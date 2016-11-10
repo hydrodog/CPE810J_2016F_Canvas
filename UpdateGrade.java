@@ -3,8 +3,8 @@
  * Informations you should provide:
  *	courseId 
  *	assignmentId;
- *	userId;
- *	token;
+ *	userId; 
+ *	token;  
  *	grade;
  *  call UpdateGrade.post() to send the grade
  *  
