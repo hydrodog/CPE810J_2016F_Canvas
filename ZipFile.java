@@ -59,7 +59,7 @@ public class ZipFile {
 		
 	}
 	
-	//zip file depression
+	//zip file decompression
 	private static void depre(String inPath, String outPath) {
 		try {
 			ZipInputStream zipInput = new ZipInputStream(new FileInputStream(inPath));
