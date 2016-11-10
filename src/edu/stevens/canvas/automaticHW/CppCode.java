@@ -1,10 +1,26 @@
+/*
+* Author: Weihao Cheng 
+* Description: This file contain a child class of abstract code class, for .cpp file
+*/
 import java.util.*;
 import java.io.*;
-
+/*
+* This class has the method to compile the code file, set the grade and comments, 
+* and return two files(grade and comments) by the update method.
+*/
 class CppCode extends Code {
+	private String path;
+	private double score;
+	private String comments;
 	
+	//constructor
 	public CppCode() {
 		super();
+	}
+	
+	//get the path of this code file
+	public String getPath() {
+		return this.path;
 	}
 	
 	public double getScore() {
@@ -22,11 +38,23 @@ class CppCode extends Code {
 	public void compile() {         // compile the code using cmd
 	}
 	
-	public void display() {                     //** Interface 3 to plagiarism team.
-		//String str = this.getSourceCode();
-		// display the source code.
+	//display the code (GUI group can use it to display it into a textarea)
+	public void display() {    
+		try {
+			FileInputStream fstream = new FileInputStream(this.getPath());
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine;
+			while ((strLine = br.readLine()) != null) {
+				System.out.println(strLine);
+			}
+			in.close();
+		} catch (Exception e) {
+			System.err.println("Error: " + e.getMessage());
+		}   
 	}
 	
+	// allow the grader to comment the code and write the comment into a file. 
 	public void setComments() {
 		Scanner input = new Scanner(System.in);
 		System.out.print("Please enter the comments: ");
@@ -49,12 +77,12 @@ class CppCode extends Code {
 	public void update() throws IOException {
 		FileWriter fwc = new FileWriter("comment.txt");
 		BufferedWriter bufwc = new BufferedWriter(fwc);
-		bufwc.write(comment);
+		bufwc.write(this.comments);
 		bufwc.flush();
 		bufwc.close();
 		FileWriter fwg = new FileWriter("grade.txt");
 		BufferedWriter bufwg = new BufferedWriter(fwg);
-		bufwg.write(score + "");
+		bufwg.write(this.score + "");
 		bufwg.flush();
 		bufwg.close();
 		// update the comments file and grade file.
