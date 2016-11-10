@@ -1,5 +1,5 @@
 /*
-* Author: Tao Jiang 
+* Author: Tao Jiang, Weihao Cheng, Yucheng Xie
 * Description: This file contain a child class of abstract code class, we split our project into 3 different parts
 * 		and will merge them together later.
 */
