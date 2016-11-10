@@ -1,0 +1,11 @@
+public void setGrade() {
+		String repeatChar = "t";
+		do{
+			Scanner input = new Scanner(System.in);
+			System.out.print("Please enter the grade: ");
+			score = input.nextDouble();
+			System.out.println("The grade you set is " + score + " (enter t/T for Ture or f/F for False).");
+			repeatChar = input.next();
+		}while(repeatChar.charAt(0) == 'F' || repeatChar.charAt(0) == 'f');
+		// allow the grader set the grade
+	}
