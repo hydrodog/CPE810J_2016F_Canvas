@@ -98,7 +98,7 @@ public class ZipFile {
 	
 	
 	/*file rule: only include .java file, .cpp file, .py file*/
-	class otherGroup {
+	static class otherGroup {
 		private List<String> rules = new ArrayList<String>();
 		public otherGroup() {
 			rules.add("java");
