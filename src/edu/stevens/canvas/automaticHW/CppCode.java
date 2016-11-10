@@ -54,14 +54,14 @@ class CppCode extends Code {
 		}   
 	}
 	
-	// allow the grader to comment the code and write the comment into a file. 
+	// allow the grader to comment the code and put the comment into a file. 
 	public void setComments() {
 		Scanner input = new Scanner(System.in);
 		System.out.print("Please enter the comments: ");
 		this.comment = input.nextLine();
-		// allow the grader to comment the code and write the comment into a file. 
 	}
 	
+	// allow the grader to grade the code and put the grade into a file. 
 	public void setGrade() {
 		String repeatChar = "t";
 		do{
@@ -71,9 +71,10 @@ class CppCode extends Code {
 			System.out.println("The grade you set is " + score + " (enter t/T for Ture or f/F for False).");
 			repeatChar = input.next();
 		}while(repeatChar.charAt(0) == 'F' || repeatChar.charAt(0) == 'f');
-		// update the grade file 
 	}
 	
+	// update the comments file and grade file.
+	// the graph group use the grade file to read and graph it  ** Interface 2
 	public void update() throws IOException {
 		FileWriter fwc = new FileWriter("comment.txt");
 		BufferedWriter bufwc = new BufferedWriter(fwc);
@@ -85,7 +86,5 @@ class CppCode extends Code {
 		bufwg.write(this.score + "");
 		bufwg.flush();
 		bufwg.close();
-		// update the comments file and grade file.
-		// the graph group use the grade file to read and graph it  ** Interface 2
 	}
 }
