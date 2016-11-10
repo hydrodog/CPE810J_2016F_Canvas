@@ -56,7 +56,7 @@ public class ZipFile {
 	}
 	// send warning to student
 	public void warnHw() {
-		
+		System.out.println("Warn HW");
 	}
 	
 	//zip file depression
