@@ -31,7 +31,8 @@ public class JavaCode {
 	}
 	
 	// compile the code using cmd.exe(has not finished yet
-	public void compile() {         
+	public void compile() {
+		//add method
 	}
 
 	//display the code (GUI group can use it to display it into a textarea)
