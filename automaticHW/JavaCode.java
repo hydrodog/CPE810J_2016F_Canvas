@@ -1,31 +1,41 @@
+/*
+* Author: Tao Jiang 
+* Description: This file contain a child class of abstract code class, we split our project into 3 different parts
+* 		and will merge them together later.
+*/
 import java.io.*;
 import java.util.*;
-class JavaCode extends Code {
+/*
+* This class has the method to compile the code file, set the grade and comments, 
+* and return two files(grade and comments) by the update method.
+*/
+public class JavaCode {
 	private String path;
 	private double score;
 	private String comments;
-	public String getPath() {
-		String 
-	}
+	
+	//constructor, has not finished yet
 	JavaCode() {
 		super();
 	}
+	//get the path of this code file (Absolute path??)
+	public String getPath() {
+		return this.path;
+	}
+	
 	public double getScore() {
 		return this.score;
 	}
 	public void setScore(double scr) {
 		this.score = scr;
 	}
-	public String getSourceCode() {
-		return this.sourceCode;
+	
+	// compile the code using cmd.exe(has not finished yet
+	public void compile() {         
 	}
-	public void setSourceCode(String sourceCode) {
-		this.sourceCode = sourceCode;
-	}
-	public void compile() {         // compile the code using cmd
-	}
-	public void display() {  
-		public void display() {  
+
+	//display the code (GUI group can use it to display it into a textarea)
+	public void display() {    
 		try {
 			FileInputStream fstream = new FileInputStream(this.getPath());
 			DataInputStream in = new DataInputStream(fstream);
@@ -38,23 +48,17 @@ class JavaCode extends Code {
 			in.close();
 		} catch (Exception e) {
 			System.err.println("Error: " + e.getMessage());
-		}                                    //** Interface 3 to plagiarism team.
-		//String str = this.getSourceCode();
-		// display the source code.
+		}   
 	}
-	public double score(double score) {
-		this.score = score;
-		// allow the grader to grade the code based on the result. 
-	}
-	
+	// allow the grader to comment the code and write the comment into a file. 
 	public void setComments() {
 			Scanner input = new Scanner(System.in);
 			System.out.print("Please enter the comments: ");
-			this.comment = input.nextLine();
+			this.comments = input.nextLine();
 			//System.out.println("The comment you set is " + comment + " (enter t/T for Ture or f/F for False).");
 			//repeatChar = input.next();
-		// allow the grader to comment the code and write the comment into a file. 
 	}
+	// allow the grader to comment the code and write the comment into a file.
 	public void grade() {
 		String repeatChar = "";
 		do{
@@ -63,25 +67,20 @@ class JavaCode extends Code {
 			this.score = input.nextDouble();
 			System.out.println("The grade you set is " + score + " (enter t/T for Ture or f/F for False).");
 			repeatChar = input.next();
-		} while (repeatChar.charAt(0) == 'F' || repeatChar.charAt(0) == 'f');
-		// allow the grader to comment the code and write the comment into a file. 
+		} while (repeatChar.charAt(0) == 'F' || repeatChar.charAt(0) == 'f'); 
 	}
+	// create two files for comments and grade respectively.
 	public void update() throws IOException { 
 		FileWriter comt = new FileWriter("comment.txt");
 		BufferedWriter comWriter = new BufferedWriter(comt);
-		comWriter.write(this.comment);
+		comWriter.write(this.comments);
 		comWriter.flush();
 		comWriter.close();
 		FileWriter grad = new FileWriter("grade.txt");
 		BufferedWriter gradWriter = new BufferedWriter(grad);
-		gradWriter.write(this.grade + "");
+		gradWriter.write(this.score + "");
 		gradWriter.flush();
 		gradWriter.close();
-		// update the comments file and grade file.
-		// the graph group use the grade file to read and graph it  ** Interface 2
-	}  
-		// update the comments file and grade file.
-		// the graph group use the grade file to read and graph it  ** Interface 2
 	}
 
 }
