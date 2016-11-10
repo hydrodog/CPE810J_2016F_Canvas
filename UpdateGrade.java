@@ -4,7 +4,7 @@
  *	courseId 
  *	assignmentId;
  *	userId;
- *	targetURL;
+ *	token;
  *	grade;
  *  call UpdateGrade.post() to send the grade
  *  
