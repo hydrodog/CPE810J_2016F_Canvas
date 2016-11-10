@@ -79,7 +79,7 @@ public class DrawingArea extends JPanel {
 		int startY = 700;
 		int w = 100;
 		
-		int[] h = {0, 1, 1, 1, 2, 4, 10, 15, 20, 10}; // get the arraylist from GradeGroup
+		int[] h = {0, 1, 1, 1, 2, 4, 10, 15, 20, 10}; // get the list of grade
 		
 		for (int i = 0; i < 10; i++) {
 			int h2 = h[i] * 20;
