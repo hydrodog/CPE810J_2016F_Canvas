@@ -6,20 +6,34 @@
 //4. Byte Code.  Did it compile down to the same thing
 //5. Pattern Irregularity.  Is this style of coding out of the ordinary for the student.
 
+
+//NOTES:
+//http://web.archive.org/web/20081224234350/http://www.dcs.shef.ac.uk/~sam/stringmetrics.html#overlap - String comparison algorithms
+//http://www.ics.uci.edu/~kay/checker.html - MOSS algorithm
+//http://theory.stanford.edu/~aiken/publications/papers/sigmod03.pdf - Research paper on document fingerprinting
 import java.util.*;
 import java.io.*;
 
+
+//TOP CLASS
+//Where different algorithms can be summed up to make an overall score
 public class PlagiarismDetector {
 	//Looks for words and lines for parsing
 	private ArrayList<FileReader> files;
 	private int overallScore;
 	
+	//List of files
 	public PlagiarismDetector()
 	{
 		files = new ArrayList<FileReader>();
 		overallScore = 0;
 	}
-	
+	//Array List constructor with all the files
+	public PlagiarismDetector(ArrayList<FileReader> files)
+	{
+			this.files = files;
+			overallScore = 0;
+	}
 	public int getOverallScore() {
 		return overallScore;
 	}
@@ -31,34 +45,145 @@ public class PlagiarismDetector {
 	{
 		protected FileReader file1;
 		//Overall score of file similarity from a string of characters standpoint
-		public int fileSimilarityScore (FileReader file)
+		public int fileSimilarityScore (FileReader file, FileReader file2)
 		{
+			ArrayList<String> comments1 = retrieveComments(file);
+			ArrayList<String> comments2 = retrieveComments(file2);
+			
+			ArrayList<String> loops1 = retriveLoops(file);
+			ArrayList<String> loops2 = retriveLoops(file2);
+			
+			ArrayList<String> ifelse1 = retriveIfElse(file);
+			ArrayList<String> ifelse2 = retriveIfElse(file2);
+			
+			//Now do a comparison of them all
+			//Basic Hit matches
+			
+			//Exact comment matches
+			int commentMatches = 0;
+			for (int x = 0; x<comments1.size(); x++)
+			{
+				for (int y = 0; x<comments2.size(); x++)
+				{
+					if(comments1.get(x) == comments2.get(y))
+						commentMatches++;
+				}
+			}
+			
+			//Loop condition direct hits, may remove variable names at a later date
+			int loopMatches = 0;
+			for (int x = 0; x<loops1.size(); x++)
+			{
+				for (int y = 0; x<loops2.size(); x++)
+				{
+					if(loops1.get(x) == loops2.get(y))
+						loopMatches++;
+				}
+			}
+			
+			//if else condition direct hits, may remove variable names at a later date
+			int ifelseMatches = 0;
+			for (int x = 0; x<ifelse1.size(); x++)
+			{
+				for (int y = 0; x<ifelse2.size(); x++)
+				{
+					if(ifelse1.get(x) == ifelse2.get(y))
+						ifelseMatches++;
+				}
+			}
+			
+			//MORE TO COME ONCE STRING SIMILARITY IS RESEARCHED
+			
 			return 0;
 		}
 		//Retrieves a single line of code
-		public String retriveLine (FileReader file)
+		public ArrayList<String> retriveLoops (FileReader file)
 		{
-			return null;
+			ArrayList<String> loops = new ArrayList<String>();
+			
+			try(BufferedReader br1 = new BufferedReader(file)) {
+			    for(String line; (line = br1.readLine()) != null; ) {
+			       if(line.contains("for") || line.contains("while"))
+			       {
+			    	   loops.add(line);
+			       }
+			    }
+			} catch (IOException e) {
+				// Unable to read file
+				e.printStackTrace();
+			}
+			return loops;
 		}
-		public String retriveLoop (FileReader file)
+		public ArrayList<String> retriveIfElse (FileReader file)
 		{
-			return null;
-		}
-		public String retriveIfElse (FileReader file)
-		{
-			return null;
+			ArrayList<String> ifelse = new ArrayList<String>();
+			
+			try(BufferedReader br1 = new BufferedReader(file)) {
+			    for(String line; (line = br1.readLine()) != null; ) {
+			       if(line.contains("if") || line.contains("else"))
+			       {
+			    	   ifelse.add(line);
+			       }
+			    }
+			} catch (IOException e) {
+				// Unable to read file
+				e.printStackTrace();
+			}
+			return ifelse;
 		}
 		//Shows if a student noted the name of who they received help from
 		//Will be preceded by a // and a proper noun
 		//Return true if they noted the student who received help, false if not found
-		public boolean studentNotedHelp (FileReader file)
+		public ArrayList<String> retrieveComments (FileReader file)
 		{
-			return false;
+			boolean blockComments = false;
+			ArrayList<String> comments = new ArrayList<String>();
+			
+			try(BufferedReader br1 = new BufferedReader(file)) {
+			    for(String line; (line = br1.readLine()) != null; ) {
+			       if(line.contains("//"))
+			       {
+			    	   comments.add(line.substring(2));
+			       }
+			       else if(line.contains("/*"))
+			       {
+			    	   blockComments = true;
+			    	   comments.add(line.substring(2));
+			       }
+			       else if (line.contains("*/"))
+			       {
+			    	   blockComments = false;
+			    	   comments.add(line.substring(2));
+			       }
+			       else if (blockComments == true)
+			       {
+			    	   comments.add(line);
+			       }
+			    }
+			} catch (IOException e) {
+				// Unable to read file
+				e.printStackTrace();
+			}
+			return comments;
 		}
 		//Returns the line number where the segement came from, otherwise return -1 if not found
-		public int indexOfLine (String line)
+		public int indexOfLine (String testLine, FileReader file)
 		{
-			return 0;
+			int counter = 0;
+			
+			try(BufferedReader br1 = new BufferedReader(file)) {
+			    for(String line; (line = br1.readLine()) != null; ) {
+			       if(line.equals(testLine))
+			       {
+			    	   return counter++;
+			       }
+			       counter++;
+			    }
+			} catch (IOException e) {
+				// Unable to read file
+				e.printStackTrace();
+			}
+			return -1;
 		}
 
 		//Method of comparable.  To be filled in to add comparing one file context to another.
@@ -104,6 +229,7 @@ public class PlagiarismDetector {
 			 return 0;
 		}
 		@Override
+		//Later comparison function for if it's exactly similar or close enough
 		public int compareTo(variableEditor o) {
 			// TODO Auto-generated method stub
 			return 0;
@@ -130,7 +256,8 @@ public class PlagiarismDetector {
 			
 		}
 		@Override
-		public int fileSimilarityScore (FileReader file)
+		//Different testing of string similarity for functions and their parameters
+		public int fileSimilarityScore (FileReader file, FileReader file2)
 		{
 			return 0;
 			
@@ -147,19 +274,19 @@ public class PlagiarismDetector {
 		}
 		@Override
 		//Uses different methods
-		public int fileSimilarityScore (FileReader file)
+		public int fileSimilarityScore (FileReader file, FileReader file2)
 		{
 			return 0;
 		}
 		@Override
 		//Loops are different syntax
-		public String retriveLoop (FileReader file)
+		public ArrayList<String> retriveLoops (FileReader file)
 		{
 			return null;
 		}
 		@Override
 		//If else will be slightly different syntax
-		public String retriveIfElse (FileReader file)
+		public ArrayList<String> retriveIfElse (FileReader file)
 		{
 			return null;
 		}
