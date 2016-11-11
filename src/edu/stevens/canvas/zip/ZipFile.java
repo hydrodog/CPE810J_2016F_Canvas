@@ -16,21 +16,18 @@ import java.util.List;
 
 
 public class ZipFile {
-	//get homework name(include format?)
-	private File hw = null;
-	//get student information
-	private int stuID = 0;
+	private File hw = null; 
+	private int stuID = 0;  //get student information
 	private String stuName = null;
 	private String stuEmail = null;
 	public ZipFile() throws Exception {
 		
     	hw = new File("/Users/duck/Desktop/Midterm.docx");
 		stuEmail = "pcao2@stevens.edu";
-		
+	
 		if(isZip(hw) == false) {
 			sendEmail();
-		}
-		
+		}	
 		if(runFile(hw) == false) {
 			warnHw();
 		}
@@ -59,8 +56,9 @@ public class ZipFile {
 		System.out.println("Warn HW");
 	}
 	
-	//zip file depression
-	private static void depre(String inPath, String outPath) {
+	//zip file decompression
+	//problem about this part: cannot see file after decompression
+	private static void deCom(String inPath, String outPath) {
 		try {
 			ZipInputStream zipInput = new ZipInputStream(new FileInputStream(inPath));
 			BufferedInputStream bufInput = new BufferedInputStream(zipInput);
@@ -200,13 +198,12 @@ public class ZipFile {
 	}
 	
 	
-	//main
 	public static void main(String[] agrs) throws Exception {
 		new ZipFile();
 		
 		// change the directory here...
 		String folder = "data/samples";
-		getFiles f = new getFiles(folder);
+		getFiles f = new getFiles(folder);//?????
 		f.setAll();
 		/*for (int i = 0; i < f.getName().size(); i++) {
 		    System.out.println(f.getName().get(i));
