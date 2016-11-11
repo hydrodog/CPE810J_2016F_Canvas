@@ -20,6 +20,12 @@ Initial Design
 
 Create Graph_GUI window, build an interface to react with the user including buttons to choose the mode, type of graph;
 
+-- Zeming Wang
+
 Create Drawing_GUI window, generate the histogram graph using assumed data;
 
+-- Lan Chang
+
 Create SummaryStat class to show the simple statistics using assumed data.
+
+-- Tao Feng
