@@ -78,7 +78,7 @@ public class JavaCode {
 		}
 	}
 	
-	// allow the grader to comment the code. 
+	// allow the grader to input the comment. 
 	public void setComments() {
 		Scanner input = new Scanner(System.in);
 		System.out.print("Please enter the comments: ");
@@ -86,25 +86,25 @@ public class JavaCode {
 	}
 	
 	// allow the grader to grade the code.
-	public void grade() {
+	public void setGrade() {
 		String repeatChar = "";
 		do{
 			Scanner input = new Scanner(System.in);
 			System.out.print("Please enter the grade: ");
 			this.score = input.nextDouble();
 			System.out.println("The grade you set is " + score + " (enter t/T for Ture or f/F for False).");
-			repeatChar = input.next();
+			repeatChar = input.next();//make sure it is the ture score grader give
 		} while (repeatChar.charAt(0) == 'F' || repeatChar.charAt(0) == 'f'); 
 	}
 	
 	// create two files for comments and grade and write into respectively.
 	public void update() throws IOException { 
-		FileWriter comt = new FileWriter("comment.txt");
+		FileWriter comt = new FileWriter("comment.txt");//input the comments into a .txt file
 		BufferedWriter comWriter = new BufferedWriter(comt);
 		comWriter.write(this.comments);
 		comWriter.flush();
 		comWriter.close();
-		FileWriter grad = new FileWriter("grade.txt");
+		FileWriter grad = new FileWriter("grade.txt");//input the grade into a .txt file
 		BufferedWriter gradWriter = new BufferedWriter(grad);
 		gradWriter.write(this.score + "");
 		gradWriter.flush();
