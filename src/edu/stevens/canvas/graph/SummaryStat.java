@@ -1,4 +1,11 @@
 
+/**
+ * Write a description of s here.
+ * simple statistics
+ * @author: Tao Feng
+ * @Code Maintaninence:Zemin Wang, Lan Chang
+ */
+
 import java.util.*;
 
 public class SummaryStat {
@@ -37,7 +44,6 @@ public class SummaryStat {
         }
     }
 
-    //http://stackoverflow.com/questions/4191687/how-to-calculate-mean-median-mode-and-range-from-a-set-of-numbers
     public static ArrayList<Integer> mode(final ArrayList<Integer> list) {
         final ArrayList<Integer> modes = new ArrayList<Integer>();
         final Map<Integer, Integer> countMap = new HashMap<Integer, Integer>();
