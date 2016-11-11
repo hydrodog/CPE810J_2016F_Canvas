@@ -115,7 +115,7 @@ public class JavaCode {
 // 		java.display();
 // 		java.compile();
 // 		java.setComments();
-// 		java.grade();
+// 		java.setGrade();
 // 		java.update();
 //     	}
 }
