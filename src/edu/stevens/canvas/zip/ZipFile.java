@@ -68,6 +68,8 @@ public class ZipFile {
 	
 	//zip file decompression
 	//problem about this part: cannot see file after decompression
+	
+	//Do we need to add a [Buffer_Size] here?
 	private static void deCom(String inPath, String outPath) {
 		try {
 			ZipInputStream zipInput = new ZipInputStream(new FileInputStream(inPath));
