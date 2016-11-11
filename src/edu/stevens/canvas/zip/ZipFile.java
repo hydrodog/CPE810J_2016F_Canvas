@@ -53,7 +53,7 @@ public class ZipFile {
 	}
 	// send warning to student
 	public void warnHw() {
-		System.out.println("hahaha");
+		System.out.println("Warn HW");
 	}
 	
 	//zip file decompression
@@ -198,13 +198,12 @@ public class ZipFile {
 	}
 	
 	
-	//main
 	public static void main(String[] agrs) throws Exception {
 		new ZipFile();
 		
 		// change the directory here...
 		String folder = "data/samples";
-		getFiles f = new getFiles(folder);
+		getFiles f = new getFiles(folder);//?????
 		f.setAll();
 		/*for (int i = 0; i < f.getName().size(); i++) {
 		    System.out.println(f.getName().get(i));
