@@ -1,5 +1,7 @@
 In this week, we try to complete the methods in the abstract class Code.
 
+The compile() method, compile the java file and run it. We will try to run other kind of programs (like C++ and Python) later.
+
 The display() method, output the source code.
 
 The setGrade() and setComment() method, set the grade and comments for the particular code object.
