@@ -5,7 +5,7 @@
 abstract class Code {
 	private double score;
 	private String path;
-	private String comment;
+	private String comments;
 
 	Code() {}
 	
