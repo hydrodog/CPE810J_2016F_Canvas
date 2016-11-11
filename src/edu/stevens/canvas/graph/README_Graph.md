@@ -1,6 +1,7 @@
 # CPE810J_2016F_Canvas
 
 Graph Group
+
 @author Zeming Wang, Tao Feng, Lan Chang
 
 Generate graphs of an assignment showing mean, distribution, variance
