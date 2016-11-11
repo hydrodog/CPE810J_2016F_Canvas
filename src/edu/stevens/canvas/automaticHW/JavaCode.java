@@ -30,28 +30,54 @@ public class JavaCode {
 		this.score = scr;
 	}
 	
-	// compile the code using cmd.exe(has not finished yet
+	// compile the code using cmd.exe
 	public void compile() {
-		//add method
+		try {
+		    Process pro = Runtime.getRuntime().exec("javac Main.java");
+		    String line = null;
+		    BufferedReader in = new BufferedReader(
+			    new InputStreamReader(pro.getErrorStream()));
+		    while ((line = in.readLine()) != null) {
+			System.out.println("javac Main.java" + " The error : " + " " + line);
+		    }
+		    pro.waitFor();
+		    System.out.println("javac Main.java" + " exitValue() " + pro.exitValue());
+
+
+		    pro = Runtime.getRuntime().exec("java Main");
+		    line = null;
+		    in = new BufferedReader(
+			    new InputStreamReader(pro.getInputStream()));
+		    while ((line = in.readLine()) != null) {
+			System.out.println("java Main" + " The output of this program : " + " " + line);
+		    }
+		    line = null;
+		    in = new BufferedReader(
+			    new InputStreamReader(pro.getErrorStream()));
+		    while ((line = in.readLine()) != null) {
+			System.out.println("java Main" + " The error : " + " " + line);
+		    }
+		    pro.waitFor();
+		    System.out.println("java Main" + " exitValue() " + pro.exitValue());
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
 	}
 
 	//display the code (GUI group can use it to display it into a textarea)
 	public void display() {    
+		BufferedReader in;
 		try {
-			FileInputStream fstream = new FileInputStream(this.getPath());
-			DataInputStream in = new DataInputStream(fstream);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			String strLine;
-
-			while ((strLine = br.readLine()) != null) {
-				System.out.println(strLine);
-			}
-			in.close();
+		    in = new BufferedReader(new FileReader(this.getPath()));
+		    String strLine;
+		    while ((strLine = in.readLine()) != null) {
+			System.out.println(strLine);
+		    }
+		    in.close();
 		} catch (Exception e) {
-			System.err.println("Error: " + e.getMessage());
-		}   
+		    System.err.println("Error: " + e.getMessage());
+		}
 	}
-
 	// allow the grader to comment the code and write the comment into a file. 
 	public void setComments() {
 		Scanner input = new Scanner(System.in);
