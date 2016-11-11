@@ -5,12 +5,6 @@ Graph Group
 
 Generate graphs of an assignment showing mean, distribution, variance
 
-Display distribution of grades
+Display distribution of grades(for an assignments, for a category of assignment (for all tests, homework))
 
-For an assignments
-
-For a category of assignment (for all tests, homework)
-
-Statistics
-
-mean, median, variance, etc.
+Statistics(mean, median, variance, etc.)
