@@ -66,25 +66,26 @@ public class ZipFile {
 			File outFile = null;
 			FileOutputStream fileOut = null;
 			ZipEntry zipEntry = null;
-		
+			int re = 0; //
 			try {
 				while ((zipEntry = zipInput.getNextEntry()) != null) {
-						if (zipEntry.isDirectory()) 
-							continue;
+						if (zipEntry.isDirectory()) {
+							
+						} else {
 						outFile = new File(outPath, zipEntry.getName());
 						if (!outFile.exists()) 
 				/*??*/		(new File(outFile.getParent())).mkdirs();
 						fileOut = new FileOutputStream(outFile);
 						bufOutput = new BufferedOutputStream(fileOut);
-						int r = bufInput.read();
-						while (r != -1) 
-							bufOutput.write(r);
-						
-					fileOut.close();
-					bufOutput.close();
+						while ((re= bufInput.read()) != -1) 
+							bufOutput.write(re);
+						bufOutput.close();
+						}		
 				}
+				fileOut.close();
 				zipInput.close();
 				bufInput.close();
+				
 			} catch (Exception e){
 				e.printStackTrace();
 			}
@@ -92,6 +93,9 @@ public class ZipFile {
 			e.printStackTrace();
 		}
 	}
+
+
+
 	
 	
 	
