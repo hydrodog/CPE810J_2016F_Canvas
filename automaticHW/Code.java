@@ -21,7 +21,7 @@ abstract class Code {
 		
 	}
 
-	public void setGrade() { // allow the grader to grade the code.
+	public void setGrades() { // allow the grader to grade the code.
 		
 	}
 
