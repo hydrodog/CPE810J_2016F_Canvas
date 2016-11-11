@@ -51,14 +51,14 @@ public class JavaCode {
 			System.err.println("Error: " + e.getMessage());
 		}   
 	}
+
 	// allow the grader to comment the code and write the comment into a file. 
 	public void setComments() {
-			Scanner input = new Scanner(System.in);
-			System.out.print("Please enter the comments: ");
-			this.comments = input.nextLine();
-			//System.out.println("The comment you set is " + comment + " (enter t/T for Ture or f/F for False).");
-			//repeatChar = input.next();
+		Scanner input = new Scanner(System.in);
+		System.out.print("Please enter the comments: ");
+		this.comments = input.nextLine();
 	}
+	
 	// allow the grader to comment the code and write the comment into a file.
 	public void grade() {
 		String repeatChar = "";
@@ -70,6 +70,7 @@ public class JavaCode {
 			repeatChar = input.next();
 		} while (repeatChar.charAt(0) == 'F' || repeatChar.charAt(0) == 'f'); 
 	}
+	
 	// create two files for comments and grade respectively.
 	public void update() throws IOException { 
 		FileWriter comt = new FileWriter("comment.txt");
@@ -83,5 +84,4 @@ public class JavaCode {
 		gradWriter.flush();
 		gradWriter.close();
 	}
-
 }
