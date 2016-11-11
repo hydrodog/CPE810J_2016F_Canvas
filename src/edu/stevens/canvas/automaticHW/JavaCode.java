@@ -78,14 +78,14 @@ public class JavaCode {
 		}
 	}
 	
-	// allow the grader to comment the code and write the comment into a file. 
+	// allow the grader to comment the code. 
 	public void setComments() {
 		Scanner input = new Scanner(System.in);
 		System.out.print("Please enter the comments: ");
 		this.comments = input.nextLine();
 	}
 	
-	// allow the grader to comment the code and write the comment into a file.
+	// allow the grader to grade the code.
 	public void grade() {
 		String repeatChar = "";
 		do{
@@ -97,7 +97,7 @@ public class JavaCode {
 		} while (repeatChar.charAt(0) == 'F' || repeatChar.charAt(0) == 'f'); 
 	}
 	
-	// create two files for comments and grade respectively.
+	// create two files for comments and grade and write into respectively.
 	public void update() throws IOException { 
 		FileWriter comt = new FileWriter("comment.txt");
 		BufferedWriter comWriter = new BufferedWriter(comt);
