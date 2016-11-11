@@ -1,3 +1,9 @@
+/**
+	 @author: Binglin Xie, Junkai Cui
+	 @modified: Yifei Yao
+	 
+*/
+
 /* 
  * To post grade to canvas
  * Informations you should provide:
@@ -18,13 +24,14 @@ import java.io.*;
 import java.net.*;
 import java.net.URL;
 
-public class Grade {
+public class Grade {// The information we need to identify a course and a student
 	private String assignmentId;
     private String courseId;
     private String studentId;
     private static String targetURL;
     private String token;
     private double grade;
+        // Methods used to get and set the required information
 	public String getAssignmentId() {
 		return assignmentId;
 	}
@@ -57,6 +64,7 @@ public class Grade {
     	this.token=token;
     	this.grade=grade;
 	}
+	// Upload the grade to Canvas
 	public void updateGrade(){
     	Grade.targetURL = "https://canvas.instructure.com/api/v1"
     			+ "/courses/"+this.courseId
@@ -66,7 +74,8 @@ public class Grade {
     			+ this.token
     			+ "&grade_data["+this.studentId+"[posted_grade]="+this.grade
     			+ "&grade_data["+this.studentId+"]"+"[text_comment]=hello!";
-    	try {
+    	// How to realize the function
+	try {
 
 			URL targetUrl = new URL(targetURL);
 
@@ -103,6 +112,7 @@ public class Grade {
 		 }
 
 		}
+	//Testing upload function
 	public static void main(String[] args){//a test example
 	    String courseId="10300000000000133";
 	    String assignmentId="10300000000046026";
