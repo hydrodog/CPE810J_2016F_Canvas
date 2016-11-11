@@ -3,8 +3,9 @@
  * Informations you should provide:
  *	courseId 
  *	assignmentId;
- *	userId; 
- *	token;  
+ *	userId;
+ *	token;
+ *	targetURL;
  *	grade;
  *  call UpdateGrade.post() to send the grade
  *  
@@ -32,7 +33,8 @@ public class UpdateGrade {
     			+ "/submissions/update_grades"
     			+ "?access_token="
     			+ this.token
-    			+ "&grade_data["+this.userId+"[posted_grade]="+this.grade;
+    			+ "&grade_data["+this.userId+"]"+"[posted_grade]="+this.grade
+    			+ "&grade_data["+this.userId+"]"+"[text_comment]=Testing!";
     	
     }
     public void post(){
@@ -77,19 +79,16 @@ public class UpdateGrade {
         	System.out.println(targetURL);
         }
        
-  /*     public static void main(String[] args){//a test example
+       public static void main(String[] args){//a test example
     	    String courseId="10300000000000133";
     	    String assignmentId="10300000000046026";
     	    String userId="10300000000022347";
-    	    String token="copy your token here!";
-    	    UpdateGrade test = new UpdateGrade(courseId,assignmentId,userId,token,50);
-    	    UpdateGrade test2 = new UpdateGrade(courseId,assignmentId,userId,token,20);
-    	    test2.printurl();
-    	    test2.post();
+    	    String token="change token here!";
+    	    UpdateGrade test = new UpdateGrade(courseId,assignmentId,userId,token,9);
+    	    test.printurl();
+    	    test.post();
     	    
-    	   
-    	   
-       }*/
+       }
   
     	
     }
