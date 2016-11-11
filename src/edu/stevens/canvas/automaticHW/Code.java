@@ -9,23 +9,23 @@ abstract class Code {
 
 	code() {}
 	
-	public void compile() { // this method will compile the code using cmd
+	public void compile() { // this method will compile the code using cmd.
 	}
 	
 	
-	public void display() { // this method will display the code
+	public void display() { // this method will display the code.
 		
 	}
 	 
-	public void setComments() { // allow the grader to comment the code and write the comment into a file.
+	public void setComments() { // allow the grader to comment the code.
 		
 	}
 
-	public void grade() { // allow the grader to grade and write the grade into a file.
+	public void grade() { // allow the grader to grade the code.
 		
 	}
 
-	public void update() { // update the comments file and grade file.
+	public void update() { // create two files for comments and grade and write into respectively.
 
 	}
 }
