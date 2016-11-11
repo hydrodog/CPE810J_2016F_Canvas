@@ -16,7 +16,8 @@
  *  to do: support more type of grade, for example : ABC , 1-5, 1-100....;
  *         finish comment method;
  *         merge with download team and add download method.
- *  
+ *         The test result can be found when you open DOV DEV - Java Team Testing - Test Student
+           TEST RESULT URL: https://sit.instructure.com/courses/133/gradebook/speed_grader?assignment_id=46026#%7B%22student_id%22%3A%2222347%22%7D
  */
 package update;
 
@@ -113,7 +114,7 @@ public class Grade {// The information we need to identify a course and a studen
 
 		}
 	//Testing upload function
-	public static void main(String[] args){//a test example
+	public static void main(String[] args){
 	    String courseId="10300000000000133";
 	    String assignmentId="10300000000046026";
 	    String userId="10300000000022347";
