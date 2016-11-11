@@ -1,13 +1,13 @@
 /*
 * Author: Tao Jiang, Weihao Cheng, Yucheng Xie
 * Description: This file contain a child class of abstract code class, we split our project into 3 different parts
-* 		and will merge them together later.
+* 		and then merge them together.
 */
 import java.io.*;
 import java.util.*;
 /*
-* This class has the method to compile the code file, set the grade and comments, 
-* and return two files(grade and comments) by the update method.
+* This class has the method to compile and display the code file, set the grade and comments, 
+* and return two files (grade and comments) by the update method.
 */
 public class JavaCode {
 	private String path;
@@ -18,11 +18,10 @@ public class JavaCode {
 	JavaCode() {
 		super();
 	}
-	//get the path of this code file (Absolute path??)
+	//get the path of this code file (Neeed to discuss with the unzip team about it)
 	public String getPath() {
 		return this.path;
-	}
-	
+	}	
 	public double getScore() {
 		return this.score;
 	}
@@ -30,47 +29,47 @@ public class JavaCode {
 		this.score = scr;
 	}
 	
-	// compile the code using cmd.exe
+	// compile java code using cmd.exe
 	public void compile() {
 		try {
-		    Process pro = Runtime.getRuntime().exec("javac Main.java");
+		    Process pro = Runtime.getRuntime().exec("javac Main.java"); //need to modify to get the path of the file.
 		    String line = null;
 		    BufferedReader in = new BufferedReader(
 			    new InputStreamReader(pro.getErrorStream()));
-		    while ((line = in.readLine()) != null) {
-			System.out.println("javac Main.java" + " The error : " + " " + line);
+		    while ((line = in.readLine()) != null) { //display the error location of compiling
+			System.out.println("javac Main.java" + " The error : " + " " + line); 
 		    }
 		    pro.waitFor();
-		    System.out.println("javac Main.java" + " exitValue() " + pro.exitValue());
+		    System.out.println("javac Main.java" + " exitValue() " + pro.exitValue()); //show "0" if compile successfully
 
 
 		    pro = Runtime.getRuntime().exec("java Main");
 		    line = null;
 		    in = new BufferedReader(
 			    new InputStreamReader(pro.getInputStream()));
-		    while ((line = in.readLine()) != null) {
+		    while ((line = in.readLine()) != null) { //display the output of the java program in console
 			System.out.println("java Main" + " The output of this program : " + " " + line);
 		    }
 		    line = null;
 		    in = new BufferedReader(
 			    new InputStreamReader(pro.getErrorStream()));
-		    while ((line = in.readLine()) != null) {
+		    while ((line = in.readLine()) != null) { //display the error location when running the java program
 			System.out.println("java Main" + " The error : " + " " + line);
 		    }
 		    pro.waitFor();
-		    System.out.println("java Main" + " exitValue() " + pro.exitValue());
+		    System.out.println("java Main" + " exitValue() " + pro.exitValue()); //show "0" when running successfully
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
 	}
 
-	//display the code (GUI group can use it to display it into a textarea)
+	//display the code in console (GUI group can use it to display it into a textarea)
 	public void display() {    
 		BufferedReader in;
 		try {
 		    in = new BufferedReader(new FileReader(this.getPath()));
 		    String strLine;
-		    while ((strLine = in.readLine()) != null) {
+		    while ((strLine = in.readLine()) != null) { //display the source code in console
 			System.out.println(strLine);
 		    }
 		    in.close();
@@ -78,6 +77,7 @@ public class JavaCode {
 		    System.err.println("Error: " + e.getMessage());
 		}
 	}
+	
 	// allow the grader to comment the code and write the comment into a file. 
 	public void setComments() {
 		Scanner input = new Scanner(System.in);
