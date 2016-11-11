@@ -1,7 +1,7 @@
 /**
  *  @author: Yang Zhang. Gaojian Chen  
  * 
- * 
+ *  
  */
 package edu.stevens.canvas.download;
 
