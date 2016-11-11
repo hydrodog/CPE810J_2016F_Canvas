@@ -43,7 +43,10 @@ public class SummaryStat {
         return list.get((list.size()-1)/2);
         }
     }
-
+    
+    
+    
+//coduld have multiple modes
     public static ArrayList<Integer> mode(final ArrayList<Integer> list) {
         final ArrayList<Integer> modes = new ArrayList<Integer>();
         final Map<Integer, Integer> countMap = new HashMap<Integer, Integer>();
