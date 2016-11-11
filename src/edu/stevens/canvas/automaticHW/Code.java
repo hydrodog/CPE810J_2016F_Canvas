@@ -7,7 +7,7 @@ abstract class Code {
 	private String path;
 	private String comment;
 
-	code() {}
+	Code() {}
 	
 	public void compile() { // this method will compile the code using cmd.
 	}
