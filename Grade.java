@@ -9,6 +9,7 @@
  *  call Grade.updateGrade() to update the grade
  *  to do: support more type of grade, for example : ABC , 1-5, 1-100....;
  *         finish comment method;
+ *         merge with download team and add download method.
  *  
  */
 package update;
