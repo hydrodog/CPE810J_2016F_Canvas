@@ -1,3 +1,13 @@
+/* 
+ * Decompress zipfile and extract file extensions
+ * 
+ * by: Peiying Cao, Zhaolun Song, Shenwei Chen
+ * 
+ * 11/11/2016
+ */
+
+
+
 package edu.stevens.canvas.zip;
 import java.awt.Desktop;
 import java.net.URI;
