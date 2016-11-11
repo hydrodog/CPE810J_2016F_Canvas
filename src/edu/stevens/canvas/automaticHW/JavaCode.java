@@ -110,4 +110,12 @@ public class JavaCode {
 		gradWriter.flush();
 		gradWriter.close();
 	}
+// 	public static void main(String[] args) throws IOException { //this is the test code, we could run it successfully.
+// 		JavaCode java = new JavaCode();
+// 		java.display();
+// 		java.compile();
+// 		java.setComments();
+// 		java.grade();
+// 		java.update();
+//     	}
 }
