@@ -60,6 +60,8 @@ public class Plagiarism{
 		for(String str : l){
 			System.out.println(str.length());
 			System.out.println("plagiarism ratio"+(double)str.length()*100/s1.length()+"%");
+			
+		        //if the ratio > 80% , it is plagiarism.
 		}
 		
 	}
