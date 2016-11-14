@@ -1,7 +1,6 @@
 package edu.stevens.canvas.zip;
 import java.awt.Desktop;
 import java.net.URI;
-import java.awt.Desktop;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -13,6 +12,19 @@ import java.util.zip.ZipInputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
+import java.sql.Date;
+
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 
 
 public class ZipFile {
@@ -40,12 +52,32 @@ public class ZipFile {
 	}
 
 	/*send email to student*/
-	public void sendEmail() throws Exception{
+	public void sendEmail() {
+		Properties p = new Properties();
+		p.put("mail.smtp.auth","true");
+		p.put("mail.smtp.port", "587");
+		p.put("mail.smtp.host", "smtp.gmail.com");
+		p.put("mail.smtp.starttls.enable", "true");
+		
+		Session session = Session.getDefaultInstance(p);
+
+				try {
+
+					Message message = new MimeMessage(session);
+					message.setFrom(new InternetAddress("peiyingcao0604@gmail.com"));
+					message.setRecipients(Message.RecipientType.TO,
+						InternetAddress.parse("1014pyc@gmail.com"));
+					message.setSubject("Testing Subject");
+					message.setText("java test");
+
+					Transport.send(message);
+
+					System.out.println("Done");
+
+				} catch (MessagingException e) {
+					throw new RuntimeException(e);
+				}
 	
-		Desktop d = Desktop.getDesktop();
-		
-		d.mail(new URI("mailto:"+ stuEmail));
-		
 	}
 	//automatically compile homework
 	public boolean runFile(File f) {

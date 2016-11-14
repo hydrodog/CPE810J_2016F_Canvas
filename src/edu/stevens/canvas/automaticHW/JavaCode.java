@@ -97,6 +97,8 @@ public class JavaCode {
 		} while (repeatChar.charAt(0) == 'F' || repeatChar.charAt(0) == 'f'); 
 	}
 	
+	
+	
 	// create two files for comments and grade and write into respectively.
 	public void update() throws IOException { 
 		FileWriter comt = new FileWriter("comment.txt");//input the comments into a .txt file
