@@ -1,13 +1,10 @@
-package edu.stevens.canvas.graph;
-
 import java.awt.*;
 
-public class Rect {
-	private double x, y, width, height;
+public class Rect extends Shape {
+	private double width, height;
 	
 	public Rect(double x, double y, double width, double height) {
-		this.x = x;
-		this.y = y;
+		super(x, y);
 		this.width = width;
 		this.height = height;
 	}
