@@ -1,4 +1,4 @@
-package edu.stevens.canvas.graphy;
+package edu.stevens.canvas.graph;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -11,19 +11,26 @@ import javax.swing.*;
 This class is for the GUI part of graph group.
 It will build an interface to react with the user
 including buttons to choose the mode, type of graph
+//11.16:
+ * Change the buttons to radio buttons
+ * Reallocate the GUI
+ * Talk with the download group, and find that the data they get doesn't show us the type of assignment
+ Which means we cannot directly know which assignment is quiz or test or project.
+ * Talk with the download group, know that data is store in .txt file
+ Add read function to this class
 */
 
 public class Graph_GUI extends JFrame implements ActionListener{
 	//private elements here
 	private JTextField inputText;
-	private final String[] graphTypeName= {"Histogram","Distrubution"};//add more here
-	private JButton[] graphTypeButton= new JButton[graphTypeName.length];
+	private final String[] graphTypeName= {"Histogram","Distrubution"};//add more here	
+	private JRadioButton[] graphTypeRButton= new JRadioButton[graphTypeName.length];
 	private final String[] studentTypeName= {"Single Student","All Student"};
-	private JButton[] studentTypeButton= new JButton[studentTypeName.length];
+	private JRadioButton[] studentTypeButton= new JRadioButton[studentTypeName.length];
 	private final String[] assignmentNumName= {"One Assignment","All Assignment"};
-	private JButton[] assignmentNumButton= new JButton[assignmentNumName.length];
+	private JRadioButton[] assignmentNumButton= new JRadioButton[assignmentNumName.length];
 	private final String[] assignmentTypeName= {"Quiz","Test","Project","Assignment","All"};
-	private JButton[] assignmentTypeButton= new JButton[assignmentTypeName.length];
+	private JRadioButton[] assignmentTypeButton= new JRadioButton[assignmentTypeName.length];
 	//This is used to choose the data range, is it going to draw a graph for a student or all student?
 	//And is the target data include just once assignment, all assignment
 	//or one certain type of assignment?(all test or all quiz)
@@ -34,7 +41,7 @@ public class Graph_GUI extends JFrame implements ActionListener{
 	private File file;
 	private JMenuItem openFile,saveFile,exit;
 	private FileDialog openDia,saveDia;
-	private boolean allStudent=false,allAssignment=false;
+	private boolean allStudent=false,allAssignment=false,isHistogram=false,isDistribution=false;
 	private String assignmentTypeChoosen;
 	//default is for one assignment for a single student
 
@@ -57,37 +64,49 @@ public class Graph_GUI extends JFrame implements ActionListener{
 		inputText = new JTextField(14);
         JPanel commandPanel1 = new JPanel();
         commandPanel1.setLayout(new GridLayout(3, 3, 3, 3));
+        ButtonGroup studentTypeGroup= new ButtonGroup();
         //Add a Panel to hold the button
         for (int i = 0; i < studentTypeName.length; i++) {
-        	studentTypeButton[i] = new JButton(studentTypeName[i]);
+        	studentTypeButton[i] = new JRadioButton(studentTypeName[i]);
         	commandPanel1.add(studentTypeButton[i]);
+        	studentTypeGroup.add(studentTypeButton[i]);
         	studentTypeButton[i].setForeground(Color.blue);
         	studentTypeButton[i].addActionListener(this);
         }
         JPanel commandPanel2 = new JPanel();
         commandPanel2.setLayout(new GridLayout(4, 4, 3, 3));
+        ButtonGroup graphTypeGroup= new ButtonGroup();
+
         for (int i = 0; i < graphTypeName.length; i++) {
-        	graphTypeButton[i] = new JButton(graphTypeName[i]);
-        	commandPanel2.add(graphTypeButton[i]);
-        	graphTypeButton[i].setForeground(Color.blue);
-        	graphTypeButton[i].addActionListener(this);
+        	graphTypeRButton[i] = new JRadioButton(graphTypeName[i]);
+        	commandPanel2.add(graphTypeRButton[i]);
+            graphTypeGroup.add(graphTypeRButton[i]);
+        	graphTypeRButton[i].setForeground(Color.blue);
+        	graphTypeRButton[i].addActionListener(this);
         }
         JPanel commandPanel3 = new JPanel();
         commandPanel3.setLayout(new GridLayout(3, 3, 3, 3));
+        ButtonGroup assignmentNumGroup= new ButtonGroup();
+
         for (int i = 0; i < assignmentNumName.length; i++) {
-        	assignmentNumButton[i] = new JButton(assignmentNumName[i]);
+        	assignmentNumButton[i] = new JRadioButton(assignmentNumName[i]);
         	commandPanel3.add(assignmentNumButton[i]);
+        	assignmentNumGroup.add(assignmentNumButton[i]);
         	assignmentNumButton[i].setForeground(Color.blue);
         	assignmentNumButton[i].addActionListener(this);
         }
         JPanel commandPanel4 = new JPanel();
         commandPanel4.setLayout(new GridLayout(4, 4, 3, 3));
+        ButtonGroup assignmentTypeGroup= new ButtonGroup();
+
         for (int i = 0; i < assignmentTypeName.length; i++) {
-        	assignmentTypeButton[i] = new JButton(assignmentTypeName[i]);
+        	assignmentTypeButton[i] = new JRadioButton(assignmentTypeName[i]);
         	commandPanel4.add(assignmentTypeButton[i]);
+        	assignmentTypeGroup.add(assignmentTypeButton[i]);
         	assignmentTypeButton[i].setForeground(Color.blue);
         	assignmentTypeButton[i].addActionListener(this);
         }
+        
 		Container c= this.getContentPane();
         JPanel top = new JPanel();
         top.setLayout(new BorderLayout());
@@ -113,16 +132,28 @@ public class Graph_GUI extends JFrame implements ActionListener{
 				openDia.setVisible(true);
 				String dirPath = openDia.getDirectory();
 				String fileName = openDia.getFile();
-				//If no this path or file
+
 				if(dirPath == null || fileName == null)
 						return ;
+
 				inputText.setText("");
+
 				file = new File(dirPath,fileName);
+				
 				try
 				{
-//To do, how do we load the grade?
+						BufferedReader bufr = new BufferedReader(new FileReader(file));
+						// Read the text file by line.
+						
+						String line = null;
+
+						while( (line = bufr.readLine())!= null)
+						{
+							//to do: where should we put these input text?
+						}
+						bufr.close();
 				}
-				catch (Exception ex)//It should be IOExceotion
+				catch (IOException ex)
 				{
 					throw new RuntimeException("Failed to open");
 				}
@@ -160,6 +191,14 @@ public class Graph_GUI extends JFrame implements ActionListener{
         	allStudent=true;
         }
         
+        if (label.equals(graphTypeName[0])) {//Histogram
+        	isHistogram=true;
+        	isDistribution=false;
+        } else if (label.equals(graphTypeName[1])) {//Distribution
+        	isDistribution=true;
+        	isHistogram=false;
+        }
+        
         if (label.equals(assignmentNumName[0])) {//one assignment
         	allAssignment=false;
 //We should load the data and let the user choose which assignment will be taken
@@ -175,7 +214,9 @@ public class Graph_GUI extends JFrame implements ActionListener{
         	assignmentTypeChoosen=assignmentTypeName[2];
         }else if (label.equals(assignmentTypeName[3])) {//assignment or homework
         	assignmentTypeChoosen=assignmentTypeName[3];
-        }else{//default and All
+        }
+        //Should we make it multiple choices?
+        else{//default and All
         	assignmentTypeChoosen="All";
         }
 	}
