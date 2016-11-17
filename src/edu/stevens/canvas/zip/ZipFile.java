@@ -87,20 +87,20 @@ public class ZipFile {
 				System.out.println("You are good! Nothing wrong with the rules!\n");
 			}
 		}
-		System.out.println("Compiling the file...");
+		/*System.out.println("Compiling the file...");
 		if(runFile(hw) == false) {
 			warnHw();
-		}
+		}*/
 		
 	}
 	
 	// if homework format wrong, send email to student, let them re-submit
-	public boolean isZip(String ext) {
+	/*public boolean isZip(String ext) {
 		if(ext.equals("zip"))
 			return true;
 		else
 			return false;
-	}
+	}*/
 
 	// generate email text
 	public String writeEmail(List<String> wrong) {
@@ -151,14 +151,14 @@ public class ZipFile {
 		}
 	
 	}
-	//automatically compile homework
+	/*//automatically compile homework
 	public boolean runFile(File f) {
 		return false;
 	}
 	// send warning to student
 	public void warnHw() {
 		System.out.println("Warning! This homework can't be compiled!");
-	}
+	}*/
 	
 	//zip file decompression
 	//problem about this part: cannot see file after decompression
