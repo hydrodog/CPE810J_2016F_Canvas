@@ -1,3 +1,5 @@
+package edu.stevens.canvas.graph;
+
 import java.io.*;
 import java.util.*;
 
