@@ -1,3 +1,5 @@
+package edu.stevens.canvas.graph;
+
 import java.awt.*;
 
 public class Arc extends Shape {
