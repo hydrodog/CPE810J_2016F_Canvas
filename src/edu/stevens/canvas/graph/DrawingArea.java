@@ -19,6 +19,7 @@ public class DrawingArea extends JPanel {
 	private ArrayList<Double> grade;
 	private int m = 20;
 	private double full = 100;
+	private String graphChoosen = "pie";
 	
 	public DrawingArea(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen) {
 		this.allStudent = allStudent;
@@ -36,9 +37,12 @@ public class DrawingArea extends JPanel {
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
 		// draw the graph
-		//drawingHistogram();
-		drawingPie();
-		
+		if (graphChoosen == "pie") {
+			drawingPie();
+		}
+		if (graphChoosen == "bar") {
+			drawingHistogram();
+		}		
 		for (Shape r : shapes) {
 			r.paint(g);
 		}
