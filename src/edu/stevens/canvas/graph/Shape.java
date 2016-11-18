@@ -1,3 +1,5 @@
+package edu.stevens.canvas.graph;
+
 import java.awt.*;
 
 abstract class Shape {
