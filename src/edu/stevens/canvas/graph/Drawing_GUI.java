@@ -1,3 +1,5 @@
+package edu.stevens.canvas.graph;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,6 +47,6 @@ public class Drawing_GUI extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		new Drawing_GUI(true, false, "assignment2");
+		new Drawing_GUI(true, false, "assignment1");
 	}
 }
