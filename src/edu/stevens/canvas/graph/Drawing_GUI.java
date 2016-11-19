@@ -22,7 +22,6 @@ public class Drawing_GUI extends JFrame {
 		
 		this.setTitle("Drawing GUI");
 		this.setSize(1500, 1000);
-		this.setResizable(false);
 		Container c = getContentPane();
 		
 		JLabel title = new JLabel("Graph");
