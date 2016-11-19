@@ -4,6 +4,7 @@
 * 		and then merge them together.
 */
 package edu.stevens.canvas.automaticHW;
+
 import java.io.*;
 import java.util.*;
 /*
