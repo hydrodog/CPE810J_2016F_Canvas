@@ -9,6 +9,14 @@ import java.util.*;
 * This class has the method to compile and display the code file, set the grade and comments, 
 * and return two files (grade and comments) by the update method.
 */
+/*
+* Week 3: design the GUI of this part. And it can be split into parts:
+	  1. Display Area: display the code;
+	  2. Run Button: for grader to test the code;
+	  3. Result Display: display the result;
+	  4. Grade Area: input the score and generate a grade file;
+	  5. Comment Area: text the comments and generate a comment file;
+*/
 public class JavaCode {
 	private String path;
 	private double score;
@@ -115,7 +123,7 @@ public class JavaCode {
 // 		java.display();
 // 		java.compile();
 // 		java.setComments();
-// 		java.grade();
+// 		java.setGrade();
 // 		java.update();
 //     	}
 }

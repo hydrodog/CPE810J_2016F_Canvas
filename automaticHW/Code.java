@@ -17,11 +17,11 @@ abstract class Code {
 		
 	}
 	 
-	public void setComments() { // allow the grader to comment the code.
+	public void setComments() { // allow the grader to comment the code and put it into a .txt file.
 		
 	}
 
-	public void setGrade() { // allow the grader to grade the code.
+	public void setGrade() { // allow the grader to grade the code and put it into a .txt file.
 		
 	}
 

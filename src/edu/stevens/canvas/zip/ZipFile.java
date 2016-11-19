@@ -1,64 +1,170 @@
+/* 
+ * Bug Fixed. 
+ * Add the function to generate email text.
+ * Update some methods. 
+ * - 11/15/2016
+ * 
+ * Add sendMail code.
+ * - 11/14/2016
+ * 
+ * Add file extension code.
+ * Add unzip code
+ * - 11/10/2016
+ * 
+ * by: Peiying Cao, Zhaolun Song, Shenwei Chen
+ * 
+ * 11/15/2016
+ */
+
+
+
 package edu.stevens.canvas.zip;
 import java.awt.Desktop;
 import java.net.URI;
-import java.awt.Desktop;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.Scanner;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
+import java.util.zip.*;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+
+// need JavaMail API
+import javax.mail.*;
+import javax.mail.internet.*;
+
 
 
 public class ZipFile {
-	private File hw = null; 
+	/* Please change the hw to your own zip file */
+	private File hw = new File("/Users/Steveisno1/Documents/16-17Fall/EE810Java/"
+			+ "Final Project/ZIPRULE/src/sample files.zip"); 
 	private int stuID = 0;  //get student information
 	private String stuName = null;
 	private String stuEmail = null;
-	public ZipFile() throws Exception {
-		
-    	hw = new File("/Users/duck/Desktop/Midterm.docx");
-		stuEmail = "pcao2@stevens.edu";
+	/* Please change the path to your own file path*/
+	private String inPath = "/Users/Steveisno1/Documents/16-17Fall/EE810Java/"
+			+ "Final Project/ZIPRULE/src/sample files.zip";
+	private String outPath = "/Users/Steveisno1/Documents/16-17Fall/EE810Java/"
+			+ "Final Project/ZIPRULE/src";
 	
-		if(isZip(hw) == false) {
-			sendEmail();
-		}	
+	public ZipFile() throws Exception {
+		/* These information are from other groups...*/
+		stuID = 10404898;
+		stuName = "Shenwei Chen";
+		stuEmail = "schen31@stevens.edu";
+		
+		// uncompress the zip file
+		deCom(inPath, outPath);
+		File zip = hw;
+		String folderName = zip.getName();	// get the folder name
+		int pos = folderName.lastIndexOf(".");
+		if (pos > 0) {
+		    folderName = folderName.substring(0, pos);
+		}
+		String ext = zip.getName();	// get the folder extension
+		pos = ext.lastIndexOf('.');
+		if (pos > 0) {
+		    ext = ext.substring(pos+1);
+		}
+		
+		if(isZip(ext) == false) {
+			System.out.println("This is not a zip file!");
+			String text = "Dear " + stuName + ":\n\nThe file you submitted is not"
+					+ " a zip file!\n\nPlease resubmit it!\nThank you!\n\n";
+			String date = new SimpleDateFormat("MM/dd/yyyy   HH:mm:ss").
+					format(Calendar.getInstance().getTime());
+			text = text + date;
+			sendEmail(text);
+		}
+		else {
+			String folder = outPath + "/" + folderName;
+			getFiles F = new getFiles(folder);
+			F.setAll();
+			F.checkRules();
+			if(F.isTrue == false) {
+				sendEmail(writeEmail(F.wrongFiles));
+			}
+			else {
+				System.out.println("You are good! Nothing wrong with the rules!\n");
+			}
+		}
+		/*System.out.println("Compiling the file...");
 		if(runFile(hw) == false) {
 			warnHw();
-		}
+		}*/
 		
 	}
 	
 	// if homework format wrong, send email to student, let them re-submit
-	private boolean isZip(File f) {
-		return false;
-	}
+	/*public boolean isZip(String ext) {
+		if(ext.equals("zip"))
+			return true;
+		else
+			return false;
+	}*/
 
-	/*send email to student*/
-	public void sendEmail() throws Exception{
-	
-		Desktop d = Desktop.getDesktop();
-		
-		d.mail(new URI("mailto:"+ stuEmail));
-		
+	// generate email text
+	public String writeEmail(List<String> wrong) {
+		String text;
+		text = "Dear " + stuName + ":\n\nYou get the rules wrong for your homework.\n\n"
+				+ "Here are the files that are not allowed:\n";
+		for(int i = 0; i < wrong.size(); i++) {
+			text = text + "\t" + wrong.get(i) + "\n";
+		}
+		text = text + "\nPlease resubmit the homework!\nThank you!\n\nCanvas system\n";
+		String date = new SimpleDateFormat("MM/dd/yyyy   HH:mm:ss").
+				format(Calendar.getInstance().getTime());
+		text = text + date;
+		return text; 
 	}
-	//automatically compile homework
+	
+	/*send email to student*/
+	public void sendEmail(String text) {
+		Properties p = new Properties();
+		p.put("mail.smtp.auth","true");
+		p.put("mail.smtp.port", "587");
+		p.put("mail.smtp.host", "smtp.gmail.com");
+		p.put("mail.smtp.starttls.enable", "true");
+		Session session = Session.getInstance(p,
+		         new javax.mail.Authenticator() {
+		            protected PasswordAuthentication getPasswordAuthentication() {
+		               return new PasswordAuthentication(
+		                  "mycanvasmanager@gmail.com", "donttellothers");
+		            }
+		         });
+		
+		// Session session = Session.getDefaultInstance(p);
+		
+		try {
+			System.out.println("Sending email, please wait...");
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress("mycanvasmanager@gmail.com"));
+			message.setRecipients(Message.RecipientType.TO,	
+					InternetAddress.parse("schen31@stevens.edu"));
+			message.setSubject("Testing Subject");
+			message.setText(text);
+
+			Transport.send(message);
+
+			System.out.println("Email has been sent successfully!\n");
+		} catch (MessagingException e) {
+			throw new RuntimeException(e);
+		}
+	
+	}
+	/*//automatically compile homework
 	public boolean runFile(File f) {
 		return false;
 	}
 	// send warning to student
 	public void warnHw() {
-		System.out.println("Warn HW");
-	}
+		System.out.println("Warning! This homework can't be compiled!");
+	}*/
 	
 	//zip file decompression
 	//problem about this part: cannot see file after decompression
-	private static void deCom(String inPath, String outPath) {
+	
+	//Do we need to add a [Buffer_Size] here?
+	public void deCom(String inPath, String outPath) {
 		try {
 			ZipInputStream zipInput = new ZipInputStream(new FileInputStream(inPath));
 			BufferedInputStream bufInput = new BufferedInputStream(zipInput);
@@ -66,25 +172,28 @@ public class ZipFile {
 			File outFile = null;
 			FileOutputStream fileOut = null;
 			ZipEntry zipEntry = null;
-		
+			int re = 0; //
 			try {
+				System.out.println("Unziping...");
 				while ((zipEntry = zipInput.getNextEntry()) != null) {
-						if (zipEntry.isDirectory()) 
-							continue;
+						if (zipEntry.isDirectory()) {
+							
+						} else {
 						outFile = new File(outPath, zipEntry.getName());
 						if (!outFile.exists()) 
 				/*??*/		(new File(outFile.getParent())).mkdirs();
 						fileOut = new FileOutputStream(outFile);
 						bufOutput = new BufferedOutputStream(fileOut);
-						int r = bufInput.read();
-						while (r != -1) 
-							bufOutput.write(r);
-						
-					fileOut.close();
-					bufOutput.close();
+						while ((re= bufInput.read()) != -1) 
+							bufOutput.write(re);
+						bufOutput.close();
+						}		
 				}
+				System.out.println("Done!\n");
+				fileOut.close();
 				zipInput.close();
 				bufInput.close();
+				
 			} catch (Exception e){
 				e.printStackTrace();
 			}
@@ -92,8 +201,7 @@ public class ZipFile {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	
 	/*file rule: only include .java file, .cpp file, .py file*/
 	static class otherGroup {
@@ -115,7 +223,8 @@ public class ZipFile {
 		private List<String> fileNames;
 		private List<String> filePath;
 		private List<String> extension;
-		
+		public List<String> wrongFiles = new ArrayList<String>();
+		boolean isTrue = true;
 		// get folder
 		public getFiles(String directory) {
 			this.folder = new File(directory);
@@ -187,31 +296,26 @@ public class ZipFile {
 		
 		// check the extension with the rules
 		public void checkRules() {
+			System.out.println("Checking the file rules...");
+			int count = 0;
 			for(int i = 0; i < extension.size(); i++) {
-				//System.out.println(rules.contains(extension.get(i)));
 				if(rules.contains(extension.get(i)) == false) {
-					System.out.println("YOU GET THE WRONG RULES!");
-					System.out.println("\"" + fileNames.get(i) + "\"" + " is not allowed!");
+					isTrue = false;
+					if(count == 0) {
+						System.out.println("You get the wrong rules!");
+						count++;
+					}
+					System.out.println("\"" + fileNames.get(i) + "\"" 
+							+ " is not allowed!");
+					wrongFiles.add(fileNames.get(i));
 				}
 			}
+			System.out.println();
 		}
 	}
 	
 	
 	public static void main(String[] agrs) throws Exception {
-		new ZipFile();
-		
-		// change the directory here...
-		String folder = "data/samples";
-		getFiles f = new getFiles(folder);//?????
-		f.setAll();
-		/*for (int i = 0; i < f.getName().size(); i++) {
-		    System.out.println(f.getName().get(i));
-		}
-		for (int i = 0; i < f.getPath().size(); i++) {
-		    System.out.println(f.getPath().get(i));
-		    System.out.println(f.getExtension().get(i));
-		}*/
-		f.checkRules();
+		ZipFile Z = new ZipFile();
 	}
 }
