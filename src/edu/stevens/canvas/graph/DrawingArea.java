@@ -22,7 +22,7 @@ public class DrawingArea extends JPanel {
 	private ArrayList<Double> grade;
 	private int m = 20;
 	private double full = 100;
-	private String graphChoosen = "bar";
+	private String graphChoosen = "pie";
 	private double width, height;
 	
 	public DrawingArea(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen) {
@@ -121,8 +121,8 @@ public class DrawingArea extends JPanel {
 		shapes = new ArrayList<Shape>();
 		
 		double r = Math.min(width, height) / 2;
-		int startX = (int) (width / 2 - r / 2);
-		int startY = (int) (height / 2 - r / 2);
+		double startX = width / 3 - r / 2;
+		double startY = height / 2 - r / 2;
 		
 		// get the sum number of the grade group
 		double sum = 0;
@@ -148,12 +148,22 @@ public class DrawingArea extends JPanel {
 				double dy = rsin / 2 - rsin / 1.8;
 				
 				shapes.add(new Arc(startX + dx, startY + dy, r, r, startAngle, angle, color[j % 5]));
-				
-				int pct = (int) (num.get(i) / sum * 10000);
 				shapes.add(new Str(startX + r/2 + x, startY + r/2 + y, (j + 1) + ""));
 				
 				startAngle += angle;
 				j++;
+			}
+		}
+		
+		String s = "): ";
+		for (int i = 0, k = 0; i < num.size(); i++) {
+			if (num.get(i) != 0) {
+				int pct = (int) (num.get(i) * 10000 / sum);
+				if (k + 1 == j) {
+					s = "]: ";
+				}
+				shapes.add(new Str(width * 0.7, height / (j + 1) * (k + 1), "[" + (k + 1) + "] [" + i * full / m + ", " +  (i + 1) * full / m + s + (double)pct / 100 + "%"));
+				k++;
 			}
 		}
 		
