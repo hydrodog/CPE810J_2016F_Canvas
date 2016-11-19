@@ -3,6 +3,7 @@
 * In this week, our team complete the methods in this class in different files and then merge them together. 
 */
 package edu.stevens.canvas.automaticHW;
+
 abstract class Code {
 	private double score;
 	private String path;
