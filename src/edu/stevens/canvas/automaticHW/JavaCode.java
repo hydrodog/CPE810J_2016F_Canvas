@@ -3,6 +3,7 @@
 * Description: This file contain a child class of abstract code class, we split our project into 3 different parts
 * 		and then merge them together.
 */
+package edu.stevens.canvas.automaticHW;
 import java.io.*;
 import java.util.*;
 /*
