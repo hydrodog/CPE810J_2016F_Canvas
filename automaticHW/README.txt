@@ -9,3 +9,7 @@ The setGrade() and setComments() method, set the grade and comments for the part
 The update() method is to generate two files: one is comments.txt and another is grade.txt. Please remind the grade.txt is in String format.
 
 We are trying to solve the problem of getting the path of the source code file with the unzip team...
+
+-------------------------------------------------
+
+In week 3, we try to add the GUI for this part of code.
