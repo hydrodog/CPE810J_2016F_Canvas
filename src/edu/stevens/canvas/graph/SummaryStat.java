@@ -1,11 +1,9 @@
-
 /**
  * Write a description of s here.
  * simple statistics
  * @author: Tao Feng
  * @Code Maintaninence:Zemin Wang, Lan Chang
  */
-
 import java.util.*;
 
 public class SummaryStat {
@@ -43,10 +41,7 @@ public class SummaryStat {
         return list.get((list.size()-1)/2);
         }
     }
-    
-    
-    
-//coduld have multiple modes
+
     public static ArrayList<Integer> mode(final ArrayList<Integer> list) {
         final ArrayList<Integer> modes = new ArrayList<Integer>();
         final Map<Integer, Integer> countMap = new HashMap<Integer, Integer>();
@@ -82,16 +77,20 @@ public class SummaryStat {
 
 
     public static double variance(ArrayList<Integer> list) {
-        double sumMinusAverage = sum(list) - average(list);
-
-        return sumMinusAverage * sumMinusAverage / (list.size()-1);
-    }
+        double var=0;
+        for(int i=0;i<list.size();i++){
+            var +=(list.get(i)-average(list))*(list.get(i)-average(list));
+        }
+        return var/ (list.size());
+        }
 
     public static double StdDev(ArrayList<Integer> list) {
-        double sumMinusAverage = sum(list) - average(list);
-
-        return Math.sqrt(sumMinusAverage * sumMinusAverage / (list.size()-1));
-    }
+        double var=0;
+        for(int i=0;i<list.size();i++){
+            var +=(list.get(i)-average(list))*(list.get(i)-average(list));
+        }
+        return Math.sqrt(var/ (list.size()));
+        }
 
     public static double max(ArrayList<Integer> list) {
         int max = Integer.MIN_VALUE;
