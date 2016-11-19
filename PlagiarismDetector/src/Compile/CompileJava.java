@@ -8,8 +8,11 @@ import java.lang.reflect.Method;
 public class CompileJava implements Compile{
 	private Reader r;
 	private String initialString;
-	CompileJava(File sourceFile) throws Exception{
-		r = new Reader(sourceFile,"java");
+	private String sourceFileName;
+	
+	CompileJava(String sourceFileName) throws Exception{
+		this.sourceFileName = sourceFileName;
+		r = new Reader(new File(sourceFileName),"java");
 		initialString = r.getString();
 	}
 	
@@ -30,7 +33,7 @@ public class CompileJava implements Compile{
 				+";",
 				"-encoding",
 				"utf-8",
-				filePath + "\\" + fileName +".java"
+				"\\" + fileName +".java"
 		};
 		
 		int status = javac.compile(args);
