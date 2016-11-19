@@ -12,4 +12,18 @@ We are trying to solve the problem of getting the path of the source code file w
 
 -------------------------------------------------
 
-In week 3, we try to add the GUI for this part of code.
+In week 3, we try to add the GUI for this part of code. (Haven't finished yet!!)
+
+And it can be split into parts:
+
+	  1. Display Area: display the code;
+    
+	  2. Run Button: for grader to test the code;
+    
+	  3. Result Display: display the result;
+    
+	  4. Grade Area: input the score and generate a grade file;
+    
+	  5. Comment Area: text the comments and generate a comment file;
+
+----------------------------------------------------
