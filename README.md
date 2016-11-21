@@ -29,3 +29,17 @@ Create Drawing_GUI window, generate the histogram graph using assumed data;
 Create SummaryStat class to show the simple statistics using assumed data.
 
 -- Tao Feng
+
+# WEEK 3
+
+Change Button into RadioButton;
+
+-- Zeming Wang
+
+Generate the pie graph and distribution graph, create GradeGroup class to read the grade file;
+
+-- Lan Chang
+
+Fix the bug in SummaryStat class.
+
+-- Tao Feng
