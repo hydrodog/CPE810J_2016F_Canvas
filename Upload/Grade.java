@@ -31,6 +31,7 @@ public class Grade {// The information we need to identify a course and a studen
     private String studentId;
     private static String targetURL;
     private String token;
+    private String comment;
     private double grade;
         // Methods used to get and set the required information
 	public String getAssignmentId() {
@@ -57,13 +58,14 @@ public class Grade {// The information we need to identify a course and a studen
 	public static void setTargetURL(String targetURL) {
 		Grade.targetURL = targetURL;
 	}
-	public Grade(String courseId,String assignmentId,String studentId,String token,double grade) {
+	public Grade(String courseId,String assignmentId,String studentId,String token,double grade,String comment) {
 		this.grade = grade;
 		this.courseId=courseId;
     	this.assignmentId=assignmentId;
     	this.studentId=studentId;
     	this.token=token;
     	this.grade=grade;
+    	this.comment=comment;
 	}
 	// Upload the grade to Canvas
 	public void updateGrade(){
@@ -74,7 +76,7 @@ public class Grade {// The information we need to identify a course and a studen
     			+ "?access_token="
     			+ this.token
     			+ "&grade_data["+this.studentId+"]"+"[posted_grade]="+this.grade
-    			+ "&grade_data["+this.studentId+"]"+"[text_comment]=Testing!";
+    			+ "&grade_data["+this.studentId+"]"+"[text_comment]="+this.comment;
     	// How to realize the function
 	try {
 
@@ -118,8 +120,9 @@ public class Grade {// The information we need to identify a course and a studen
 	    String courseId="10300000000000133";
 	    String assignmentId="10300000000046026";
 	    String userId="10300000000022347";
-	    String token="1030~BxcmBG0xRZw720NNodMrxAH9FIA7HlH9T48yi0I5SDLqzJc4tmoMsWiSS9tMx36S";
-	    Grade test = new Grade(courseId,assignmentId,userId,token,10);
+	    String token="1030~otki4cHfzAaABucqiiXd3MyqTcIppLIdxeX5mOV8qQzVURff4wxgwzVwZ0eiPoNQ";
+	    String comment="goodjob";
+	    Grade test = new Grade(courseId,assignmentId,userId,token,10,comment);
 	    //test.printurl();
 	    test.updateGrade();
 	    
