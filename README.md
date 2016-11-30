@@ -32,7 +32,7 @@ Create SummaryStat class to show the simple statistics using assumed data.
 
 # WEEK 3
 
-Change Button into RadioButton;
+Change buttons to radio buttons, reallocate the GUI, add read function;
 
 -- Zeming Wang
 
