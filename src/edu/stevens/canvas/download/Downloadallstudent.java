@@ -1,10 +1,4 @@
-/**
- *  @author: Yang Zhang. Gaojian Chen  
- * 
- *  
- */
-package edu.stevens.canvas.download;
-
+package Download;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,14 +53,34 @@ public class Downloadallstudent {
 					System.out.println(output);
 					StringBuffer aa=new StringBuffer();
 					String s=null;
+					String ss=null;
+					String []s1=new String[8];
+					ArrayList<String> l=new ArrayList<String>();
 					String regex = "(\"id\":+\\d+)|(\"name\":\"(.*?)\")|(\"sis_user_id\":\"(.*?)\")|(\"login_id\":\"(.*?)\")";
 					Pattern p2=Pattern.compile(regex);
 		  			Matcher m2=p2.matcher(output);	
 		  			while(m2.find()){
-		  				s=m2.group();	  				
-		  				aa.append(s);		  				
+		  				s=m2.group(0);	  				
+		  				//aa.append(s);	  	
+		  				l.add(s);
 		  			}		  			
-		  			System.out.println(aa);
+		  			//System.out.println(l);
+//		  			String regex1="(edu\")";
+		  			for(int i=0;i<l.size();i++){
+		  				System.out.println(l.get(i));
+		  			}
+//		  			String str=aa.toString();
+//		  			String regex1="(edu\")";
+//		  			String str1[]=str.split(regex1);
+//		  			for(int i=0;i<=str1.length;i++){
+//		  				System.out.println(str1[i]);
+//		  			}
+//		  			Pattern p3=Pattern.compile(regex1);
+//		  			Matcher m3=p3.matcher(aa);	
+//		  			while(m3.find()){
+//		  				s1=m3.group();
+//		  			}
+		  			
 				}
 
 				httpConnection.disconnect();
@@ -87,7 +103,7 @@ public class Downloadallstudent {
 
 	        public static void main(String[] args){//a test example
 	     	    String courseId="10300000000000133";
-	     	    String token=“YOUR-TOKEN”;
+	     	    String token="1030~58i17teqWRMLjLmJpttFxob4dlX1Yw5JPNxXkZyMOJgGD5oRAHZhssBGr5gDOYsY";
 	     	    Downloadallstudent test = new Downloadallstudent(courseId,token);
 	     	    test.printurl();
 	     	    test.get();
