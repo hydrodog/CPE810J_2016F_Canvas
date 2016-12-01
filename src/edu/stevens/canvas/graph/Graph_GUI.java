@@ -3,6 +3,8 @@ package edu.stevens.canvas.graph;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.Scanner;
+
 import javax.swing.*;
 
 /**
@@ -18,12 +20,14 @@ including buttons to choose the mode, type of graph
  Which means we cannot directly know which assignment is quiz or test or project.
  * Talk with the download group, know that data is store in .txt file
  Add read function to this class
+ 11¡£19~12.2£º
+ See that there should be pie chart and bar chart, add these two buttons and actionlisteners.
 */
 
 public class Graph_GUI extends JFrame implements ActionListener{
 	//private elements here
 	private JTextField inputText;
-	private final String[] graphTypeName= {"Histogram","Distrubution"};//add more here	
+	private final String[] graphTypeName= {"Histogram","Distrubution","Bar","Pie"};//add more here	
 	private JRadioButton[] graphTypeRButton= new JRadioButton[graphTypeName.length];
 	private final String[] studentTypeName= {"Single Student","All Student"};
 	private JRadioButton[] studentTypeButton= new JRadioButton[studentTypeName.length];
@@ -31,6 +35,7 @@ public class Graph_GUI extends JFrame implements ActionListener{
 	private JRadioButton[] assignmentNumButton= new JRadioButton[assignmentNumName.length];
 	private final String[] assignmentTypeName= {"Quiz","Test","Project","Assignment","All"};
 	private JRadioButton[] assignmentTypeButton= new JRadioButton[assignmentTypeName.length];
+	private JButton mkSure = new JButton("Done");
 	//This is used to choose the data range, is it going to draw a graph for a student or all student?
 	//And is the target data include just once assignment, all assignment
 	//or one certain type of assignment?(all test or all quiz)
@@ -41,7 +46,9 @@ public class Graph_GUI extends JFrame implements ActionListener{
 	private File file;
 	private JMenuItem openFile,saveFile,exit;
 	private FileDialog openDia,saveDia;
-	private boolean allStudent=false,allAssignment=false,isHistogram=false,isDistribution=false;
+	private boolean allStudent=false,allAssignment=false,isHistogram=false,isDistribution=false,isBar=false,isPie=false,hasInput=false;
+	//Somehow I feel the method of giving eacg option a global bool var is stupid, do we have a better solution?
+	
 	private String assignmentTypeChoosen;
 	//default is for one assignment for a single student
 
@@ -65,7 +72,10 @@ public class Graph_GUI extends JFrame implements ActionListener{
         JPanel commandPanel1 = new JPanel();
         commandPanel1.setLayout(new GridLayout(3, 3, 3, 3));
         ButtonGroup studentTypeGroup= new ButtonGroup();
+        
         //Add a Panel to hold the button
+        mkSure.addActionListener(this);
+        
         for (int i = 0; i < studentTypeName.length; i++) {
         	studentTypeButton[i] = new JRadioButton(studentTypeName[i]);
         	commandPanel1.add(studentTypeButton[i]);
@@ -77,6 +87,7 @@ public class Graph_GUI extends JFrame implements ActionListener{
         commandPanel2.setLayout(new GridLayout(4, 4, 3, 3));
         ButtonGroup graphTypeGroup= new ButtonGroup();
 
+        //Just repeating what we done above
         for (int i = 0; i < graphTypeName.length; i++) {
         	graphTypeRButton[i] = new JRadioButton(graphTypeName[i]);
         	commandPanel2.add(graphTypeRButton[i]);
@@ -107,19 +118,22 @@ public class Graph_GUI extends JFrame implements ActionListener{
         	assignmentTypeButton[i].addActionListener(this);
         }
         
+        //Now add these components to the windows
 		Container c= this.getContentPane();
         JPanel top = new JPanel();
         top.setLayout(new BorderLayout());
         top.add("Center", outputText);
         JPanel right = new JPanel();
         right.setLayout(new BorderLayout());
-        right.add("North", commandPanel2);
+        right.add("Center", commandPanel2);
         right.add("West", commandPanel1);
         right.add("East", commandPanel3);
-        right.add("South", commandPanel4);
-        c.setLayout(new GridLayout(1,8, 2, 2));
+        right.add("North", commandPanel4);
+        right.add("South", mkSure);
+        c.setLayout(new GridLayout(1,9, 2, 2));
         c.add(top, "WEST");
         c.add(right,"EAST");
+        
     }
 	
 	class MenuListener implements ActionListener{
@@ -150,6 +164,8 @@ public class Graph_GUI extends JFrame implements ActionListener{
 						while( (line = bufr.readLine())!= null)
 						{
 							//to do: where should we put these input text?
+							//Now we know that the input data will be store in .txt
+							//But what's the format, and will there be any available data that is sorted by other group?
 						}
 						bufr.close();
 				}
@@ -194,9 +210,25 @@ public class Graph_GUI extends JFrame implements ActionListener{
         if (label.equals(graphTypeName[0])) {//Histogram
         	isHistogram=true;
         	isDistribution=false;
+        	isBar=false;
+        	isPie=false;
         } else if (label.equals(graphTypeName[1])) {//Distribution
         	isDistribution=true;
         	isHistogram=false;
+        	isBar=false;
+        	isPie=false;
+        }
+        else if (label.equals(graphTypeName[2])) {//Barchart
+        	isDistribution=false;
+        	isHistogram=false;
+        	isBar=true;
+        	isPie=false;
+        }
+        else if (label.equals(graphTypeName[3])) {//Piechart
+        	isDistribution=false;
+        	isHistogram=false;
+        	isBar=false;
+        	isPie=true;
         }
         
         if (label.equals(assignmentNumName[0])) {//one assignment
@@ -218,6 +250,15 @@ public class Graph_GUI extends JFrame implements ActionListener{
         //Should we make it multiple choices?
         else{//default and All
         	assignmentTypeChoosen="All";
+        }
+        
+        if (label.equals("Done")) {//Execute now
+        	/*
+        	 * Check all above bool vars, and determine which drawing function to called
+        	 * Before calling drawing function, we should also calling corresponding math method to deal with data
+        	 * Also, we need to fetch data from somewhere
+        	 */
+//System.out.println("Draw the diagram");//This is for test
         }
 	}
 	//React to the operations, like press buttons
@@ -246,13 +287,25 @@ public class Graph_GUI extends JFrame implements ActionListener{
 	//Setup the MenuBar and Menu
 	
     private String getNameFromText() {
-    	String rusult=null;
+    	String result=null;
     	//to do, if specific name of student or assignment given, directly output
-		return rusult;//To get the input text,
+    	//Do we really need this function? maybe it can help to search some student or some assignment
+    	//But it would be a problem to determine whether the name given is for student or assignment.
+    	result = inputText.getText();
+		if(result.equals("")){
+			hasInput=false;
+			return null;//nothing is input
+		}
+					
+		if(result != null){
+			hasInput=true;
+			// to do
+		}
+		return result;//To get the input text,
     }
-	
+	/* // This part is for testing this GUI
     public static void main(String args[]) {
         Graph_GUI c1 = new Graph_GUI();
         c1.setVisible(true);
-    }
+    }*/
 }
