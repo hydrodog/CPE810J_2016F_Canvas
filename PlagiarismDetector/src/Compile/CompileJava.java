@@ -3,39 +3,37 @@ package Compile;
 import java.util.*;
 import java.io.*;
 import java.lang.reflect.Method;
+import sun.tools.java.MethodType;
 
 
-public class CompileJava implements Compile{
+public class CompileJava implements CompileString{
 	private Reader r;
 	private String initialString;
-	private String sourceFileName;
+	private String sourceCode;
 	
-	CompileJava(String sourceFileName) throws Exception{
-		this.sourceFileName = sourceFileName;
-		r = new Reader(new File(sourceFileName),"java");
-		initialString = r.getString();
+	CompileJava(String sourceFile){
+		this.sourceCode = sourceCode;	
 	}
 	
 	@Override
 	public void compileSourceCode() throws Exception{
 		// TODO Auto-generated method stub
-		String className =" ";
+		String className = "Test";
 		String path = "bin";
-		createTempFile(className);
-		
+		@SuppressWarnings("restriction")
 		com.sun.tools.javac.Main javac = new com.sun.tools.javac.Main();
+		
 		String[] args = new String[]{
 				"-d",
 				path,
 				"-classpath",
-				"%classpath%;"
-				+path
-				+";",
+				"%classpath%;" + path + ";",
 				"-encoding",
 				"utf-8",
-				"\\" + fileName +".java"
+				".java"
 		};
 		
+		@SuppressWarnings("restriction")
 		int status = javac.compile(args);
 		if(status != 0){
 			System.out.println(sourceFile + ""have not compile sucessfully!);
@@ -43,7 +41,7 @@ public class CompileJava implements Compile{
 			try{
 				Class cls = Class.forName(className);
 				Method main = cls.getMethod("t", new Class[]{String[].class});
-				main.invoke(null, new Object[] {String[0]});
+				main.invoke(null, new Object[] {new String[0]});
 				
 			}catch (SecurityException se){}
 		}

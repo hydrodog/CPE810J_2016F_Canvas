@@ -19,4 +19,8 @@ public class Reader {
 	public String getString(){
 		return s.toString();
 	}
+	
+	public String getType(){
+		return type;
+	}
 }
