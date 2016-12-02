@@ -8,6 +8,9 @@ import java.util.regex.Pattern;
 
 import javax.swing.*;
 import javax.swing.filechooser.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 class file {
 	String filename;
@@ -26,20 +29,96 @@ class file {
 		this.fileext = "";
 		this.filename = "";
 	}
+	public String toString() {
+		if(filename.equals("") == true && fileext.equals("") == true) {
+			return "*.~";
+		}
+		if(filename.equals("") == true && fileext.equals("") == false) {
+			return "*." + fileext;
+		}
+		if(filename.equals("") == false && fileext.equals("") == true) {
+			return filename + ".~";
+		}
+		else {
+			return filename + "." + fileext;
+		}
+	}
 }
 
+
 public class ruleGUI extends JFrame {
-	private JLabel stuID, stuName, stuEmail, hwName, title, musthave, mustnot;
-	private JTextField must_t, mustnot_t;
+	private JLabel stuID, stuName, stuEmail, hwName, title, musthave, mustnot, directory;
+	private JTextField must_t, mustnot_t, directories;
 	private JTextArea process;
-	private JButton ok, reset, set;
+	private JButton ok, reset, setR, setD, back;
 	private JTextArea t;
 	private JScrollPane sp;
+	private JList dir;
+	private JTree tree;
+	private String direct = "Current directory: /";
 	final static boolean shouldFill = true;
     final static boolean shouldWeightX = true;
     final static boolean RIGHT_TO_LEFT = false;
+    private void createNodes(DefaultMutableTreeNode top) {
+        DefaultMutableTreeNode category = null;
+        DefaultMutableTreeNode f = null;
+        f = new DefaultMutableTreeNode(new file
+                ("",
+                ""));
+        top.add(f);
+ /*
+        category = new DefaultMutableTreeNode("src");
+        top.add(category);
+ 
+        //original Tutorial
+        f = new DefaultMutableTreeNode(new file
+            ("main",
+            "cpp"));
+        category.add(f);
+ 
+        //Tutorial Continued
+        f = new DefaultMutableTreeNode(new file
+            ("zip",
+            "java"));
+        category.add(f);*/
+    }
+    DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("root");
+    DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
+    public DefaultMutableTreeNode addObject(Object child) {
+        DefaultMutableTreeNode parentNode = null;
+        TreePath parentPath = tree.getSelectionPath();
+
+        if (parentPath == null) {
+            //There is no selection. Default to the root node.
+            parentNode = rootNode;
+        } else {
+            parentNode = (DefaultMutableTreeNode)
+                         (parentPath.getLastPathComponent());
+        }
+
+        return addObject(parentNode, child, true);
+    }
+    
+    public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent,
+                                            Object child,
+                                            boolean shouldBeVisible) {
+        DefaultMutableTreeNode childNode =
+                new DefaultMutableTreeNode(child);
+        
+        treeModel.insertNodeInto(childNode, parent,
+                                 parent.getChildCount());
+
+        //Make sure the user can see the lovely new node.
+        if (shouldBeVisible) {
+            tree.scrollPathToVisible(new TreePath(childNode.getPath()));
+        }
+        return childNode;
+    }
+
+    
 	public ruleGUI(String s) throws Exception {
 		super(s);
+		ZipFile Z = new ZipFile();
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
@@ -52,8 +131,48 @@ public class ruleGUI extends JFrame {
 		hwName = new JLabel("Homework: " + "example homework", SwingConstants.CENTER);
 		musthave = new JLabel("Must have: ");
 		mustnot = new JLabel("Must not have: ");
+		directory = new JLabel(direct, SwingConstants.CENTER);
 		must_t = new JTextField();
 		mustnot_t = new JTextField();
+		directories = new JTextField();
+		setD = new JButton("add new directory");
+		
+		
+		dir = new JList();
+		
+		String folderName = Z.hw.getName();	// get the folder name
+		int pos = folderName.lastIndexOf(".");
+		if (pos > 0) {
+		    folderName = folderName.substring(0, pos);
+		}
+		DefaultMutableTreeNode top =
+		        new DefaultMutableTreeNode(folderName);
+		rootNode = top;
+		treeModel = new DefaultTreeModel(rootNode);
+		createNodes(rootNode);
+		tree = new JTree(rootNode);
+		setD.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				String D = directories.getText();
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+	                       tree.getLastSelectedPathComponent();
+				//System.out.println(node);
+				//if(node.isLeaf() == false) {
+					DefaultMutableTreeNode category = null;
+					DefaultMutableTreeNode f = null;
+			        category = new DefaultMutableTreeNode(D);
+					node.add(category);
+					f = new DefaultMutableTreeNode(new file
+			                ("",
+			                ""));
+			        category.add(f);
+			        addObject(category);
+			        
+				//}
+			}
+		});
+		DefaultListModel listModel = new DefaultListModel();
+		listModel.addElement("root");
 		process = new JTextArea();
 		process.setEditable(false);
 		sp = new JScrollPane(process);
@@ -62,9 +181,9 @@ public class ruleGUI extends JFrame {
 		sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		ok = new JButton("OK");
 		reset = new JButton("RESET");
-		set = new JButton("SET");
+		setR = new JButton("SET");
 		
-		set.addActionListener(new ActionListener(){
+		setR.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				// ...
 				String s1 = must_t.getText();
@@ -118,8 +237,13 @@ public class ruleGUI extends JFrame {
 				//otherGroup other = new otherGroup();
 				
 				try {
-					ZipFile Z = new ZipFile();
+					
 					getFiles G = new getFiles(Z);
+					String newDirect = G.folder.getName();
+					int pos = newDirect.lastIndexOf(".");
+					if (pos > 0) {
+					    newDirect = newDirect.substring(0, pos);
+					}
 					for(int i = 0; i < have.size(); i++) {
 						G.other.rules.add(have.get(i));
 					}
@@ -176,6 +300,11 @@ public class ruleGUI extends JFrame {
 		c.gridy = 2;
 		pane2.add(stuEmail, c);
 		
+		/*c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 1;
+		pane1.add(directory);
+		*/
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.gridwidth = 3;
@@ -186,31 +315,62 @@ public class ruleGUI extends JFrame {
 		pane1.add(pane2, c);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 2;
+		pane1.add(directory, c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 3;
+		c.ipady = 100;
+		pane1.add(tree, c);
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		//c.gridwidth = 3;
+		c.gridx = 1;
+		c.gridy = 0;
+		c.ipadx = 400;
+		c.ipady = 10;
+		pane3.add(directories, c);
+		c = new GridBagConstraints();
+		//c.fill = GridBagConstraints.HORIZONTAL;
 		//c.gridwidth = 3;
 		c.gridx = 0;
 		c.gridy = 0;
+		c.ipadx = 10;
+		c.ipady = 10;
+		pane3.add(setD, c);
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		//c.gridwidth = 3;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.ipady = 10;
 		pane3.add(musthave, c);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.gridwidth = 3;
 		c.gridx = 1;
-		c.gridy = 0;
+		c.gridy = 1;
+		c.ipady = 10;
 		pane3.add(must_t, c);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.gridwidth = 3;
 		c.gridx = 0;
-		c.gridy = 1;
+		c.gridy = 2;
+		c.ipady = 10;
 		pane3.add(mustnot, c);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.gridwidth = 3;
 		c.gridx = 1;
-		c.gridy = 1;
+		c.gridy = 2;
+		c.ipady = 10;
 		pane3.add(mustnot_t, c);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.gridwidth = 3;
 		c.ipady = 40;      //make this component tall
 		c.gridx = 0;
-		c.gridy = 2;
+		c.gridy = 4;
 		pane1.add(pane3, c);
 		
 		//c.fill = GridBagConstraints.HORIZONTAL;
@@ -219,7 +379,7 @@ public class ruleGUI extends JFrame {
 		c.gridy = 0;
 		c.ipadx = 10;
 		c.ipady = 10;
-		pane4.add(set, c);
+		pane4.add(setR, c);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
@@ -234,19 +394,19 @@ public class ruleGUI extends JFrame {
 		//c.ipady = 40;      //make this component tall
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 3;
+		c.gridy = 5;
 		c.ipady = 10;
 		pane1.add(pane4, c);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
-		c.gridy = 4;
+		c.gridy = 6;
 		c.ipady = 100;
 		pane1.add(sp, c);
 		
 		
 		getContentPane().add(pane1);
-		setSize(600,400);
+		setSize(800,600);
 		setLocationRelativeTo(null); 
 		setVisible(true);
 	}
@@ -285,6 +445,9 @@ public class ruleGUI extends JFrame {
 				}
 			}
 		}
+		
+		
+		
 	}
 	
 	
