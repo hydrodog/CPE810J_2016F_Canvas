@@ -19,7 +19,7 @@ public class DynamicCompileTest {
         out.println("package Compile;");
         out.println("public class Hello{");
         out.println("public static void main(String[] args){");
-        out.println("System.out.println(\"helloworld!\");");
+        out.println("System.out.println(\"Hi HelloWorld!!\");");
         out.println("}");
         out.println("}");
         out.flush();
@@ -29,9 +29,9 @@ public class DynamicCompileTest {
         CompilationTask task = javaCompiler.getTask(null, null, null, Arrays.asList("-d","./bin"),null,Arrays.asList(fileObject));
         boolean success = task.call();
         if(! success){
-        	System.out.println("Sucess!");
-        }else{
         	System.out.println("Fail!");
+        }else{
+        	System.out.println("Sucess!");
         	URL[] urls = new URL[]{new URL("file:/"+"./bin")};
             URLClassLoader classLoader = new URLClassLoader(urls);
             Class class1 = classLoader.loadClass("Compile.Hello");
