@@ -4,22 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-/**
- * class to display the drawing GUI
- * @author Lan Chang
- *
- */
 
 public class Drawing_GUI extends JFrame {
-	private boolean allStudent;
-	private boolean allAssignment;
-	private String assignmentTypeChoosen;
-	
-	public Drawing_GUI(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen) {
-		this.allStudent = allStudent;
-		this.allAssignment = allAssignment;
-		this.assignmentTypeChoosen = assignmentTypeChoosen;
-		
+	public Drawing_GUI(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen, String chartTypeChoosen, double fullScore, int m) {
 		this.setTitle("Drawing GUI");
 		this.setSize(1500, 1000);
 		Container c = getContentPane();
@@ -29,7 +16,7 @@ public class Drawing_GUI extends JFrame {
 		title.setHorizontalAlignment(SwingConstants.CENTER);
 		c.add(title, BorderLayout.NORTH);
 		
-		DrawingArea d = new DrawingArea(allStudent, allAssignment, assignmentTypeChoosen);
+		DrawingArea d = new DrawingArea(allStudent, allAssignment, assignmentTypeChoosen, chartTypeChoosen, fullScore, m);
 		c.add(d, BorderLayout.CENTER);
 		
 		addWindowListener(new WindowAdapter() {
@@ -42,6 +29,6 @@ public class Drawing_GUI extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		new Drawing_GUI(true, false, "assignment1");
+		new Drawing_GUI(true, false, "assignment1", "pie", 100, 20);
 	}
 }
