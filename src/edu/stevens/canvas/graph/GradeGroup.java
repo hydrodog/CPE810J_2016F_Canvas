@@ -16,13 +16,15 @@ public class GradeGroup {
 	private static String assignmentTypeChoosen;
 	private static ArrayList<Double> grade;
 	private static ArrayList<Integer> num;
-	private int m = 20;
-	private double full = 100;
+	private int m;
+	private double fullScore;
 	
-	public GradeGroup(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen) {
+	public GradeGroup(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen, double fullScore, int m) {
 		this.allStudent = allStudent;
 		this.allAssignment = allAssignment;
 		this.assignmentTypeChoosen = assignmentTypeChoosen;
+		this.m = m;
+		this.fullScore = fullScore;
 		
 		File file = new File("grade");
 		fileList = file.listFiles();
@@ -62,8 +64,8 @@ public class GradeGroup {
 			num.add(0);
 		}
 		for (int i = 0; i < grade.size(); i++) {
-			if (grade.get(i) != full) {
-				num.set((int) (grade.get(i) / (full / m)), num.get((int) (grade.get(i) / (full / m))) + 1);
+			if (grade.get(i) != fullScore) {
+				num.set((int) (grade.get(i) / (fullScore / m)), num.get((int) (grade.get(i) / (fullScore / m))) + 1);
 			}
 			else {
 				num.set(m - 1, num.get(m - 1) + 1);
