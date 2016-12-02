@@ -1,10 +1,12 @@
 package edu.stevens.canvas.graph;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import java.util.*;
 
 /**
@@ -14,23 +16,19 @@ import java.util.*;
  */
 
 public class DrawingArea extends JPanel {
-	private boolean allStudent;
-	private boolean allAssignment;
-	private String assignmentTypeChoosen;
 	private ArrayList<Shape> shapes;
 	private ArrayList<Integer> num;
 	private ArrayList<Double> grade;
-	private int m = 20;
-	private double full = 100;
-	private String graphChoosen = "pie";
+	private int m;
+	private double fullScore;
+	private String chartTypeChoosen;
 	private double width, height;
 	
-	public DrawingArea(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen) {
-		this.allStudent = allStudent;
-		this.allAssignment = allAssignment;
-		this.assignmentTypeChoosen = assignmentTypeChoosen;
-		
-		GradeGroup grade_group = new GradeGroup(allStudent, allAssignment, assignmentTypeChoosen);
+	public DrawingArea(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen, String chartTypeChoosen, double fullScore, int m) {
+		this.chartTypeChoosen = chartTypeChoosen;
+		this.m = m;
+		this.fullScore = fullScore;
+		GradeGroup grade_group = new GradeGroup(allStudent, allAssignment, assignmentTypeChoosen, fullScore, m);
 		num = grade_group.getNum();
 		grade = grade_group.getGrade();
 	}
@@ -38,17 +36,17 @@ public class DrawingArea extends JPanel {
 	public void paint(Graphics g) {
 		// get the size
 		width = this.getWidth();
-		height = this.getHeight();		
+		height = this.getHeight();
 		
 		// set the background
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, (int)width, (int)height);
 		
 		// draw the graph
-		if (graphChoosen == "pie") {
+		if (chartTypeChoosen == "pie") {
 			drawingPie();
 		}
-		if (graphChoosen == "bar") {
+		if (chartTypeChoosen == "bar") {
 			drawingHistogram();
 		}
 		for (Shape r : shapes) {
@@ -65,12 +63,11 @@ public class DrawingArea extends JPanel {
 		shapes.add(new Line(width * 0.05, height * 0.90, width * 0.90, height * 0.90));
 		shapes.add(new Line(width * 0.05, height * 0.10, width * 0.90, height * 0.10));
 		shapes.add(new Line(width * 0.90, height * 0.90, width * 0.90, height * 0.10));
-		//shapes.add(new Line(width * 0.05, height * 0.90, width * 0.05, height * 0.90));
 		shapes.add(new Str(width * 0.05, height * 0.05, "Number of Student"));
 		shapes.add(new Str(width * 0.92, height * 0.95, "Grade"));
 		for (int i = 0; i <= m; i++) {
 			shapes.add(new Line(width * 0.075 + bar_width * i, height * 0.9, width * 0.075 + bar_width * i, height * 0.91));
-			shapes.add(new Str(width * 0.06 + bar_width * i, height * 0.95, i * (full / m) + ""));
+			shapes.add(new Str(width * 0.06 + bar_width * i, height * 0.95, i * (fullScore / m) + ""));
 		}
 		
 		// get the max number of the grade group
@@ -93,7 +90,7 @@ public class DrawingArea extends JPanel {
 		// draw the distribution
 		double avg = average(grade);
 		double var = variance(grade);
-		double y_max = Gauss(avg / full * width * 0.8, avg, var);
+		double y_max = Gauss(avg / fullScore * width * 0.8, avg, var);
 		for (int i = (int) (width * 0.075); i < (int) (width * 0.875); i++) {
 			double y1_temp = Gauss(i - width * 0.075, avg, var);
 			double y2_temp = Gauss(i + 1 - width * 0.075, avg, var);
@@ -104,9 +101,9 @@ public class DrawingArea extends JPanel {
 		
 		// draw the 25%, 50%, 75%
 		Collections.sort(grade);		
-		int x25 = (int) (grade.get((int) ((grade.size() + 1) * 0.25)) * width * 0.8 / full + width * 0.075);
-		int x50 = (int) (grade.get((int) ((grade.size() + 1) * 0.50)) * width * 0.8 / full + width * 0.075);
-		int x75 = (int) (grade.get((int) ((grade.size() + 1) * 0.75)) * width * 0.8 / full + width * 0.075);
+		int x25 = (int) (grade.get((int) ((grade.size() + 1) * 0.25)) * width * 0.8 / fullScore + width * 0.075);
+		int x50 = (int) (grade.get((int) ((grade.size() + 1) * 0.50)) * width * 0.8 / fullScore + width * 0.075);
+		int x75 = (int) (grade.get((int) ((grade.size() + 1) * 0.75)) * width * 0.8 / fullScore + width * 0.075);
 		for (int i = (int) (width * 0.075); i <= (int) (width * 0.875); i++) {
 			if (i == x25 || i == x50 || i == x75) {
 				double y_temp = Gauss(i - width * 0.075, avg, var);
@@ -114,12 +111,13 @@ public class DrawingArea extends JPanel {
 			}
 		}
 		
-		saveImage();
+		saveImage("bar_chart");
 	}
 	
 	public void drawingPie() {
 		shapes = new ArrayList<Shape>();
 		
+		// get the radius and center point
 		double r = Math.min(width, height) / 2;
 		double startX = width / 3 - r / 2;
 		double startY = height / 2 - r / 2;
@@ -162,12 +160,12 @@ public class DrawingArea extends JPanel {
 				if (k + 1 == j) {
 					s = "]: ";
 				}
-				shapes.add(new Str(width * 0.7, height / (j + 1) * (k + 1), "[" + (k + 1) + "] [" + i * full / m + ", " +  (i + 1) * full / m + s + (double)pct / 100 + "%"));
+				shapes.add(new Str(width * 0.7, height / (j + 1) * (k + 1), "[" + (k + 1) + "] [" + i * fullScore / m + ", " +  (i + 1) * fullScore / m + s + (double)pct / 100 + "%"));
 				k++;
 			}
 		}
 		
-		saveImage();
+		saveImage("pie_chart");
 	}
 	
 	public void clear() {
@@ -193,11 +191,11 @@ public class DrawingArea extends JPanel {
 	}
 	
 	public double Gauss(double x, double avg, double var) {
-		return (1 / Math.sqrt(2 * Math.PI * var)) * Math.pow(Math.E, - (x / (width * 0.8 / full) - avg) * (x / (width * 0.8 / full) - avg) / (2 * var));
+		return (1 / Math.sqrt(2 * Math.PI * var)) * Math.pow(Math.E, - (x / (width * 0.8 / fullScore) - avg) * (x / (width * 0.8 / fullScore) - avg) / (2 * var));
 	}
 	
-	public void saveImage() {
-		BufferedImage image = new BufferedImage(1500, 1000, BufferedImage.TYPE_INT_RGB);
+	public void saveImage(String name) {
+		BufferedImage image = new BufferedImage((int)width, (int)height, BufferedImage.TYPE_INT_RGB);
 		Graphics g = image.getGraphics();
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, (int)width, (int)height);
@@ -205,7 +203,7 @@ public class DrawingArea extends JPanel {
 			r.paint(g);
 		}
 		try {
-			ImageIO.write(image, "PNG", new File("1.png"));
+			ImageIO.write(image, "PNG", new File(name + ".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
