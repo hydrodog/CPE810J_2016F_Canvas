@@ -1,4 +1,9 @@
 /* 
+ * Updated GUI.
+ * Able to set rules in GUI.
+ * Rules are more flexible.
+ * - 12/02/2016
+ * 
  * Bug Fixed. 
  * Add the function to generate email text.
  * Update some methods. 
