@@ -43,3 +43,13 @@ Generate the pie graph and distribution graph, create GradeGroup class to read t
 Fix the bug in SummaryStat class.
 
 -- Tao Feng
+
+# WEEK 4-5
+
+Add new buttons and actionlisteners to Graph_GUI class;
+
+-- Zeming Wang
+
+Update the Drawing part;
+
+-- Lan Chang
