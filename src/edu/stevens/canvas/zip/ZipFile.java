@@ -23,6 +23,7 @@ import java.awt.Desktop;
 import java.net.URI;
 import java.io.*;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.zip.*;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -31,30 +32,49 @@ import java.text.SimpleDateFormat;
 import javax.mail.*;
 import javax.mail.internet.*;
 
-
-
-public class ZipFile {
-	/* Please change the hw to your own zip file */
-	private File hw = new File("/Users/Steveisno1/Documents/16-17Fall/EE810Java/"
-			+ "Final Project/ZIPRULE/src/sample files.zip"); 
-	private int stuID = 0;  //get student information
-	private String stuName = null;
-	private String stuEmail = null;
-	/* Please change the path to your own file path*/
-	private String inPath = "/Users/Steveisno1/Documents/16-17Fall/EE810Java/"
-			+ "Final Project/ZIPRULE/src/sample files.zip";
-	private String outPath = "/Users/Steveisno1/Documents/16-17Fall/EE810Java/"
-			+ "Final Project/ZIPRULE/src";
+class otherGroup {
+	List<file> rules = new ArrayList<file>();
+	List<file> rulesN = new ArrayList<file>();
+	public otherGroup() {
+		/*rules.add("java");
+		rules.add("cpp");
+		rules.add("py");*/
+		// ...
+		//file f = new file("*", "cpp");
+		//rules.add(f);
+		//...
+	}
 	
-	public ZipFile() throws Exception {
-		/* These information are from other groups...*/
-		stuID = 10404898;
-		stuName = "Shenwei Chen";
-		stuEmail = "schen31@stevens.edu";
+	public List<file> getRulesY() {
+		return rules;
+	}
+	public List<file> getRulesN() {
+		return rulesN;
+	}
+}
+
+/*file rule: only include .java file, .cpp file, .py file*/
+
+class getFiles {
+	public File folder;
+	public File[] listOfFiles;
+	public List<file> ruleshave = new ArrayList<file>();
+	public List<file> rulesnothave = new ArrayList<file>();
+	public List<file> files = new ArrayList<file>();
+	public List<String> fileNames;
+	public List<String> filePath;
+	public List<String> nameWithoutExt; // file name without extension
+	public List<String> extension;
+	public List<String> wrongFiles = new ArrayList<String>();
+	public otherGroup other = new otherGroup();
+	boolean isTrue = true;
+	// get folder
+	public getFiles(ZipFile Z) {
 		
-		// uncompress the zip file
-		deCom(inPath, outPath);
-		File zip = hw;
+		
+		// ...
+		File zip = Z.hw;
+		
 		String folderName = zip.getName();	// get the folder name
 		int pos = folderName.lastIndexOf(".");
 		if (pos > 0) {
@@ -65,42 +85,178 @@ public class ZipFile {
 		if (pos > 0) {
 		    ext = ext.substring(pos+1);
 		}
-		
-		if(isZip(ext) == false) {
-			System.out.println("This is not a zip file!");
-			String text = "Dear " + stuName + ":\n\nThe file you submitted is not"
-					+ " a zip file!\n\nPlease resubmit it!\nThank you!\n\n";
-			String date = new SimpleDateFormat("MM/dd/yyyy   HH:mm:ss").
-					format(Calendar.getInstance().getTime());
-			text = text + date;
-			sendEmail(text);
+		String folder = Z.outPath + "/" + folderName;
+		this.folder = new File(folder);
+		this.listOfFiles = this.folder.listFiles();
+	}
+	
+	// set file rules
+	public void setRules(List<file> rules1, List<file> rules2) {
+		this.ruleshave = rules1;
+		this.rulesnothave = rules2;
+	}
+	
+	// set file names
+	public void setName() {
+		fileNames = new ArrayList<String>();
+		nameWithoutExt = new ArrayList<String>();
+		for (File file : listOfFiles) {
+		    if (file.isFile()) {
+		        fileNames.add(file.getName());
+		        String[] temp = file.getName().split(Pattern.quote("."));
+		        nameWithoutExt.add(temp[0]);
+		        files.add(new file(temp[0], temp[1]));
+		    }
+		}
+	}
+	
+	// get file names
+	public List<String> getName() {
+		return fileNames;
+	}
+	
+	public List<String> getNameNoExt() {
+		return nameWithoutExt;
+	}
+	
+	// set the absolute path, shares the same index with List<String> fileNames
+		public void setPath() {
+			filePath= new ArrayList<String>();
+			for (File file : listOfFiles) {
+			    if (file.isFile()) {
+			        filePath.add(file.getAbsolutePath());
+			    }
+			}
+		}
+	
+	// get the absolute path
+	public List<String> getPath() {
+		return filePath;
+	}
+	
+	// set file extension, shares the same index with List<String> fileNames
+		public void setExtension() {
+			extension = new ArrayList<String>();
+			for (int i = 0; i < filePath.size(); i++) {
+				String ext;
+				String path = filePath.get(i);
+				int n = path.lastIndexOf('.');
+				if (n > 0) {
+				    ext = path.substring(n+1);
+				    extension.add(ext);
+				}
+			}
+		}
+	
+	// get file extension
+	public List<String> getExtension() {
+		return extension;
+	}
+	
+	// set together...
+	public void setAll() {
+		setName();
+		setPath();
+		setExtension();
+		//otherGroup other = new otherGroup();
+		setRules(other.getRulesY(), other.getRulesN());
+	}
+	// contains the required files
+	public boolean contains(List<file> l, file f) {
+		//if(f.filename.equals("") == false && f.fileext.equals("") == false) {
+			for(int i = 0; i < l.size(); i++) {
+				if(l.get(i).filename.equals(f.filename) == true && l.get(i).fileext.equals(f.fileext) == true) {
+					return true;
+				}
+				if(l.get(i).filename.equals("") == true && l.get(i).fileext.equals(f.fileext) == true) {
+					return true;
+				}
+				if(l.get(i).filename.equals(f.filename) == true && l.get(i).fileext.equals("") == true) {
+					return true;
+				}
+				if(l.get(i).filename.equals("") == true && l.get(i).fileext.equals("") == true) {
+					return true;
+				}
+			}
+			return false;
+		//}
+		/*
+		else if(f.filename.equals("") == true && f.fileext.equals("") == false) {
+			for(int i = 0; i < l.size(); i++) {
+				if(l.get(i).fileext.equals(f.fileext) == true) {
+					return true;
+				}
+			}
+			return false;
+		}
+		else if(f.filename.equals("") == false && f.fileext.equals("") == true) {
+			for(int i = 0; i < l.size(); i++) {
+				if(l.get(i).filename.equals(f.filename) == true) {
+					return true;
+				}
+			}
+			return false;
 		}
 		else {
-			String folder = outPath + "/" + folderName;
-			getFiles F = new getFiles(folder);
-			F.setAll();
-			F.checkRules();
-			if(F.isTrue == false) {
-				sendEmail(writeEmail(F.wrongFiles));
-			}
-			else {
-				System.out.println("You are good! Nothing wrong with the rules!\n");
+			return true;
+		}*/
+	}
+	
+	
+	// check the extension with the rules
+	public void checkRules() {
+		System.out.println("Checking the file rules...");
+		int count = 0;
+		int tot = ruleshave.size();
+		boolean[] correct = new boolean[tot];
+		for(int i = 0; i < extension.size(); i++) {
+			if(contains(rulesnothave, files.get(i)) == true) {
+				isTrue = false;
+				if(count == 0) {
+					System.out.println("You get the wrong rules!");
+					count++;
+				}
+				System.out.println("\"" + fileNames.get(i) + "\"" 
+						+ " is not allowed!");
+				wrongFiles.add(fileNames.get(i));
 			}
 		}
-		/*System.out.println("Compiling the file...");
-		if(runFile(hw) == false) {
-			warnHw();
-		}*/
+		System.out.println();
+	}
+}
+
+public class ZipFile {
+	/* Please change the hw to your own zip file */
+	public File hw = new File("/Users/Steveisno1/Documents/16-17Fall/EE810Java/"
+			+ "Final Project/ZIPRULE/src/sample files.zip"); 
+	public int stuID = 0;  //get student information
+	public String stuName = null;
+	public String stuEmail = null;
+	/* Please change the path to your own file path*/
+	public String inPath = "/Users/Steveisno1/Documents/16-17Fall/EE810Java/"
+			+ "Final Project/ZIPRULE/src/sample files.zip";
+	public String outPath = "/Users/Steveisno1/Documents/16-17Fall/EE810Java/"
+			+ "Final Project/ZIPRULE/src";
+	
+	public ZipFile() throws Exception {
+		/* These information are from other groups...*/
+		stuID = 10404898;
+		stuName = "Shenwei Chen";
+		stuEmail = "schen31@stevens.edu";
+		
+		// uncompress the zip file
+		deCom(inPath, outPath);
+		
 		
 	}
 	
 	// if homework format wrong, send email to student, let them re-submit
-	/*public boolean isZip(String ext) {
+	public boolean isZip(String ext) {
 		if(ext.equals("zip"))
 			return true;
 		else
 			return false;
-	}*/
+	}
 
 	// generate email text
 	public String writeEmail(List<String> wrong) {
@@ -139,7 +295,7 @@ public class ZipFile {
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress("mycanvasmanager@gmail.com"));
 			message.setRecipients(Message.RecipientType.TO,	
-					InternetAddress.parse("schen31@stevens.edu"));
+					InternetAddress.parse(stuEmail));
 			message.setSubject("Testing Subject");
 			message.setText(text);
 
@@ -151,14 +307,14 @@ public class ZipFile {
 		}
 	
 	}
-	/*//automatically compile homework
+	//automatically compile homework
 	public boolean runFile(File f) {
 		return false;
 	}
 	// send warning to student
 	public void warnHw() {
 		System.out.println("Warning! This homework can't be compiled!");
-	}*/
+	}
 	
 	//zip file decompression
 	//problem about this part: cannot see file after decompression
@@ -201,121 +357,10 @@ public class ZipFile {
 			e.printStackTrace();
 		}
 	}
-
-	
-	/*file rule: only include .java file, .cpp file, .py file*/
-	static class otherGroup {
-		private List<String> rules = new ArrayList<String>();
-		public otherGroup() {
-			rules.add("java");
-			rules.add("cpp");
-			rules.add("py");
-		}
-		public List<String> getRules() {
-			return rules;
-		}
-	}
-
-	class getFiles {
-		private File folder;
-		private File[] listOfFiles;
-		private List<String> rules;
-		private List<String> fileNames;
-		private List<String> filePath;
-		private List<String> extension;
-		public List<String> wrongFiles = new ArrayList<String>();
-		boolean isTrue = true;
-		// get folder
-		public getFiles(String directory) {
-			this.folder = new File(directory);
-			this.listOfFiles = folder.listFiles();
-		}
-		
-		// set file rules
-		public void setRules(List<String> rules) {
-			this.rules = rules;
-		}
-		
-		// set file names
-		public void setName() {
-			fileNames = new ArrayList<String>();
-			for (File file : listOfFiles) {
-			    if (file.isFile()) {
-			        fileNames.add(file.getName());
-			    }
-			}
-		}
-		
-		// get file names
-		public List<String> getName() {
-			return fileNames;
-		}
-		
-		// set the absolute path, shares the same index with List<String> fileNames
-			public void setPath() {
-				filePath= new ArrayList<String>();
-				for (File file : listOfFiles) {
-				    if (file.isFile()) {
-				        filePath.add(file.getAbsolutePath());
-				    }
-				}
-			}
-		
-		// get the absolute path
-		public List<String> getPath() {
-			return filePath;
-		}
-		
-		// set file extension, shares the same index with List<String> fileNames
-			public void setExtension() {
-				extension = new ArrayList<String>();
-				for (int i = 0; i < filePath.size(); i++) {
-					String ext;
-					String path = filePath.get(i);
-					int n = path.lastIndexOf('.');
-					if (n > 0) {
-					    ext = path.substring(n+1);
-					    extension.add(ext);
-					}
-				}
-			}
-		
-		// get file extension
-		public List<String> getExtension() {
-			return extension;
-		}
-		
-		// set together...
-		public void setAll() {
-			setName();
-			setPath();
-			setExtension();
-			otherGroup other = new otherGroup();
-			setRules(other.getRules());
-		}
-		
-		// check the extension with the rules
-		public void checkRules() {
-			System.out.println("Checking the file rules...");
-			int count = 0;
-			for(int i = 0; i < extension.size(); i++) {
-				if(rules.contains(extension.get(i)) == false) {
-					isTrue = false;
-					if(count == 0) {
-						System.out.println("You get the wrong rules!");
-						count++;
-					}
-					System.out.println("\"" + fileNames.get(i) + "\"" 
-							+ " is not allowed!");
-					wrongFiles.add(fileNames.get(i));
-				}
-			}
-			System.out.println();
-		}
-	}
 	
 	
 	public static void main(String[] agrs) throws Exception {
-		ZipFile Z = new ZipFile();
+		//ZipFile Z = new ZipFile();
+		ruleGUI rg = new ruleGUI("demo");
 	}
 }
