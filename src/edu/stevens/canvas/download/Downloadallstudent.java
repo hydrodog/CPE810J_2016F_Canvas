@@ -103,7 +103,7 @@ public class Downloadallstudent {
 
 	        public static void main(String[] args){//a test example
 	     	    String courseId="10300000000000133";
-	     	    String token="1030~58i17teqWRMLjLmJpttFxob4dlX1Yw5JPNxXkZyMOJgGD5oRAHZhssBGr5gDOYsY";
+	     	    String token="Your token";
 	     	    Downloadallstudent test = new Downloadallstudent(courseId,token);
 	     	    test.printurl();
 	     	    test.get();
