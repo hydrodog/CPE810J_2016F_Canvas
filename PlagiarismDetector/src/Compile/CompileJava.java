@@ -1,25 +1,25 @@
 package Compile;
 
-import java.util.*;
-import java.io.*;
-import java.lang.reflect.Method;
-import sun.tools.java.MethodType;
-
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 
 public class CompileJava extends Compile{
-
-	public CompileJava(String direction) {
-		super(direction, "java");
-		// TODO Auto-generated constructor stub
+	
+	private String code;
+	
+	public CompileJava(String code){
+		this.code = code;
 	}
 
 	@Override
-	public String readFile() {
+	public void CompileSourceCode() {
 		// TODO Auto-generated method stub
-		
-		return null;
+		Reader reader = new Reader("java","e:", "HelloWorld");
+		String code = reader.getCode();
+		JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
+		JavaFileObject fileObject = new JavaStringObject()
 	}
-
+	
 	@Override
 	public String compiledFile() {
 		// TODO Auto-generated method stub
