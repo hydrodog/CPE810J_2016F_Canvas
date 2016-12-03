@@ -14,6 +14,7 @@ import javax.tools.ToolProvider;
 
 public class CompileJava implements Compile{
 	
+	// A CompileJava class need to store two datas: name and direction.
 	private String name;
 	private String direction;
 	
@@ -25,8 +26,12 @@ public class CompileJava implements Compile{
 	@Override
 	public void CompileSourceCode() {
 		// TODO Auto-generated method stub
+		
+		//Reader class can return a string contains code;
 		Reader reader = new Reader("java",direction, name);
 		String code = reader.getCode();
+		
+		
 		JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
 		JavaFileObject javaFileObject = new JavaStringObject(name,code);
 		CompilationTask task = javaCompiler.getTask(null, null, null, Arrays.asList("-d","./bin"), null, Arrays.asList(javaFileObject));
@@ -69,8 +74,6 @@ public class CompileJava implements Compile{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
 		}
 	}
 	
