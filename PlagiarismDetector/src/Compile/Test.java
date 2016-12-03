@@ -2,6 +2,7 @@ package Compile;
 
 public class Test {
 	public static void main(String[] args){
-		System.out.println("HI");
+		CompileJava c = new CompileJava("HelloWorld","e:");
+		c.CompileSourceCode();
 	}
 }
