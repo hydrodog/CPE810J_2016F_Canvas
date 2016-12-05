@@ -1,3 +1,4 @@
+
 package binaryCodeCompare;
 
 public class EDATest {

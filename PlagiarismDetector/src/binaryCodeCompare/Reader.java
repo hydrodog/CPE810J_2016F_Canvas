@@ -48,26 +48,4 @@ public class Reader {
 		
 		return bytes;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

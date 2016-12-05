@@ -11,10 +11,4 @@ public class CompileCpp implements Compile{
 		
 	}
 
-	@Override
-	public String compiledFile() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

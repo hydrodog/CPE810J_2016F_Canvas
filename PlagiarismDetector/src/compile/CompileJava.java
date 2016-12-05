@@ -18,12 +18,11 @@ import javax.tools.ToolProvider;
 
 public class CompileJava implements Compile{
 	
-	// A CompileJava class need to store two datas: name and direction.
-	private String name;
+	private File file;
 	private String direction;
 	
-	public CompileJava(String name, String direction){
-		this.name = name;
+	public CompileJava(File file, String direction){
+		this.file = file;
 		this.direction = direction;
 	}
 
@@ -32,21 +31,22 @@ public class CompileJava implements Compile{
 		// TODO Auto-generated method stub
 		
 		//Reader class can return a string contains code;
-		Reader reader = new Reader("java",direction, name);
-		String code = reader.getCode();
+		Reader reader = new Reader();
+		String code = reader.getCode(file);
+		String name = file.getName();
 		
 		
 		JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
 		JavaFileObject javaFileObject = new JavaStringObject(name,code);
-		CompilationTask task = javaCompiler.getTask(null, null, null, Arrays.asList("-d","e:/temp"), null, Arrays.asList(javaFileObject));
+		CompilationTask task = javaCompiler.getTask(null, null, null, Arrays.asList("-d",direction), null, Arrays.asList(javaFileObject));
 		boolean success = task.call();
 		if(! success){
-			System.out.println("Compilation fail!");
+			System.out.println(name + " Compilation fail!");
 		}else{
-			System.out.println("Compilation success!");
+			System.out.println(name + " Compilation success!");
 			try {
 				URL[] urls = new URL[]{
-						new URL("file:/e:/temp/")
+						new URL("file:/" + direction)
 				};
 				URLClassLoader classLoader = new URLClassLoader(urls);
 				Class class_ = classLoader.loadClass(name);
@@ -80,11 +80,4 @@ public class CompileJava implements Compile{
 			}
 		}
 	}
-	
-	@Override
-	public String compiledFile() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }

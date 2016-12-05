@@ -1,3 +1,6 @@
+/*
+ * Author: Su Pengyu
+ */
 package binaryCodeCompare;
 
 public class EditDistanceAlgorithm {

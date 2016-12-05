@@ -9,21 +9,12 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Reader {
-	private String type;
-	private String direction;
-	private String name;
 	
-	public Reader(String name, String direction, String type){
-		this.type = type;
-		this.direction = direction;
-		this.name = name;
-	}
-	
-	public String getCode(){
+	public String getCode(File file){
 		BufferedReader input = null;
 		StringBuilder code = new StringBuilder();
 		try{
-			input = new BufferedReader(new FileReader(new File(direction + name + "." + type)));
+			input = new BufferedReader(new FileReader(file));
 			String s;
 			while((s = input.readLine()) != null){
 				code.append(s + "\n");
