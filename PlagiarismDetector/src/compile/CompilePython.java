@@ -1,7 +1,7 @@
 /*
  * Author: Su Pengyu
  */
-package Compile;
+package compile;
 
 public class CompilePython implements Compile{
 

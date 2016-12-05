@@ -1,7 +1,7 @@
 /*
  * Author: Su Pengyu
  */
-package Compile;
+package compile;
 
 public class Test {
 	public static void main(String[] args){

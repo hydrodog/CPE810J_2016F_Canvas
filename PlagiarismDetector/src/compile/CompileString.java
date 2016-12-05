@@ -1,7 +1,7 @@
 /*
  * Author: Su Pengyu
  */
-package Compile;
+package compile;
 
 public interface CompileString {
 	public void compileSourceCode() throws Exception;

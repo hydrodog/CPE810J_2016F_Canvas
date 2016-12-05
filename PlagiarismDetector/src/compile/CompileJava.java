@@ -1,7 +1,7 @@
 /*
  * Author: Su Pengyu
  */
-package Compile;
+package compile;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;

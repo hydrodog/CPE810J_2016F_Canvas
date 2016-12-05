@@ -1,7 +1,7 @@
 /*
  * Author: Su Pengyu
  */
-package Compile;
+package compile;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -11,9 +11,11 @@ import java.net.URLClassLoader;
 import java.util.Arrays;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
+
+import compile.JavaStringObject;
+
 import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
-import Compile.JavaStringObject;
 
 public class DynamicCompileTest {
 	public static void main(String[] args) throws Exception{
