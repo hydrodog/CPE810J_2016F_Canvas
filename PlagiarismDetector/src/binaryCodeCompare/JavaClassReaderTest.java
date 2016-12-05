@@ -1,26 +1,23 @@
 package binaryCodeCompare;
 
-import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class JavaClassReaderTest {
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException{
 		File f = new File("e:/temp/HelloWorld.class");
-		BufferedReader input = null;
-		StringBuilder s = new StringBuilder();
-		try{
-			input = new BufferedReader(new FileReader(f));
-			String s_;
-			while((s_ = input.readLine()) != null){
-				s.append(s_);
-			}
-			input.close();
-		}catch(IOException e){	
-			e.printStackTrace();
+		FileInputStream input = null;
+			input = new FileInputStream(f);
+		DataInputStream data = new DataInputStream(input);
+		StringBuilder b = new StringBuilder();
+		String s;
+		while((s = data.readLine()) != null){
+			b.append(s);
 		}
-		System.out.println(s);
+		System.out.println(b);
 	}
 	
 	
