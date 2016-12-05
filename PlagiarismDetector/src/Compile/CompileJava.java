@@ -1,5 +1,6 @@
 package Compile;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -34,7 +35,7 @@ public class CompileJava implements Compile{
 		
 		JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
 		JavaFileObject javaFileObject = new JavaStringObject(name,code);
-		CompilationTask task = javaCompiler.getTask(null, null, null, Arrays.asList("-d","./bin"), null, Arrays.asList(javaFileObject));
+		CompilationTask task = javaCompiler.getTask(null, null, null, Arrays.asList("-d","e:/temp"), null, Arrays.asList(javaFileObject));
 		boolean success = task.call();
 		if(! success){
 			System.out.println("Compilation fail!");
@@ -42,7 +43,7 @@ public class CompileJava implements Compile{
 			System.out.println("Compilation success!");
 			try {
 				URL[] urls = new URL[]{
-						new URL("file:/" + "./bin")
+						new URL("file:/e:/temp/")
 				};
 				URLClassLoader classLoader = new URLClassLoader(urls);
 				Class class_ = classLoader.loadClass(name);
