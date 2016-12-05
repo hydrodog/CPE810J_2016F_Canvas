@@ -1,3 +1,6 @@
+/*
+ * Author: Su Pengyu
+ */
 package binaryCodeCompare;
 
 public class Test {
@@ -8,6 +11,6 @@ public class Test {
 			System.out.println(b[i]);
 		}
 		System.out.println("hi" + b.length);
-		
+
 	}
 }

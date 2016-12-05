@@ -1,3 +1,6 @@
+/*
+ * Author: Su Pengyu
+ */
 package binaryCodeCompare;
 
 import java.io.DataInputStream;
