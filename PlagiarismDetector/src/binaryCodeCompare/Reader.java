@@ -21,7 +21,7 @@ public class Reader {
 	}
 	
 	public byte[] getBytes() {
-		File file = new File(direction + name + "." + type);
+		File file = new File(direction + name);
 		FileInputStream input = null;
 		byte[] bytes = null;
 		try {

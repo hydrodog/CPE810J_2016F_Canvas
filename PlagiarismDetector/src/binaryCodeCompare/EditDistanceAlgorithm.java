@@ -12,8 +12,9 @@ public class EditDistanceAlgorithm {
 		for(int i = 0; i < data.cols; i++){
 			data.set(i, 0, i);
 		}
-		for(int i = 1; i < data.cols; i++) {
-			for(int j = 1; j < data.rows; j++) {
+		
+		for(int i = 1; i < data.rows; i++) {
+			for(int j = 1; j < data.cols; j++) {
 				if(a[i - 1] == b[j - 1]) {
 					data.set(data.get(i - 1, j - 1), i, j);
 				}else{
@@ -22,7 +23,7 @@ public class EditDistanceAlgorithm {
 				}
 			}
 		}
-		return (1 - data.get(data.cols - 1, data.rows - 1) / (double)max(data.cols - 1, data.rows - 1));
+		return (1 - data.get(data.rows - 1, data.cols - 1) / (double)max(data.rows - 1, data.cols - 1));
 	}
 	
 	private int min(int i, int j, int k) {

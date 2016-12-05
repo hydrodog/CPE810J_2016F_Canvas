@@ -13,7 +13,7 @@ public class ReadFileTest {
 		String direction = "E:HelloWorld";
 		BufferedReader input = null;
 		try{
-			input = new BufferedReader(new FileReader(new File(direction+".java")));
+			input = new BufferedReader(new FileReader(new File("e:/temp/Hello2.java")));
 			StringBuilder output = new StringBuilder();
 			String s;
 			while((s = input.readLine()) != null){

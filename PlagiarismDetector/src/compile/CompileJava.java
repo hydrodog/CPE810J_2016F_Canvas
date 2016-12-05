@@ -34,7 +34,7 @@ public class CompileJava implements Compile{
 		Reader reader = new Reader();
 		String code = reader.getCode(file);
 		String name = file.getName();
-		
+		name = name.substring(0, name.length() - 5);
 		
 		JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
 		JavaFileObject javaFileObject = new JavaStringObject(name,code);
@@ -52,7 +52,9 @@ public class CompileJava implements Compile{
 				Class class_ = classLoader.loadClass(name);
 				Method  method = class_.getDeclaredMethod("main", String[].class);
 				String[] args_ ={null};
+				System.out.println("\nBelow is the output of test file!");
 				method.invoke(class_.newInstance(), args_);
+				System.out.println("Test file output end!\n");
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
