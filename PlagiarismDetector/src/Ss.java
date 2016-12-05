@@ -1,4 +1,4 @@
-
+package Plagiarism;
 
 /*
  * author: Yu Yu
