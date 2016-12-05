@@ -51,6 +51,8 @@ public class PlagiarismDector {
 					file[1] = file2;
 					suspectedFilePair.add(file);
 					System.out.println("\nWarning!Find plagiarism!\n");
+				}else {
+					System.out.println("\nNot find plagiarism!\n");
 				}
 			}
 		}

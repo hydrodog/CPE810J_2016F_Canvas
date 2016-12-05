@@ -7,10 +7,8 @@ public class Test {
 	public static void main(String[] args) {
 		ArrayList<File> f = new ArrayList<File>();
 		f.add(new File("e:/temp/Hello1.java"));
-		f.add(new File("e:/temp/Hello2.java"));
+		f.add(new File("e:/temp/BoogleGame.java"));
 		PlagiarismDector p = new PlagiarismDector(f,"java","e:/temp/");
 		ArrayList<File[]> f_ = p.getSuspectedFilePair();
-		
-		System.out.println("hi");
 	}
 }
