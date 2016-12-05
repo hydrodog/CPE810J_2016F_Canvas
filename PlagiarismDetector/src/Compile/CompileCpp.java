@@ -3,7 +3,7 @@ package Compile;
 public class CompileCpp implements Compile{
 
 	@Override
-	public void CompileSourceCode() {
+	public void compileSourceCode() {
 		// TODO Auto-generated method stub
 		
 	}

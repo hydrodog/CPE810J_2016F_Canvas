@@ -25,7 +25,7 @@ public class CompileJava implements Compile{
 	}
 
 	@Override
-	public void CompileSourceCode() {
+	public void compileSourceCode() {
 		// TODO Auto-generated method stub
 		
 		//Reader class can return a string contains code;
