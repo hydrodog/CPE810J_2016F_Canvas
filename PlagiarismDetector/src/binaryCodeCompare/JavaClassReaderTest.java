@@ -13,11 +13,11 @@ public class JavaClassReaderTest {
 			input = new FileInputStream(f);
 		DataInputStream data = new DataInputStream(input);
 		StringBuilder s = new StringBuilder();
-		while(data.available() > 0){
-			s.append(data.readByte()+ "\n");
+		byte[] b = new byte[data.available()];
+		data.readFully(b);
+		for(int i = 0; i < b.length; i++) {
+			System.out.println(b[i]);
 		}
-		System.out.println(s);
-		System.out.println(s.length());
 	}
 	
 	

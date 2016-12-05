@@ -10,7 +10,7 @@ public class Reader {
 	private String direction;
 	private String name;
 	
-	public Reader(String type, String direction, String name){
+	public Reader(String name, String direction, String type){
 		this.type = type;
 		this.direction = direction;
 		this.name = name;
