@@ -1,5 +1,5 @@
 /**
- *  @author: Yang Zhang. Gaojian Chen  
+ *  @author: Yang Zhang. 
  * 
  *  
  */
