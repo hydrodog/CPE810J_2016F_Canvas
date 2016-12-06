@@ -15,6 +15,7 @@ import javax.swing.tree.TreePath;
 class file {
 	String filename;
 	String fileext;
+	boolean isAdd;
 	public file(String n, String e) {
 		this.filename = n;
 		this.fileext = e;
@@ -45,26 +46,39 @@ class file {
 	}
 }
 
+class direc {
+	public List<file> have;
+	public List<file> nothave;
+	public List<direc> d;
+	public String name;
+	public direc(String s) {
+		name = s;
+		have = new ArrayList<file>();
+		nothave = new ArrayList<file>();
+		d = new ArrayList<direc>();
+	}
+}
 
 public class ruleGUI extends JFrame {
 	private JLabel stuID, stuName, stuEmail, hwName, title, musthave, mustnot, directory;
 	private JTextField must_t, mustnot_t, directories;
 	private JTextArea process;
-	private JButton ok, reset, setR, setD, back;
+	private JButton ok, reset, setR, setD, removeD;
 	private JTextArea t;
-	private JScrollPane sp;
+	private JScrollPane sp, treeView;
 	private JList dir;
 	private JTree tree;
 	private String direct = "Current directory: /";
+	public direc DIRECTORY;
+	
+	
 	final static boolean shouldFill = true;
     final static boolean shouldWeightX = true;
     final static boolean RIGHT_TO_LEFT = false;
     private void createNodes(DefaultMutableTreeNode top) {
         DefaultMutableTreeNode category = null;
         DefaultMutableTreeNode f = null;
-        f = new DefaultMutableTreeNode(new file
-                ("",
-                ""));
+        f = new DefaultMutableTreeNode("Allows all files");
         top.add(f);
  /*
         category = new DefaultMutableTreeNode("src");
@@ -115,6 +129,21 @@ public class ruleGUI extends JFrame {
         return childNode;
     }
 
+    public void searchDirect(direc D, String s, direc result) {
+    	if(D.name.equals(s)) {
+    		result = new direc(null);
+    		result = D;
+    		return;
+    	}
+    	else {
+    		for(int i = 0; i < D.d.size(); i++) {
+    			searchDirect(D.d.get(i), s, result);
+    			if(result.equals(DIRECTORY) == false) {
+    				return;
+    			}
+    		}
+    	} 
+    }
     
 	public ruleGUI(String s) throws Exception {
 		super(s);
@@ -136,49 +165,136 @@ public class ruleGUI extends JFrame {
 		mustnot_t = new JTextField();
 		directories = new JTextField();
 		setD = new JButton("add new directory");
-		
-		
-		dir = new JList();
+		removeD = new JButton("remove directory");
+
 		
 		String folderName = Z.hw.getName();	// get the folder name
 		int pos = folderName.lastIndexOf(".");
 		if (pos > 0) {
 		    folderName = folderName.substring(0, pos);
 		}
+		
+		DIRECTORY = new direc(folderName);
+		
 		DefaultMutableTreeNode top =
 		        new DefaultMutableTreeNode(folderName);
 		rootNode = top;
 		treeModel = new DefaultTreeModel(rootNode);
 		createNodes(rootNode);
 		tree = new JTree(rootNode);
+		DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+		
 		setD.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				String D = directories.getText();
+				
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode)
 	                       tree.getLastSelectedPathComponent();
 				//System.out.println(node);
-				//if(node.isLeaf() == false) {
-					DefaultMutableTreeNode category = null;
-					DefaultMutableTreeNode f = null;
-			        category = new DefaultMutableTreeNode(D);
-					node.add(category);
-					f = new DefaultMutableTreeNode(new file
-			                ("",
-			                ""));
-			        category.add(f);
-			        addObject(category);
-			        
-				//}
+				if(node.isLeaf() == false) {
+				}
+				else {
+					node = (DefaultMutableTreeNode) node.getParent();
+				}
+				DefaultMutableTreeNode category = null;
+				DefaultMutableTreeNode f = null;
+				
+				List<String> list = new ArrayList<String>();
+				
+		        category = new DefaultMutableTreeNode(D);
+		        list.add(category.toString());
+				node.add(category);
+				f = new DefaultMutableTreeNode("Allows all files");
+		        category.add(f);
+		        //addObject(category);
+		        //DefaultMutableTreeNode parent = (DefaultMutableTreeNode)
+		        model.reload(node);
+		        
+				DefaultMutableTreeNode temp = node;
+				if((DefaultMutableTreeNode)temp.getParent() != null) {
+					list.add(node.toString());
+				}
+				while((DefaultMutableTreeNode)temp.getParent() != null) {
+					list.add(((DefaultMutableTreeNode)temp.getParent()).toString());
+					if((DefaultMutableTreeNode)((DefaultMutableTreeNode)temp.getParent()).getParent() == null) {
+						break;
+					}
+					temp = (DefaultMutableTreeNode)temp.getParent();
+					
+				}
+				direc d = DIRECTORY;
+		        for(int i = list.size()-1; i >= 0; i--) {
+		        	//System.out.println(list.get(i));
+		        	d.d.add(new direc(list.get(i)));
+		        	for(int ii = 0; ii < d.d.size(); ii++) {
+		        		if(d.d.get(ii).name.equals(list.get(i)) == true) {
+		        			d = d.d.get(ii);
+		        			break;
+		        		}
+		        	}
+				}
+		        //System.out.println(d.name);
 			}
 		});
-		DefaultListModel listModel = new DefaultListModel();
-		listModel.addElement("root");
+		
+		removeD.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+	                       tree.getLastSelectedPathComponent();
+				List<String> list = new ArrayList<String>();
+				DefaultMutableTreeNode temp = node;
+				if((DefaultMutableTreeNode)temp.getParent() != null) {
+					list.add(node.toString());
+				}
+				while((DefaultMutableTreeNode)temp.getParent() != null) {
+					list.add(((DefaultMutableTreeNode)temp.getParent()).toString());
+					if((DefaultMutableTreeNode)((DefaultMutableTreeNode)temp.getParent()).getParent() == null) {
+						break;
+					}
+					temp = (DefaultMutableTreeNode)temp.getParent();
+					
+				}
+				direc d = DIRECTORY;
+				direc t = null;
+		        for(int i = list.size()-1; i >= 0; i--) {
+		        	//System.out.println(list.get(i));
+		        	d.d.add(new direc(list.get(i)));
+		        	for(int ii = 0; ii < d.d.size(); ii++) {
+		        		if(d.d.get(ii).name.equals(list.get(i)) == true) {
+		        			t = d;
+		        			d = d.d.get(ii);
+		        			break;
+		        		}
+		        	}
+				}
+		        //System.out.println(d.name);
+		        for(int i = 0; i < t.d.size(); i++) {
+		        	if(t.d.get(i).name.equals(d.name)) {
+		        		t.d.remove(i);
+		        		break;
+		        	}
+		        }
+		        
+				if(node.isLeaf() == false) {
+					DefaultMutableTreeNode node1 = (DefaultMutableTreeNode) node.getParent();
+					node1.remove(node);
+					model.reload(node1);
+				}
+				
+				
+			}
+		});
+		
 		process = new JTextArea();
 		process.setEditable(false);
 		sp = new JScrollPane(process);
 		sp.setBounds(10,60,780,500);
 		sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		treeView = new JScrollPane(tree);
+		treeView.setBounds(10,60,780,500);
+		treeView.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		ok = new JButton("OK");
 		reset = new JButton("RESET");
 		setR = new JButton("SET");
@@ -188,8 +304,71 @@ public class ruleGUI extends JFrame {
 				// ...
 				String s1 = must_t.getText();
 				String s2 = mustnot_t.getText();
-				readRule(s1, true);
-				readRule(s2, false);
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+	                       tree.getLastSelectedPathComponent();
+				if(node.isLeaf() == false) {
+				}
+				else {
+					node = (DefaultMutableTreeNode) node.getParent();
+				}
+				String s = node.toString();
+				direc result = DIRECTORY;
+				/*searchDirect(DIRECTORY, s, result);
+				direc d = result;
+				System.out.println(d.name);
+				*/
+				List<String> list = new ArrayList<String>();
+				DefaultMutableTreeNode temp = node;
+				list.add(node.toString());
+				while((DefaultMutableTreeNode)temp.getParent() != null) {
+					list.add(((DefaultMutableTreeNode)temp.getParent()).toString());
+					temp = (DefaultMutableTreeNode)temp.getParent();
+				}
+				direc d = DIRECTORY;
+				//System.out.println(d.d.get(0).name);
+				//System.out.println(d.d.get(0).d.get(0).name);
+				//System.out.println(d.d.get(0).d.get(0).d.get(0).name);
+				//System.out.println(d.d.get(0).d.get(0).d.get(0).d.get(0).name);
+				
+				
+				for(int i = list.size()-1; i >= 0; i--) {
+					//System.out.println(list.get(i));
+					for(int ii = 0; ii < d.d.size(); ii++) {
+						//System.out.println(d.d.get(ii).name);
+						if(d.d.get(ii).name.equals(list.get(i)) == true) {
+							d = d.d.get(ii);
+							break;
+						}
+					}
+				}
+				//System.out.println(d.name);
+				
+				readRule(d, s1, true);
+				readRule(d, s2, false);
+				DefaultMutableTreeNode f = null;
+				for(int i = 0; i < d.have.size(); i++) {
+					if(node.getFirstLeaf().toString().equals("Allows all files") == true) {
+						node.remove(node.getFirstLeaf());
+						model.reload(node);
+					}
+					if(d.have.get(i).isAdd != true) {
+						f = new DefaultMutableTreeNode(d.have.get(i));
+						node.add(f);
+						d.have.get(i).isAdd = true;
+					}
+				}
+				for(int i = 0; i < d.nothave.size(); i++) {
+					if(node.getFirstLeaf().toString().equals("Allows all files") == true) {
+						node.remove(node.getFirstLeaf());
+						model.reload(node);
+					}
+					if(d.nothave.get(i).isAdd != true) {
+						f = new DefaultMutableTreeNode("Not Allowed: " + d.nothave.get(i));
+						node.add(f);
+						d.nothave.get(i).isAdd = true;
+					}
+				}
+				model.reload(node);
 				boolean said = false;
 				if(have.size() != 0) {
 					process.setText(process.getText() + "Rules set!\n");
@@ -323,7 +502,18 @@ public class ruleGUI extends JFrame {
 		c.gridx = 0;
 		c.gridy = 3;
 		c.ipady = 100;
-		pane1.add(tree, c);
+		pane1.add(treeView, c);
+		
+		JPanel temppane = new JPanel(new GridBagLayout());
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.ipadx = 10;
+		temppane.add(setD, c);
+		c.gridx = 1;
+		temppane.add(removeD, c);
+		
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.gridwidth = 3;
@@ -333,13 +523,13 @@ public class ruleGUI extends JFrame {
 		c.ipady = 10;
 		pane3.add(directories, c);
 		c = new GridBagConstraints();
-		//c.fill = GridBagConstraints.HORIZONTAL;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.gridwidth = 3;
 		c.gridx = 0;
 		c.gridy = 0;
 		c.ipadx = 10;
 		c.ipady = 10;
-		pane3.add(setD, c);
+		pane3.add(temppane, c);
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		//c.gridwidth = 3;
@@ -407,6 +597,7 @@ public class ruleGUI extends JFrame {
 		
 		getContentPane().add(pane1);
 		setSize(800,600);
+		setResizable(false);
 		setLocationRelativeTo(null); 
 		setVisible(true);
 	}
@@ -415,7 +606,7 @@ public class ruleGUI extends JFrame {
 	List<file> have = new ArrayList<file>();
 	List<file> nothave = new ArrayList<file>();
 	
-	public void readRule(String s, boolean isHave) {
+	public void readRule(direc d, String s, boolean isHave) {
 		if(s.equals("") == false) {
 			String[] sub = s.split(";");
 			if(isHave == true) {
@@ -423,11 +614,11 @@ public class ruleGUI extends JFrame {
 					if(sub[i].contains(".")) {
 						String[] temp = sub[i].split(Pattern.quote("."));
 						file f = new file(temp[0], temp[1]);
-						have.add(f);
+						d.have.add(f);
 					}
 					else {
 						file f = new file("*", sub[i]);
-						have.add(f);
+						d.have.add(f);
 					}
 				}
 			}
@@ -436,11 +627,11 @@ public class ruleGUI extends JFrame {
 					if(sub[i].contains(".")) {
 						String[] temp = sub[i].split(Pattern.quote("."));
 						file f = new file(temp[0], temp[1]);
-						nothave.add(f);
+						d.nothave.add(f);
 					}
 					else {
 						file f = new file("*", sub[i]);
-						nothave.add(f);
+						d.nothave.add(f);
 					}
 				}
 			}
