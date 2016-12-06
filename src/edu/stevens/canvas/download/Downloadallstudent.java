@@ -1,3 +1,8 @@
+/**
+ *  @author: Yang Zhang. Gaojian Chen  
+ * 
+ *  
+ */
 package Download;
 
 import java.io.BufferedReader;
