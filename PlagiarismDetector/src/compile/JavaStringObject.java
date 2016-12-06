@@ -1,5 +1,7 @@
 /*
  * Author: Su Pengyu
+ * SimpleJavaFileObject is a parameter of javaComplier.getTask, here we create
+ * our own object.
  */
 package compile;
 

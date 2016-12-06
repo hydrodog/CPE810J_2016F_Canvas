@@ -1,5 +1,6 @@
 /*
  * Author: Su Pengyu
+ * Reader.getCode() method returns String of contents.
  */
 package compile;
 

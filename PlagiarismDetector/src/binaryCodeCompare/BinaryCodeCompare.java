@@ -1,5 +1,7 @@
 /*
  * Author: Su Pengyu
+ * BinaryCodeCompare integrate the fuction of
+ * EDA and Reader.
  */
 package binaryCodeCompare;
 

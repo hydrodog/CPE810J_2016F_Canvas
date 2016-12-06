@@ -1,5 +1,11 @@
 /*
  * Author: Su Pengyu
+ * EditDistanceAlgorithm measure the difficulty to change 
+ * a string into another string. EDAValue is the number of
+ * steps we need.
+ * EDA need to store data in a matrix. Since java doesn't
+ * have efficient matrix data form, I create my own matrix
+ * data structure.
  */
 package binaryCodeCompare;
 

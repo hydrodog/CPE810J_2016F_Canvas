@@ -1,5 +1,8 @@
 /*
  * Author: Su Pengyu
+ * CompileJava class implements from Compile interface.
+ * It's contains essential data and method for compile a 
+ * .java file into .class file.
  */
 package compile;
 
@@ -18,8 +21,8 @@ import javax.tools.ToolProvider;
 
 public class CompileJava implements Compile{
 	
-	private File file;
-	private String direction;
+	private File file;  // .java file to be compiled.
+	private String direction;  //Store temp .class files.
 	
 	public CompileJava(File file, String direction){
 		this.file = file;
@@ -30,21 +33,35 @@ public class CompileJava implements Compile{
 	public void compileSourceCode() {
 		// TODO Auto-generated method stub
 		
-		//Reader class can return a string contains code;
-		Reader reader = new Reader();
+		/*Reader class can return a string contains code, in 
+		 * this situation java code. 
+		 */
+		Reader reader = new Reader(); 
 		String code = reader.getCode(file);
-		String name = file.getName();
+		
+		/*JVM require .java file name has to be the same as public class,
+		 * so we suppose that the file name is equal to public class name.
+		 */
+		String name = file.getName();  // File.getName() return a name contains postfix.
 		name = name.substring(0, name.length() - 5);
 		
+		/*JavaCompiler, JavaFileObject and CompilationTask are core of dynamic 
+		 *compile, which already write in package javax.tools. Here we just import 
+		 *and use it.
+		 */
 		JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
 		JavaFileObject javaFileObject = new JavaStringObject(name,code);
-		CompilationTask task = javaCompiler.getTask(null, null, null, Arrays.asList("-d",direction), null, Arrays.asList(javaFileObject));
+		CompilationTask task = javaCompiler.getTask(null, null, null, 
+				Arrays.asList("-d",direction), null, Arrays.asList(javaFileObject));  //See details in oracle documents.
 		boolean success = task.call();
 		if(! success){
 			System.out.println(name + " Compilation fail!");
 		}else{
 			System.out.println(name + " Compilation success!");
 			try {
+				/*Automatically execute the .class file CompilationTask just made. This part is not
+				 * essential in plagiarism detection but here just add this funcion.
+				 */
 				URL[] urls = new URL[]{
 						new URL("file:/" + direction)
 				};
