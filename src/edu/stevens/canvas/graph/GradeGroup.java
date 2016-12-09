@@ -11,31 +11,50 @@ import java.util.*;
 
 public class GradeGroup {
 	private static File[] fileList;
-	private boolean allStudent;
-	private boolean allAssignment;
-	private static String assignmentTypeChoosen;
+	private boolean allStudent, allAssignment;
+	private String assignmentTypeChoosen, assignment;
 	private static ArrayList<Double> grade;
 	private static ArrayList<Integer> num;
 	private int m;
 	private double fullScore;
+	private boolean done;
 	
-	public GradeGroup(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen, double fullScore, int m) {
+	public GradeGroup(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen, String assignment) {
 		this.allStudent = allStudent;
 		this.allAssignment = allAssignment;
 		this.assignmentTypeChoosen = assignmentTypeChoosen;
-		this.m = m;
-		this.fullScore = fullScore;
+		this.assignment = assignment;
 		
 		File file = new File("grade");
 		fileList = file.listFiles();
 		
-		getGradeFile();
-		cal();
+		if (this.allStudent == true && this.allAssignment == false && !this.assignment.equals("")) {
+			getSingleGradeFile();
+			done = true;
+		}
 	}
 	
-	public void getGradeFile() {
+	public GradeGroup(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen, String assignment, double fullScore, int m) {
+		this.allStudent = allStudent;
+		this.allAssignment = allAssignment;
+		this.assignmentTypeChoosen = assignmentTypeChoosen;
+		this.assignment = assignment;
+		this.fullScore = fullScore;
+		this.m = m;
+		
+		File file = new File("grade");
+		fileList = file.listFiles();
+		
+		if (this.allStudent == true && this.allAssignment == false && !this.assignment.equals("")) {
+			getSingleGradeFile();
+			cal();
+			done = true;
+		}
+	}
+	
+	public void getSingleGradeFile() {
 		int index = -1;
-		String filename = assignmentTypeChoosen + ".txt";
+		String filename = assignment + ".txt";
 		
 		for (int i = 0; i < fileList.length; i++) {
 			if (filename.equals(fileList[i].getName())) {
@@ -79,5 +98,9 @@ public class GradeGroup {
 	
 	public ArrayList<Double> getGrade() {
 		return grade;
+	}
+	
+	public boolean getDone() {
+		return done;
 	}
 }

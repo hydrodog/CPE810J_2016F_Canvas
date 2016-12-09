@@ -1,6 +1,7 @@
 package edu.stevens.canvas.graph;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 
 abstract class Shape {
 	protected double x,y;
@@ -10,4 +11,10 @@ abstract class Shape {
 	}
 	
 	public abstract void paint(Graphics g);
+
+	public void addMouseMotionListener(MouseAdapter mouseAdapter) {	
+	}
+
+	public void setToolTipText(String string) {
+	}
 }

@@ -12,7 +12,7 @@ public class Str extends Shape {
 	
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
-		g.setFont(new Font("Helvetica", Font.BOLD, 25));
+		g.setFont(new Font("Helvetica", Font.PLAIN, 25));
 		g.drawString(str, (int)x, (int)y);
 	}
 }

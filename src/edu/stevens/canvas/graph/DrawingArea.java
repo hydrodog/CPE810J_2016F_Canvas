@@ -1,12 +1,10 @@
 package edu.stevens.canvas.graph;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
 import java.util.*;
 
 /**
@@ -21,16 +19,16 @@ public class DrawingArea extends JPanel {
 	private ArrayList<Double> grade;
 	private int m;
 	private double fullScore;
-	private String chartTypeChoosen;
+	private String graphTypeChoosen;
 	private double width, height;
+	private BufferedImage image;
 	
-	public DrawingArea(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen, String chartTypeChoosen, double fullScore, int m) {
-		this.chartTypeChoosen = chartTypeChoosen;
-		this.m = m;
+	public DrawingArea(ArrayList<Integer> num, ArrayList<Double> grade, String graphTypeChoosen, double fullScore, int m) {
+		this.num = num;
+		this.grade = grade;
+		this.graphTypeChoosen = graphTypeChoosen;
 		this.fullScore = fullScore;
-		GradeGroup grade_group = new GradeGroup(allStudent, allAssignment, assignmentTypeChoosen, fullScore, m);
-		num = grade_group.getNum();
-		grade = grade_group.getGrade();
+		this.m = m;
 	}
 	
 	public void paint(Graphics g) {
@@ -43,14 +41,17 @@ public class DrawingArea extends JPanel {
 		g.fillRect(0, 0, (int)width, (int)height);
 		
 		// draw the graph
-		if (chartTypeChoosen == "pie") {
+		if (graphTypeChoosen == "pie") {
 			drawingPie();
+			for (Shape r : shapes) {
+				r.paint(g);
+			}
 		}
-		if (chartTypeChoosen == "bar") {
+		if (graphTypeChoosen == "bar") {
 			drawingHistogram();
-		}
-		for (Shape r : shapes) {
-			r.paint(g);
+			for (Shape r : shapes) {
+				r.paint(g);
+			}
 		}
 	}
 	
@@ -111,7 +112,13 @@ public class DrawingArea extends JPanel {
 			}
 		}
 		
-		saveImage("bar_chart");
+		image = new BufferedImage((int)width, (int)height, BufferedImage.TYPE_INT_RGB);
+		Graphics g = image.getGraphics();
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, (int)width, (int)height);
+		for (Shape r1 : shapes) {
+			r1.paint(g);
+		}
 	}
 	
 	public void drawingPie() {
@@ -165,7 +172,13 @@ public class DrawingArea extends JPanel {
 			}
 		}
 		
-		saveImage("pie_chart");
+		image = new BufferedImage((int)width, (int)height, BufferedImage.TYPE_INT_RGB);
+		Graphics g = image.getGraphics();
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, (int)width, (int)height);
+		for (Shape r2 : shapes) {
+			r2.paint(g);
+		}
 	}
 	
 	public void clear() {
@@ -194,17 +207,11 @@ public class DrawingArea extends JPanel {
 		return (1 / Math.sqrt(2 * Math.PI * var)) * Math.pow(Math.E, - (x / (width * 0.8 / fullScore) - avg) * (x / (width * 0.8 / fullScore) - avg) / (2 * var));
 	}
 	
-	public void saveImage(String name) {
-		BufferedImage image = new BufferedImage((int)width, (int)height, BufferedImage.TYPE_INT_RGB);
-		Graphics g = image.getGraphics();
-		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, (int)width, (int)height);
-		for (Shape r : shapes) {
-			r.paint(g);
-		}
+	public void saveImage(String savePath) {
 		try {
-			ImageIO.write(image, "PNG", new File(name + ".png"));
-		} catch (IOException e) {
+			ImageIO.write(image, "PNG", new File(savePath + ".png"));
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
