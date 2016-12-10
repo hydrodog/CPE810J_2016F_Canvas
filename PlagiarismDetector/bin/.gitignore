@@ -1,4 +1,11 @@
-/Compile/
+/PlagiarismDetector$ByteCodeTesting.class
+/PlagiarismDetector$FileParser.class
+/PlagiarismDetector$FunctionUse.class
+/PlagiarismDetector$StudentPatterns.class
+/PlagiarismDetector$fileRetrieval.class
+/PlagiarismDetector$variableEditor.class
+/PlagiarismDetector.class
+/Ss.class
 /binaryCodeCompare/
 /compile/
 /plagiarismDetectorByExecutableFile/

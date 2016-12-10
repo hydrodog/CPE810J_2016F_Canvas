@@ -45,6 +45,7 @@ public class PlagiarismDector {
 				java1.compileSourceCode();
 				java2.compileSourceCode();
 				BinaryCodeCompare x = new BinaryCodeCompare(file1.getName(),file2.getName(),"java",tempFileDirection);
+				
 				if(x.getSimilarity() > 0.5) {
 					File[] file = new File[2];
 					file[0] = file1;
