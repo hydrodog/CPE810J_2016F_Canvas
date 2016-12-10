@@ -6,6 +6,8 @@
  */
 package compile;
 
+import java.io.File;
+
 public interface Compile {
 	
 	public abstract void compileSourceCode();

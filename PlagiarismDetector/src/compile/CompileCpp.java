@@ -41,6 +41,7 @@ public class CompileCpp implements Compile{
 				System.out.println(line);
 			}
 			if(brFalse != null){
+				System.out.println("Error in Commond-Line\n£¡");
 				while( (line = brFalse.readLine()) != null) {
 					System.out.println(line);
 				}
