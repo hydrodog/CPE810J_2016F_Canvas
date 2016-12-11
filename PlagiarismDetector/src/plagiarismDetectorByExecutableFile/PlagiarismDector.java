@@ -9,7 +9,7 @@ public class PlagiarismDector {
 	private ArrayList<File> fileList = new ArrayList<File>();
 	private String type;
 	/*
-	 * // Since this program need to first compile source file into 
+	 * Since this program need to first compile source file into 
 	 * executable file, users are supposed to provide a direction 
 	 * to store these compiled files.
 	 */

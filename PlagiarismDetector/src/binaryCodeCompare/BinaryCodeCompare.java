@@ -8,21 +8,17 @@ package binaryCodeCompare;
 import java.io.File;
 
 public class BinaryCodeCompare {
-	private String aName;
-	private String bName;
-	private String type;
-	private String direction;
+	private File file1;
+	private File file2;
 	
-	public BinaryCodeCompare(String a, String b, String type, String direction) {
-		this.aName = a;
-		this.bName = b;
-		this.type = type;
-		this.direction = direction;
+	public BinaryCodeCompare(File file1, File file2) {
+		this.file1 = file1;
+		this.file2 = file2;
 	}
 	
 	public double getSimilarity() {
-		Reader aCode = new Reader(aName, direction, type);
-		Reader bCode = new Reader(bName, direction, type);
+		Reader aCode = new Reader(file1);
+		Reader bCode = new Reader(file2);
 		return binaryCodeSimilarity(aCode.getBytes(), bCode.getBytes());
 	}
 	

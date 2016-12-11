@@ -40,8 +40,9 @@ public class CompileCpp implements Compile{
 			while( (line = brTrue.readLine()) != null) {
 				System.out.println(line);
 			}
-			if(brFalse != null){
-				System.out.println("Error in Commond-Line\n£¡");
+			if((line = brFalse.readLine()) != null){
+				System.out.println("Error in Commond-Line!\n");
+				System.out.println(line);
 				while( (line = brFalse.readLine()) != null) {
 					System.out.println(line);
 				}

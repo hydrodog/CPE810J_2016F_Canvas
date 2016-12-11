@@ -12,19 +12,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Reader {
-	private String name;  //File name
-	private String direction;  // File direction
-	private String type;  //File type
+	private File file;
 	
-	public Reader(String name, String direction, String type) {
-		this.name = name;
-		this.direction = direction;
-		this.type = type;
+	public Reader(File file) {
+		this.file = file;
 	}
 	
 	
 	public byte[] getBytes() {
-		File file = new File(direction + name);
 		FileInputStream input = null;
 		byte[] bytes = null;
 		try {

@@ -23,7 +23,6 @@ public class CompilePython implements Compile{
 		String command = "cmd /c " + path + "&&python -m py_compile " + file.getName();
 		Process p;
 		try {
-			System.out.println(command);
 			p = Runtime.getRuntime().exec(command);
 			BufferedReader brTrue = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			BufferedReader brFalse = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -31,8 +30,9 @@ public class CompilePython implements Compile{
 			while( (line = brTrue.readLine()) != null) {
 				System.out.println(line);
 			}
-			if(brFalse != null){
+			if((line = brFalse.readLine()) != null){
 				System.out.println("Error in Commond-Line!\n");
+				System.out.println(line);
 				while( (line = brFalse.readLine()) != null) {
 					System.out.println(line);
 				}
