@@ -5,10 +5,12 @@ import java.util.ArrayList;
 
 public class Test {
 	public static void main(String[] args) {
+		File f1 = new File("e:HelloWorld1.java");
+		File f2 = new File("e:HelloWorld2.java");
 		ArrayList<File> f = new ArrayList<File>();
-		f.add(new File("e:/temp/Hello1.java"));
-		f.add(new File("e:/temp/BoogleGame.java"));
-		PlagiarismDector p = new PlagiarismDector(f,"java","e:/temp/");
-		ArrayList<File[]> f_ = p.getSuspectedFilePair();
+		f.add(f1);
+		f.add(f2);
+		PlagiarismDector p = new PlagiarismDector(f,"java");
+		p.getSuspectedFilePair();
 	}
 }

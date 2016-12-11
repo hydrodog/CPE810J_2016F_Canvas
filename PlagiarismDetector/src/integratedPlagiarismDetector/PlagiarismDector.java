@@ -7,7 +7,7 @@ public class PlagiarismDector {
 	private ArrayList<File> fileList = new ArrayList<File>();
 	private String type;
 	
-	public PlagiarismDector(ArrayList<File> fileList, String type, String tempFileDirection) {
+	public PlagiarismDector(ArrayList<File> fileList, String type) {
 		this.fileList = fileList;
 		this.type = type;
 	}
@@ -21,14 +21,17 @@ public class PlagiarismDector {
 				filePair[1] = fileList.get(j);
 				double similarity = 0;
 				
-				compiledFileCompare.FinalCompiledFileCompare fCFC = new compiledFileCompare.FinalCompiledFileCompare();
-				double compiledFileCompareSimilarity = fCFC.getSimilarity(filePair, type);
-				similarity += compiledFileCompareSimilarity;
+				//compiledFileCompare.FinalCompiledFileCompare fCFC = new compiledFileCompare.FinalCompiledFileCompare();
+				//double compiledFileCompareSimilarity = fCFC.getSimilarity(filePair, type);
+				//similarity += compiledFileCompareSimilarity;
+				
+				pla.Plagiarism lCS = new pla.Plagiarism();
+				similarity += lCS.pla(filePair[0].getPath(),filePair[1].getPath());
 				
 				if(similarity > 0.5) {
 					suspectedFilePair.add(filePair);
 					System.out.println("\nWarning!Find plagiarism between" + filePair[0].getName() +
-							"and" + filePair[2] +"!\n");
+							"and" + filePair[1] +"!\n");
 				}else {
 					System.out.println("\nNot find plagiarism!\n");
 				}

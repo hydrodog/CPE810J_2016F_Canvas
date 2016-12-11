@@ -1,4 +1,5 @@
-package Plagiarism;
+package pla;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 /*
  * author: Yu Yu 
- * modified： 
+ * modified锛� 
  */
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -47,12 +48,10 @@ public class Plagiarism{
 	}
 
 	
-	public double pla(){
+	public double pla(String path1, String path2){
 		Ss s = new Ss();
 		int size = 0;
 		
-		String path1 = "/Users/Yuyu/Documents/workspace/Plagiarism/src/Plagiarism/Test1.java";
-		String path2 = "/Users/Yuyu/Documents/workspace/Plagiarism/src/Plagiarism/Test2.java";
 		Plagiarism p = new Plagiarism();
 		String s1 = p.readFile(path1);
 		int length = s1.length();
@@ -62,18 +61,14 @@ public class Plagiarism{
 		String same = "";
 		
 		while(l.size()!=0){
-			System.out.println("----------"+l.size());
 			String str = l.get(0);
 			if(str.length()<10)
 				break;
-			System.out.println("**********"+str.length());
 			same = str;
 			res += (double)str.length()*100/length;
 			s1 = s1.replace(str, "");
 			s2 = s2.replace(str, "");
 			l = s.getSameStr(s1, s2);
-			System.out.println(s1);
-			System.out.println(s2);
 		}
 		
 		System.out.println("plagiarism ratio"+res+"%");
