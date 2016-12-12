@@ -1,9 +1,4 @@
 /* 
- * Updated GUI.
- * Able to set rules in GUI.
- * Rules are more flexible.
- * - 12/02/2016
- * 
  * Bug Fixed. 
  * Add the function to generate email text.
  * Update some methods. 
@@ -63,6 +58,8 @@ class otherGroup {
 class getFiles {
 	public File folder;
 	public File[] listOfFiles;
+	public List<String> console = new ArrayList<String>();
+	public direc RealDirectory;
 	public List<file> ruleshave = new ArrayList<file>();
 	public List<file> rulesnothave = new ArrayList<file>();
 	public List<file> files = new ArrayList<file>();
@@ -72,14 +69,11 @@ class getFiles {
 	public List<String> extension;
 	public List<String> wrongFiles = new ArrayList<String>();
 	public otherGroup other = new otherGroup();
-	boolean isTrue = true;
+	boolean istrue = true;
 	// get folder
 	public getFiles(ZipFile Z) {
-		
-		
 		// ...
 		File zip = Z.hw;
-		
 		String folderName = zip.getName();	// get the folder name
 		int pos = folderName.lastIndexOf(".");
 		if (pos > 0) {
@@ -93,6 +87,32 @@ class getFiles {
 		String folder = Z.outPath + "/" + folderName;
 		this.folder = new File(folder);
 		this.listOfFiles = this.folder.listFiles();
+		RealDirectory = new direc(folderName);
+		setDirectory(RealDirectory, listOfFiles);
+	}
+	
+	public void setDirectory(direc D, File[] LIST) {
+		for(File file : LIST) {
+			if(file.isFile() == true && file.isHidden() == false) {
+				String[] temp = file.getName().split(Pattern.quote("."));
+				file f = new file(temp[0], temp[1]);
+				D.have.add(f);
+			}
+			if(file.isDirectory() == true) {
+				File[] newlist = file.listFiles();
+				D.d.add(new direc(file.getName()));
+				int index = -1;
+				for(int i = 0; i < D.d.size(); i++) {
+					if(D.d.get(i).name.equals(file.getName()) == true) {
+						index = i;
+						break;
+					}
+				}
+				if(index != -1) {
+					setDirectory(D.d.get(index), newlist);
+				}
+			}
+		}
 	}
 	
 	// set file rules
@@ -207,7 +227,88 @@ class getFiles {
 		}*/
 	}
 	
+	public boolean isContain(direc d, file f) {
+		for(int i = 0; i < d.have.size(); i++) {
+			if(d.have.get(i).filename.equals(f.filename) == true && d.have.get(i).fileext.equals(f.fileext) == true) {
+				return true;
+			}
+			if(d.have.get(i).filename.equals("") == true && d.have.get(i).fileext.equals(f.fileext) == true) {
+				return true;
+			}
+			if(d.have.get(i).filename.equals(f.filename) == true && d.have.get(i).fileext.equals("") == true) {
+				return true;
+			}
+			if(d.have.get(i).filename.equals("") == true && d.have.get(i).fileext.equals("") == true) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
+	public void checkRules(direc reald, direc setd) {
+		if(reald.name.equalsIgnoreCase(setd.name) == false) {
+			istrue = false; // rules have violation
+			console.add("You don't have the directory \"" + setd.name + "\"");
+			//System.out.println("You don't have the directory \"" + setd.name + "\"");
+		}
+		else {
+			for(int ii = 0; ii < setd.have.size(); ii++) {
+				int index = -1;
+				boolean isTrue = false;
+				for(int i = 0; i < reald.have.size(); i++) {
+					if(reald.have.get(i).filename.equalsIgnoreCase(setd.have.get(ii).filename) == true && reald.have.get(i).fileext.equalsIgnoreCase(setd.have.get(ii).fileext) == true) {
+						isTrue = true;
+						index = i;
+						break;
+					}
+					if(setd.have.get(ii).filename.equalsIgnoreCase("") == true && reald.have.get(i).fileext.equalsIgnoreCase(setd.have.get(ii).fileext) == true) {
+						isTrue = true;
+						index = i;
+						break;
+					}
+					if(reald.have.get(i).filename.equalsIgnoreCase(setd.have.get(ii).filename) == true && setd.have.get(ii).fileext.equalsIgnoreCase("") == true) {
+						isTrue = true;
+						index = i;
+						break;
+					}
+					if(setd.have.get(i).filename.equalsIgnoreCase("") == true && setd.have.get(i).fileext.equalsIgnoreCase("") == true) {
+						isTrue = true;
+						index = i;
+						break;
+					}
+				}
+				if(isTrue == true) {
+					reald.have.get(index).isChecked = true;
+				}
+				else {
+					istrue = false;
+					console.add("You don't have the file \"" + setd.have.get(ii).toString() + "\" in the directory \"" + setd.name + "\"");
+					//System.out.println("You don't have the file \"" + setd.have.get(ii).toString() + "\" in the directory \"" + setd.name + "\"");
+				}
+			}
+			boolean isFound = false;
+			int ind = -1;
+			for(int j = 0; j < setd.d.size(); j++) {
+				for(int jj = 0; jj < reald.d.size(); jj++) {
+					if(reald.d.get(jj).name.equalsIgnoreCase(setd.d.get(j).name) == true) {
+						isFound = true;
+						ind = jj;
+						break;
+					}
+				}
+				if(isFound == false) {
+					istrue = false;
+					console.add("You don't have the directory \"" + setd.d.get(j).name + "\"");
+					//System.out.println("You don't have the directory \"" + setd.d.get(j).name + "\"");
+				}
+				else {
+					checkRules(reald.d.get(ind), setd.d.get(j));
+					isFound = false;
+				}
+			}
+		}	
+	}
+	/*
 	// check the extension with the rules
 	public void checkRules() {
 		System.out.println("Checking the file rules...");
@@ -215,7 +316,7 @@ class getFiles {
 		int tot = ruleshave.size();
 		boolean[] correct = new boolean[tot];
 		for(int i = 0; i < extension.size(); i++) {
-			if(contains(rulesnothave, files.get(i)) == true) {
+			if(contains(rulesnothave, files.get(i)) == true && contains(ruleshave, files.get(i)) == false) {
 				isTrue = false;
 				if(count == 0) {
 					System.out.println("You get the wrong rules!");
@@ -227,7 +328,7 @@ class getFiles {
 			}
 		}
 		System.out.println();
-	}
+	}*/
 }
 
 public class ZipFile {
@@ -269,7 +370,7 @@ public class ZipFile {
 		text = "Dear " + stuName + ":\n\nYou get the rules wrong for your homework.\n\n"
 				+ "Here are the files that are not allowed:\n";
 		for(int i = 0; i < wrong.size(); i++) {
-			text = text + "\t" + wrong.get(i) + "\n";
+			text = text + wrong.get(i) + "\n";
 		}
 		text = text + "\nPlease resubmit the homework!\nThank you!\n\nCanvas system\n";
 		String date = new SimpleDateFormat("MM/dd/yyyy   HH:mm:ss").
@@ -296,7 +397,7 @@ public class ZipFile {
 		// Session session = Session.getDefaultInstance(p);
 		
 		try {
-			System.out.println("Sending email, please wait...");
+			//System.out.println("Sending email, please wait...");
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress("mycanvasmanager@gmail.com"));
 			message.setRecipients(Message.RecipientType.TO,	
@@ -306,7 +407,7 @@ public class ZipFile {
 
 			Transport.send(message);
 
-			System.out.println("Email has been sent successfully!\n");
+			//System.out.println("Email has been sent successfully!\n");
 		} catch (MessagingException e) {
 			throw new RuntimeException(e);
 		}
@@ -335,7 +436,7 @@ public class ZipFile {
 			ZipEntry zipEntry = null;
 			int re = 0; //
 			try {
-				System.out.println("Unziping...");
+				//System.out.println("Unziping...");
 				while ((zipEntry = zipInput.getNextEntry()) != null) {
 						if (zipEntry.isDirectory()) {
 							
@@ -350,7 +451,7 @@ public class ZipFile {
 						bufOutput.close();
 						}		
 				}
-				System.out.println("Done!\n");
+				//System.out.println("Done!\n");
 				fileOut.close();
 				zipInput.close();
 				bufInput.close();
