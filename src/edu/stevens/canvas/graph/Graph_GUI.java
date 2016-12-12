@@ -47,9 +47,7 @@ public class Graph_GUI extends JFrame implements ActionListener {
 	private JTextField assignmentChoosen = new JTextField();
 	// Graph Attribute: Full Score, Width of Group
 	private final JLabel lb0 = new JLabel("Graph Option:");
-	private final JLabel lb1 = new JLabel("Full Score:");
 	private final JLabel lb2 = new JLabel("Width of Group:");
-	private JTextField tf1 = new JTextField();
 	private JTextField tf2 = new JTextField();
 	// Button: Calculate the Statistics, Draw the Graph
 	private JButton buttonDraw = new JButton("Draw");
@@ -63,7 +61,7 @@ public class Graph_GUI extends JFrame implements ActionListener {
 	private JMenuItem openFile, saveFile, exit;
 	private FileDialog openDia, saveDia;
 	// Option boolean or String
-	private boolean allStudent = false, allAssignment = false, hasInput = false;
+	private boolean allStudent = false, allAssignment = false;
 	private String assignmentTypeChoosen, graphTypeChoosen;
 	// Font
 	private final Font f = new Font("Helvetica", Font.BOLD, 20);
@@ -154,15 +152,10 @@ public class Graph_GUI extends JFrame implements ActionListener {
 		JPanel commandPanel4 = new JPanel();
 		commandPanel4.setLayout(new GridLayout(5, 1, 10, 10));
 		lb0.setFont(f);
-		lb1.setFont(f);
 		lb2.setFont(f);
-		tf1.setFont(f);
 		tf2.setFont(f);
-		lb1.setForeground(Color.blue);
 		lb2.setForeground(Color.blue);
 		commandPanel4.add(lb0);
-		commandPanel4.add(lb1);
-		commandPanel4.add(tf1);
 		commandPanel4.add(lb2);
 		commandPanel4.add(tf2);
 		
@@ -218,17 +211,17 @@ public class Graph_GUI extends JFrame implements ActionListener {
 				file = new File(dirPath, fileName);
 				
 				try {
-						BufferedReader bufr = new BufferedReader(new FileReader(file));
-						// Read the text file by line.
+					BufferedReader bufr = new BufferedReader(new FileReader(file));
+					// Read the text file by line.
 						
-						String line = null;
+					String line = null;
 						
-						while((line = bufr.readLine()) != null) {
-							//to do: where should we put these input text?
-							//Now we know that the input data will be store in .txt
-							//But what's the format, and will there be any available data that is sorted by other group?
-						}
-						bufr.close();
+					while((line = bufr.readLine()) != null) {
+						//to do: where should we put these input text?
+						//Now we know that the input data will be store in .txt
+						//But what's the format, and will there be any available data that is sorted by other group?
+					}
+					bufr.close();
 				}
 				catch (IOException ex) {
 					throw new RuntimeException("Failed to open");
@@ -299,21 +292,21 @@ public class Graph_GUI extends JFrame implements ActionListener {
 		// draw the graph
 		if (label.equals("Draw")) {
 			// get the graph option and assignment name
-			String fullScore = tf1.getText();
 			String widthOfGroup = tf2.getText();
 			String assignment = assignmentChoosen.getText();
 			
-			if (!fullScore.equals("") && !widthOfGroup.equals("")) {
-				double full = Double.parseDouble(fullScore);
-				int m = (int)(full / Double.parseDouble(widthOfGroup));
+			if (!widthOfGroup.equals("")) {
+				double width = Integer.parseInt(widthOfGroup);
 				
 				// get the grade and the number of each group
-				GradeGroup gg = new GradeGroup(allStudent, allAssignment, assignmentTypeChoosen, assignment, full, m);
+				GradeGroup gg = new GradeGroup(allStudent, allAssignment, assignmentTypeChoosen, assignment, width);
+				double full = gg.getFull();
+				int group = (int) (full / width);
 				ArrayList<Integer> num = gg.getNum();
 				ArrayList<Double> grade = gg.getGrade();
 				
 				if (gg.getDone()) {
-					dgui = new Drawing_GUI(num, grade, graphTypeChoosen, full, m);
+					dgui = new Drawing_GUI(num, grade, graphTypeChoosen, full, group);
 				}
 			}
 		}
@@ -334,17 +327,17 @@ public class Graph_GUI extends JFrame implements ActionListener {
 		}
 	}
 		
-	JMenuBar getMenu() {//Set the menu here
+	JMenuBar getMenu() {// Set the menu and menubar
 		MenuListener myMenuListener = new MenuListener();
 		menubar = new JMenuBar();
 		menuFile = new JMenu("File");
 		menuFile.setFont(f);
 		openFile = new JMenuItem("Open a file..");
 		openFile.setFont(f);
-		//What should the open file do? to load a file that store the grade?
+		// What should the open file do? to load a file that store the grade?
 		saveFile = new JMenuItem("Save the graph");
 		saveFile.setFont(f);
-		//Save file should save the image
+		// Save file should save the image
 		exit = new JMenuItem("Exit");
 		exit.setFont(f);
 		openFile.addActionListener(myMenuListener);
@@ -359,25 +352,7 @@ public class Graph_GUI extends JFrame implements ActionListener {
 		saveDia = new FileDialog(this, "my save file", FileDialog.SAVE);
 		return menubar;
 	}
-	//Setup the MenuBar and Menu
 	
-	private String getNameFromText() {
-		String result = null;
-		//to do, if specific name of student or assignment given, directly output
-		//Do we really need this function? maybe it can help to search some student or some assignment
-		//But it would be a problem to determine whether the name given is for student or assignment.
-		result = inputText.getText();
-		if(result.equals("")) {
-			hasInput = false;
-			return null; //nothing is input
-		}
-					
-		if(result != null){
-			hasInput = true;
-			// to do
-		}
-		return result;//To get the input text,
-	}
 	// This part is for testing this GUI
 	public static void main(String args[]) {
 		Graph_GUI c1 = new Graph_GUI();

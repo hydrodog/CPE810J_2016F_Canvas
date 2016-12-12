@@ -17,18 +17,18 @@ public class DrawingArea extends JPanel {
 	private ArrayList<Shape> shapes;
 	private ArrayList<Integer> num;
 	private ArrayList<Double> grade;
-	private int m;
+	private int group;
 	private double fullScore;
 	private String graphTypeChoosen;
 	private double width, height;
 	private BufferedImage image;
 	
-	public DrawingArea(ArrayList<Integer> num, ArrayList<Double> grade, String graphTypeChoosen, double fullScore, int m) {
+	public DrawingArea(ArrayList<Integer> num, ArrayList<Double> grade, String graphTypeChoosen, double fullScore, int group) {
 		this.num = num;
 		this.grade = grade;
 		this.graphTypeChoosen = graphTypeChoosen;
 		this.fullScore = fullScore;
-		this.m = m;
+		this.group = group;
 	}
 	
 	public void paint(Graphics g) {
@@ -59,16 +59,16 @@ public class DrawingArea extends JPanel {
 		shapes = new ArrayList<Shape>();
 		
 		// draw the axis
-		double bar_width = width * 0.8 / m;
+		double bar_width = width * 0.8 / group;
 		shapes.add(new Line(width * 0.05, height * 0.10, width * 0.05, height * 0.90));
 		shapes.add(new Line(width * 0.05, height * 0.90, width * 0.90, height * 0.90));
 		shapes.add(new Line(width * 0.05, height * 0.10, width * 0.90, height * 0.10));
 		shapes.add(new Line(width * 0.90, height * 0.90, width * 0.90, height * 0.10));
 		shapes.add(new Str(width * 0.05, height * 0.05, "Number of Student"));
 		shapes.add(new Str(width * 0.92, height * 0.95, "Grade"));
-		for (int i = 0; i <= m; i++) {
+		for (int i = 0; i <= group; i++) {
 			shapes.add(new Line(width * 0.075 + bar_width * i, height * 0.9, width * 0.075 + bar_width * i, height * 0.91));
-			shapes.add(new Str(width * 0.06 + bar_width * i, height * 0.95, i * (fullScore / m) + ""));
+			shapes.add(new Str(width * 0.06 + bar_width * i, height * 0.95, i * (fullScore / group) + ""));
 		}
 		
 		// get the max number of the grade group
@@ -167,7 +167,7 @@ public class DrawingArea extends JPanel {
 				if (k + 1 == j) {
 					s = "]: ";
 				}
-				shapes.add(new Str(width * 0.7, height / (j + 1) * (k + 1), "[" + (k + 1) + "] [" + i * fullScore / m + ", " +  (i + 1) * fullScore / m + s + (double)pct / 100 + "%"));
+				shapes.add(new Str(width * 0.7, height / (j + 1) * (k + 1), "[" + (k + 1) + "] [" + i * fullScore / group + ", " +  (i + 1) * fullScore / group + s + (double)pct / 100 + "%"));
 				k++;
 			}
 		}

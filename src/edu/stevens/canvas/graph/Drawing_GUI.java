@@ -8,7 +8,7 @@ import javax.swing.*;
 public class Drawing_GUI extends JFrame {
 	private DrawingArea d;
 	
-	public Drawing_GUI(ArrayList<Integer> num, ArrayList<Double> grade, String graphTypeChoosen, double fullScore, int m) {
+	public Drawing_GUI(ArrayList<Integer> num, ArrayList<Double> grade, String graphTypeChoosen, double fullScore, int group) {
 		this.setTitle("Drawing GUI");
 		this.setSize(1500, 1000);
 		Container c = getContentPane();
@@ -18,7 +18,7 @@ public class Drawing_GUI extends JFrame {
 		title.setHorizontalAlignment(SwingConstants.CENTER);
 		c.add(title, BorderLayout.NORTH);
 		
-		d = new DrawingArea(num, grade, graphTypeChoosen, fullScore, m);
+		d = new DrawingArea(num, grade, graphTypeChoosen, fullScore, group);
 		c.add(d, BorderLayout.CENTER);
 		
 		this.setVisible(true);
