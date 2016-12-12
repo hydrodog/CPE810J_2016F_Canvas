@@ -71,7 +71,7 @@ public class Plagiarism{
 			l = s.getSameStr(s1, s2);
 		}
 		
-		System.out.println("plagiarism ratio"+res+"%");
+		System.out.println("LCS plagiarism ratio "+res+"%");
 return res/100;
 	}
 }

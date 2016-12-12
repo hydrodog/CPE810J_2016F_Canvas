@@ -21,17 +21,17 @@ public class PlagiarismDector {
 				filePair[1] = fileList.get(j);
 				double similarity = 0;
 				
-				//compiledFileCompare.FinalCompiledFileCompare fCFC = new compiledFileCompare.FinalCompiledFileCompare();
-				//double compiledFileCompareSimilarity = fCFC.getSimilarity(filePair, type);
-				//similarity += compiledFileCompareSimilarity;
+				compiledFileCompare.FinalCompiledFileCompare fCFC = new compiledFileCompare.FinalCompiledFileCompare();
+				double compiledFileCompareSimilarity = fCFC.getSimilarity(filePair, type);
+				similarity += compiledFileCompareSimilarity;
 				
 				pla.Plagiarism lCS = new pla.Plagiarism();
 				similarity += lCS.pla(filePair[0].getPath(),filePair[1].getPath());
 				
 				if(similarity > 0.5) {
 					suspectedFilePair.add(filePair);
-					System.out.println("\nWarning!Find plagiarism between" + filePair[0].getName() +
-							"and" + filePair[1] +"!\n");
+					System.out.println("\nWarning!Find plagiarism between " + filePair[0].getName() +
+							" and " + filePair[1].getName() +"!\n");
 				}else {
 					System.out.println("\nNot find plagiarism!\n");
 				}

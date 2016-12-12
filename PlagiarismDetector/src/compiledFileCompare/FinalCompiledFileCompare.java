@@ -7,15 +7,24 @@ public class FinalCompiledFileCompare {
 		CompiledFileCompare x;
 		if(type.equals("java")) {
 			x = new CompiledFileCompareJava(filePair,type);
-			return x.similarity();
+			double similarity = x.similarity();
+			double ratio = 100 * similarity;
+			System.out.println("Edit Distance between these two file is " + ratio + "%");
+			return similarity;
 		} else if(type.equals("c++")) {
 			x = new CompiledFileCompareCpp(filePair,type);
-			return x.similarity();
+			double similarity = x.similarity();
+			double ratio = 100 * similarity;
+			System.out.println("Edit Distance between these two file is " + ratio + "%");
+			return similarity;
 		} else if(type.equals("python")) {
 			x = new CompiledFileComparePy (filePair,type);
-			return x.similarity();
+			double similarity = x.similarity();
+			double ratio = 100 * similarity;
+			System.out.println("Edit Distance between these two file is " + ratio + "%");
+			return similarity;
 		} else {
-			System.out.println("Please check file type. (c++,java,python)");
+			System.out.println("Please check file type! Only [c++,java,python] is acceptable!");
 			return 0;
 		}
 	}

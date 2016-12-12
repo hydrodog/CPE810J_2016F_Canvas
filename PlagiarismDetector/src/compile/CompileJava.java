@@ -26,7 +26,7 @@ public class CompileJava implements Compile{
 	
 	public CompileJava(File file, String direction){
 		this.file = file;
-		this.direction = direction;
+		this.direction = direction.replace(file.getName(), "" );
 	}
 
 	@Override
@@ -60,18 +60,18 @@ public class CompileJava implements Compile{
 			System.out.println(name + " Compilation success!");
 			try {
 				/*Automatically execute the .class file CompilationTask just made. This part is not
-				 * essential in plagiarism detection but here just add this funcion.
+				 * essential in plagiarism detection but here just add this function.
 				 */
 				URL[] urls = new URL[]{
-						new URL("file:/" + direction)
+						new URL("file:/" + direction + "/")
 				};
 				URLClassLoader classLoader = new URLClassLoader(urls);
 				Class class_ = classLoader.loadClass(name);
 				Method  method = class_.getDeclaredMethod("main", String[].class);
 				String[] args_ ={null};
-				System.out.println("\nBelow is the output of test file!");
+				System.out.println("\nBelow is the output of " + name + ":");
 				method.invoke(class_.newInstance(), args_);
-				System.out.println("Test file output end!\n");
+				System.out.println(name + " output end!\n");
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
