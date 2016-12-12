@@ -16,6 +16,7 @@ class file {
 	String filename;
 	String fileext;
 	boolean isAdd;
+	boolean isChecked;
 	public file(String n, String e) {
 		this.filename = n;
 		this.fileext = e;
@@ -70,7 +71,8 @@ public class ruleGUI extends JFrame {
 	private JTree tree;
 	private String direct = "Current directory: /";
 	public direc DIRECTORY;
-	
+	boolean isSend = false;
+	public List<String> output = new ArrayList<String>();
 	
 	final static boolean shouldFill = true;
     final static boolean shouldWeightX = true;
@@ -145,9 +147,24 @@ public class ruleGUI extends JFrame {
     	} 
     }
     
+    public boolean isContains(direc D, String s) {
+    	for(int i = 0; i < D.d.size(); i++) {
+    		if(D.d.get(i).name.equals(s) == true) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
 	public ruleGUI(String s) throws Exception {
 		super(s);
+		process = new JTextArea();
+		process.setEditable(false);
+		
+		process.setText(process.getText() + "Unziping...\n");
 		ZipFile Z = new ZipFile();
+		process.setText(process.getText() + "Done!\n");
+		
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
@@ -197,44 +214,91 @@ public class ruleGUI extends JFrame {
 				else {
 					node = (DefaultMutableTreeNode) node.getParent();
 				}
-				DefaultMutableTreeNode category = null;
-				DefaultMutableTreeNode f = null;
-				
-				List<String> list = new ArrayList<String>();
-				
-		        category = new DefaultMutableTreeNode(D);
-		        list.add(category.toString());
-				node.add(category);
-				f = new DefaultMutableTreeNode("Allows all files");
-		        category.add(f);
-		        //addObject(category);
-		        //DefaultMutableTreeNode parent = (DefaultMutableTreeNode)
-		        model.reload(node);
-		        
-				DefaultMutableTreeNode temp = node;
-				if((DefaultMutableTreeNode)temp.getParent() != null) {
-					list.add(node.toString());
+				DefaultMutableTreeNode child = (DefaultMutableTreeNode)
+						node.getFirstChild();
+				boolean isExist = false;
+				//System.out.println(child);
+				if(child.toString().equals(D) == true) {
+					process.setText(process.getText() + "Directory already exist!\n");
+					isExist = true;
 				}
-				while((DefaultMutableTreeNode)temp.getParent() != null) {
-					list.add(((DefaultMutableTreeNode)temp.getParent()).toString());
-					if((DefaultMutableTreeNode)((DefaultMutableTreeNode)temp.getParent()).getParent() == null) {
-						break;
+				while(child.getNextSibling() != null) {
+					child = (DefaultMutableTreeNode)
+							child.getNextSibling();
+					//System.out.println(child);
+					if(child.toString().equals(D) == true) {
+						process.setText(process.getText() + "Directory already exist!\n");
+						isExist = true;
 					}
-					temp = (DefaultMutableTreeNode)temp.getParent();
-					
 				}
-				direc d = DIRECTORY;
-		        for(int i = list.size()-1; i >= 0; i--) {
-		        	//System.out.println(list.get(i));
-		        	d.d.add(new direc(list.get(i)));
-		        	for(int ii = 0; ii < d.d.size(); ii++) {
-		        		if(d.d.get(ii).name.equals(list.get(i)) == true) {
-		        			d = d.d.get(ii);
-		        			break;
+				if(isExist == false) {
+					DefaultMutableTreeNode category = null;
+					DefaultMutableTreeNode f = null;
+					
+					List<String> list = new ArrayList<String>();
+					
+			        category = new DefaultMutableTreeNode(D);
+			        list.add(category.toString());
+					node.add(category);
+					f = new DefaultMutableTreeNode("Allows all files");
+			        category.add(f);
+			        //addObject(category);
+			        //DefaultMutableTreeNode parent = (DefaultMutableTreeNode)
+			        model.reload(node);
+			        
+					DefaultMutableTreeNode temp = node;
+					//if((DefaultMutableTreeNode)temp.getParent() != null) {
+						list.add(node.toString());
+					//}
+					while((DefaultMutableTreeNode)temp.getParent() != null) {
+						list.add(((DefaultMutableTreeNode)temp.getParent()).toString());
+						/*if((DefaultMutableTreeNode)((DefaultMutableTreeNode)temp.getParent()).getParent() == null) {
+							break;
+						}*/
+						temp = (DefaultMutableTreeNode)temp.getParent();
+						
+					}
+					direc d = DIRECTORY;
+			        for(int i = list.size()-2; i >= 0; i--) {
+			        	//System.out.println(list.get(i));
+			        	if(isContains(d, list.get(i)) == false) {
+			        		d.d.add(new direc(list.get(i)));
+			        	}
+			        	for(int ii = 0; ii < d.d.size(); ii++) {
+			        		if(d.d.get(ii).name.equals(list.get(i)) == true) {
+			        			d = d.d.get(ii);
+			        			break;
+			        		}
+			        	}
+					}
+				}
+				
+		        /*
+		        for(int i = 0; i < list.size(); i++) {
+		        	System.out.println(list.get(i));
+		        }
+		        */
+		        
+		        //System.out.println(d.name);
+		        //System.out.println(DIRECTORY.d.size());
+		        /*
+		        for(int i = 0; i < DIRECTORY.d.size(); i++) {
+		        	process.setText(process.getText() + " " + DIRECTORY.d.get(i).name);
+		        	if(DIRECTORY.d.get(i).d.size() != 0) {
+		        		for(int ii = 0; ii < DIRECTORY.d.get(i).d.size(); ii++) {
+		        			process.setText(process.getText() + " " + DIRECTORY.d.get(i).d.get(ii).name + "*");
+		        			if(DIRECTORY.d.get(i).d.get(ii).d.size() != 0) {
+				        		for(int iii = 0; iii < DIRECTORY.d.get(i).d.get(ii).d.size(); iii++) {
+				        			process.setText(process.getText() + " " + DIRECTORY.d.get(i).d.get(ii).d.get(iii).name + "**");
+				        		}
+				        	}
 		        		}
 		        	}
-				}
-		        //System.out.println(d.name);
+		        }*/
+		        //process.setText("1");
+				must_t.setText("");
+				mustnot_t.setText("");
+				directories.setText("");
 			}
 		});
 		
@@ -244,22 +308,22 @@ public class ruleGUI extends JFrame {
 	                       tree.getLastSelectedPathComponent();
 				List<String> list = new ArrayList<String>();
 				DefaultMutableTreeNode temp = node;
-				if((DefaultMutableTreeNode)temp.getParent() != null) {
+				//if((DefaultMutableTreeNode)temp.getParent() != null) {
 					list.add(node.toString());
-				}
+				//}
 				while((DefaultMutableTreeNode)temp.getParent() != null) {
 					list.add(((DefaultMutableTreeNode)temp.getParent()).toString());
-					if((DefaultMutableTreeNode)((DefaultMutableTreeNode)temp.getParent()).getParent() == null) {
+					/*if((DefaultMutableTreeNode)((DefaultMutableTreeNode)temp.getParent()).getParent() == null) {
 						break;
-					}
+					}*/
 					temp = (DefaultMutableTreeNode)temp.getParent();
 					
 				}
 				direc d = DIRECTORY;
 				direc t = null;
-		        for(int i = list.size()-1; i >= 0; i--) {
+		        for(int i = list.size()-2; i >= 0; i--) {
 		        	//System.out.println(list.get(i));
-		        	d.d.add(new direc(list.get(i)));
+		        	//d.d.add(new direc(list.get(i)));
 		        	for(int ii = 0; ii < d.d.size(); ii++) {
 		        		if(d.d.get(ii).name.equals(list.get(i)) == true) {
 		        			t = d;
@@ -281,13 +345,27 @@ public class ruleGUI extends JFrame {
 					node1.remove(node);
 					model.reload(node1);
 				}
-				
-				
+				for(int i = 0; i < DIRECTORY.d.size(); i++) {
+		        	process.setText(process.getText() + " " + DIRECTORY.d.get(i).name);
+		        	if(DIRECTORY.d.get(i).d.size() != 0) {
+		        		for(int ii = 0; ii < DIRECTORY.d.get(i).d.size(); ii++) {
+		        			process.setText(process.getText() + " " + DIRECTORY.d.get(i).d.get(ii).name + "*");
+		        			if(DIRECTORY.d.get(i).d.get(ii).d.size() != 0) {
+				        		for(int iii = 0; iii < DIRECTORY.d.get(i).d.get(ii).d.size(); iii++) {
+				        			process.setText(process.getText() + " " + DIRECTORY.d.get(i).d.get(ii).d.get(iii).name + "**");
+				        		}
+				        	}
+		        		}
+		        	}
+		        }
+				must_t.setText("");
+				mustnot_t.setText("");
+				directories.setText("");
 			}
 		});
 		
-		process = new JTextArea();
-		process.setEditable(false);
+		
+		
 		sp = new JScrollPane(process);
 		sp.setBounds(10,60,780,500);
 		sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -331,7 +409,7 @@ public class ruleGUI extends JFrame {
 				//System.out.println(d.d.get(0).d.get(0).d.get(0).d.get(0).name);
 				
 				
-				for(int i = list.size()-1; i >= 0; i--) {
+				for(int i = list.size()-2; i >= 0; i--) {
 					//System.out.println(list.get(i));
 					for(int ii = 0; ii < d.d.size(); ii++) {
 						//System.out.println(d.d.get(ii).name);
@@ -341,7 +419,7 @@ public class ruleGUI extends JFrame {
 						}
 					}
 				}
-				//System.out.println(d.name);
+				
 				
 				readRule(d, s1, true);
 				readRule(d, s2, false);
@@ -351,6 +429,7 @@ public class ruleGUI extends JFrame {
 						node.remove(node.getFirstLeaf());
 						model.reload(node);
 					}
+					//System.out.println(node);
 					if(d.have.get(i).isAdd != true) {
 						f = new DefaultMutableTreeNode(d.have.get(i));
 						node.add(f);
@@ -397,49 +476,80 @@ public class ruleGUI extends JFrame {
 					}
 					process.setText(process.getText() + "\n");
 				}
+				must_t.setText("");
+				mustnot_t.setText("");
+				directories.setText("");
 			}
 		});
 		
+		String str = folderName;
 		reset.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				if(have.size() != 0 || nothave.size() != 0)
-					process.setText(process.getText() + "Reset the rules!\n");
+				root.removeAllChildren();
+		        DefaultMutableTreeNode f = null;
+		        f = new DefaultMutableTreeNode("Allows all files");
+		        root.add(f);
+		        model.reload();
+				DIRECTORY = new direc(str);
 				must_t.setText("");
 				mustnot_t.setText("");
-				have.clear();
-				nothave.clear();
+				directories.setText("");
 			}
 		});
+		
 		
 		ok.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				//otherGroup other = new otherGroup();
 				
 				try {
-					
 					getFiles G = new getFiles(Z);
 					String newDirect = G.folder.getName();
 					int pos = newDirect.lastIndexOf(".");
 					if (pos > 0) {
 					    newDirect = newDirect.substring(0, pos);
 					}
+					/*
 					for(int i = 0; i < have.size(); i++) {
 						G.other.rules.add(have.get(i));
 					}
 					for(int i = 0; i < nothave.size(); i++) {
 						G.other.rulesN.add(nothave.get(i));
+					}*/
+					//G.setAll();
+					//System.out.println(DIRECTORY.name);
+					G.checkRules(G.RealDirectory, DIRECTORY);
+					for(int i = 0; i < G.console.size(); i++) {
+						process.setText(process.getText() + G.console.get(i) + "\n");
 					}
-					G.setAll();
-					G.checkRules();
-					if(G.isTrue == false) {
-						//Z.sendEmail(Z.writeEmail(G.wrongFiles));
+					
+					
+					if(G.istrue == false) {
+						// use thread to update GUI while in progress
+						process.setText(process.getText() + "Sending email, please wait...\n");
+						SwingWorker<List<String>, Object> worker = new SwingWorker<List<String>, Object>() {
+				        @Override
+				        protected List<String> doInBackground() throws Exception {                
+				            return G.console; // call a REST API
+				        }
+				        @Override
+				        protected void done() {
+				            try {
+				            	
+				        		Z.sendEmail(Z.writeEmail(get()));
+				        		process.setText(process.getText() + "Email has been sent successfully!\n");
+				            } catch (Exception e) {
+				                //ignore
+				            }
+				        }
+				    };      
+				    worker.execute();
 					}
+					
+					
 					else {
-						System.out.println("You are good! Nothing wrong with the rules!\n");
-					}
-					System.out.println("Compiling the file...");
-					if(Z.runFile(Z.hw) == false) {
-						Z.warnHw();
+						process.setText(process.getText() + "Nothing wrong with the rules!\n");
+						//System.out.println("You are good! Nothing wrong with the rules!\n");
 					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -447,6 +557,8 @@ public class ruleGUI extends JFrame {
 				}
 			}
 		});
+		
+		
 		JPanel pane1 = new JPanel(new GridBagLayout());
 		JPanel pane2 = new JPanel(new GridBagLayout());
 		JPanel pane3 = new JPanel(new GridBagLayout());
@@ -614,11 +726,28 @@ public class ruleGUI extends JFrame {
 					if(sub[i].contains(".")) {
 						String[] temp = sub[i].split(Pattern.quote("."));
 						file f = new file(temp[0], temp[1]);
-						d.have.add(f);
+						boolean ishave = false;
+						for(int ii = 0; ii < d.have.size(); ii++) {
+							if(d.have.get(ii).toString().equals(sub[i]) == true) {
+								ishave = true;
+							}
+						}
+						if(ishave == false) {
+							d.have.add(f);
+						}
 					}
 					else {
 						file f = new file("*", sub[i]);
-						d.have.add(f);
+						boolean ishave = false;
+						for(int ii = 0; ii < d.have.size(); ii++) {
+							if(d.have.get(ii).fileext.equals(sub[i]) == true && 
+									d.have.get(ii).filename.equals("")) {
+								ishave = true;
+							}
+						}
+						if(ishave == false) {
+							d.have.add(f);
+						}
 					}
 				}
 			}
@@ -627,21 +756,32 @@ public class ruleGUI extends JFrame {
 					if(sub[i].contains(".")) {
 						String[] temp = sub[i].split(Pattern.quote("."));
 						file f = new file(temp[0], temp[1]);
-						d.nothave.add(f);
+						boolean ishave = false;
+						for(int ii = 0; ii < d.nothave.size(); ii++) {
+							if(d.nothave.get(ii).toString().equals(sub[i]) == true) {
+								ishave = true;
+							}
+						}
+						if(ishave == false) {
+							d.nothave.add(f);
+						}
 					}
 					else {
 						file f = new file("*", sub[i]);
-						d.nothave.add(f);
+						boolean ishave = false;
+						for(int ii = 0; ii < d.nothave.size(); ii++) {
+							if(d.nothave.get(ii).fileext.equals(sub[i]) == true && 
+									d.nothave.get(ii).filename.equals("")) {
+								ishave = true;
+							}
+						}
+						if(ishave == false) {
+							d.nothave.add(f);
+						}
 					}
 				}
 			}
 		}
-		
-		
-		
 	}
-	
-	
-	
 }
 
