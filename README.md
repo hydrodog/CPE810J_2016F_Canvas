@@ -53,3 +53,9 @@ Add new buttons and actionlisteners to Graph_GUI class;
 Update the Drawing part;
 
 -- Lan Chang
+
+# WEEK 6
+
+Add method that can read a category of grade file, combine the whole classes together and debug the program;
+
+-- Lan Chang
