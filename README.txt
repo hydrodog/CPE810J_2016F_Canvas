@@ -27,3 +27,4 @@ And it can be split into parts:
 	  5. Comment Area: text the comments and generate a comment file;
 
 ----------------------------------------------------
+In the file MyDemo.java is the frame of the gui, but haven't finished yet;
