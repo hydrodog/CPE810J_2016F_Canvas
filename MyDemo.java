@@ -71,27 +71,24 @@ class MyDemo extends JFrame {
                 
                 openDia.setVisible(true);
                 
-                String dirpath = openDia.getDirectory();//获取打开文件路径并保存到字符串中。
-                String fileName = openDia.getFile();//获取打开文件名称并保存到字符串中
+                String dirpath = openDia.getDirectory();
+                String fileName = openDia.getFile();
                 
-                if (dirpath == null || fileName == null)//判断路径和文件是否为空
+                if (dirpath == null || fileName == null)
                     return;
                 else
-                    display.setText(null);//文件不为空，清空原来文件内容。
-                file = new File(dirpath, fileName);//创建新的路径和名称
+                    display.setText(null);
+                file = new File(dirpath, fileName);
 
                 try {
-                    BufferedReader bufr = new BufferedReader(new FileReader(file));//尝试从文件中读东西
-                    String line = null;//变量字符串初始化为空
+                    BufferedReader bufr = new BufferedReader(new FileReader(file));
+                    String line = null;
                     while ((line = bufr.readLine()) != null) {
-                	display.append(line + "\r\n");//显示每一行内容
-                    }
-                    bufr.close();//关闭文件
+                	display.append(line + "\r\n");
+                    bufr.close();
                 } catch (FileNotFoundException e1) {
-                    // 抛出文件路径找不到异常
                     e1.printStackTrace();
                 } catch (IOException e1) {
-                    // 抛出IO异常
                     e1.printStackTrace();
                 }
 
@@ -103,24 +100,24 @@ class MyDemo extends JFrame {
         nextItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (file == null) {
-                    nextDia.setVisible(true);//显示保存文件对话框
-                    String dirpath = nextDia.getDirectory();//获取保存文件路径并保存到字符串中。
-                    String fileName = nextDia.getFile();////获取打保存文件名称并保存到字符串中
+                    nextDia.setVisible(true);
+                    String dirpath = nextDia.getDirectory();
+                    String fileName = nextDia.getFile();
                     
-                    if (dirpath == null || fileName == null)//判断路径和文件是否为空
-                        return;//空操作
+                    if (dirpath == null || fileName == null)
+                        return;
                     else
-                        file=new File(dirpath,fileName);//文件不为空，新建一个路径和名称
+                        file=new File(dirpath,fileName);
                 }
                     try {
                         BufferedWriter bufw = new BufferedWriter(new FileWriter(file));
                         
-                        String text = display.getText();//获取文本内容
-                        bufw.write(text);//将获取文本内容写入到字符输出流
+                        String text = display.getText();
+                        bufw.write(text);
                         
-                        bufw.close();//关闭文件
+                        bufw.close();
                     } catch (IOException e1) {
-                        //抛出IO异常
+                        
                         e1.printStackTrace();
                     }
                 
@@ -129,7 +126,6 @@ class MyDemo extends JFrame {
 
         });
         
-        // 退出菜单项监听
         closeItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
@@ -137,7 +133,6 @@ class MyDemo extends JFrame {
 
         });
         
-        // 窗体关闭监听
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
