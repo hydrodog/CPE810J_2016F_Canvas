@@ -29,6 +29,7 @@ public class SummaryStat {
 		return list.size();
 	}
 	
+		
 	public static double sum(ArrayList<Double> list) {
 		double sum = 0;
 		for (int i = 0; i < list.size(); i++){
@@ -53,7 +54,7 @@ public class SummaryStat {
 		}
 	}
 	
-	/*
+	
 	public static ArrayList<Double> mode(final ArrayList<Integer> list) {
 		final ArrayList<Double> modes = new ArrayList<Double>();
 		final Map<Double, Integer> countMap = new HashMap<Double, Integer>();
@@ -83,7 +84,7 @@ public class SummaryStat {
 		}
 		return modes;
 	}
-	*/
+	
 	
 	public static double variance(ArrayList<Double> list) {
 		double var = 0;
