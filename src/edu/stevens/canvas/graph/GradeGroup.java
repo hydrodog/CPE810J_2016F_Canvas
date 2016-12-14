@@ -83,35 +83,28 @@ public class GradeGroup {
 			if (fileList[i].getName().matches(quizRegex) && assignmentTypeChoosen.matches(quizRegex)) {
 				index.add(i);
 			}
-			if (assignmentTypeChoosen.equals("All")) {
-				index.add(i);
-			}
 		}
 		
-		HashMap<String, GradeCount> multiGrade = new HashMap<String, GradeCount> ();
+		fullScore = 0;
+		
+		HashMap<String, Double> multiGrade = new HashMap<String, Double> ();
 		
 		for (int i = 0; i < index.size(); i++) {			
 			Scanner fileInput;
 			try {
 				fileInput = new Scanner(fileList[index.get(i)]);
 				
-				fullScore = Double.parseDouble(fileInput.next());
+				fullScore += Double.parseDouble(fileInput.next());
 				
 				while (fileInput.hasNext()) {
 					String id_temp = fileInput.next();
-					String grade_temp = fileInput.next();
+					double grade_temp = Double.parseDouble(fileInput.next());
 					if (!multiGrade.containsKey(id_temp)) {
-						int count0 = 1;
-						double tg0 = Double.parseDouble(grade_temp) / fullScore * 100;
-						multiGrade.put(id_temp, new GradeCount(tg0, count0));
+						multiGrade.put(id_temp, grade_temp);
 					}
 					else {
-						double tg0 = Double.parseDouble(grade_temp) / fullScore * 100;
-						int count1 = multiGrade.get(id_temp).getN();
-						double tg1 = multiGrade.get(id_temp).getTg() * multiGrade.get(id_temp).getN();
-						int count2 = count1 + 1;
-						double tg2 = (tg1 + tg0) / count2;
-						multiGrade.put(id_temp, new GradeCount(tg2, count2));
+						double grade_sum = multiGrade.get(id_temp);
+						multiGrade.put(id_temp, grade_sum + grade_temp);
 					}
 				}
 			}
@@ -122,8 +115,8 @@ public class GradeGroup {
 		
 		grade = new ArrayList<Double> ();
 		
-		for (HashMap.Entry<String, GradeCount> entry : multiGrade.entrySet()) {
-			grade.add(entry.getValue().getTg());
+		for (HashMap.Entry<String, Double> entry : multiGrade.entrySet()) {
+			grade.add(entry.getValue() / fullScore * 100);
 		}
 		
 		fullScore = 100;
@@ -189,23 +182,5 @@ public class GradeGroup {
 	
 	public double getFull() {
 		return fullScore;
-	}
-}
-
-class GradeCount {
-	private double tg;
-	private int n;
-	
-	public GradeCount(double tg, int n) {
-		this.tg = tg;
-		this.n = n;
-	}
-	
-	public int getN() {
-		return n;
-	}
-	
-	public double getTg() {
-		return tg;
 	}
 }

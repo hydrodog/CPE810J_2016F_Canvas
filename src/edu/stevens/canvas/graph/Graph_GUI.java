@@ -22,49 +22,65 @@ import javax.swing.*;
  * See that there should be pie chart and bar chart, add these two buttons and action listeners.
 */
 
-public class Graph_GUI extends JFrame implements ActionListener {
+public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListener {
 	private JTextField inputText;
 	
 	// These are used to choose the data range, is it going to draw a graph for a student or all student?
 	// And is the target data include one assignment, all assignment or one category of assignment?
+	
 	// Assignment Type: Quiz, Test, Project, Assignment, All
 	private final JLabel assignmentType = new JLabel("Assignment Type:");
-	private final String[] assignmentTypeName = {"Quiz", "Test", "Project", "Assignment", "All"};
+	private final String[] assignmentTypeName = {"Assignment", "Quiz", "Test", "Project", "All"};
 	private JRadioButton[] assignmentTypeButton = new JRadioButton[assignmentTypeName.length];
-	// Student Type: All Student, Single Student
-	private final JLabel studentType = new JLabel("Student Type:");
-	private final String[] studentTypeName = {"All Student", "Single Student"};
-	private JRadioButton[] studentTypeButton = new JRadioButton[studentTypeName.length];
-	// Graph Type: Histogram, Pie Chart
-	private final JLabel graphType = new JLabel("Graph Type:");
-	private final String[] graphTypeName = {"Histogram", "Pie Chart"};
-	private JRadioButton[] graphTypeButton = new JRadioButton[graphTypeName.length];
+	
+	private final String[] assignmentTypePercent = {"Assignment_p", "Quiz_p", "Test_p", "Project_p", "All_p"};
+	private JTextField[] assignmentTypePercentField = new JTextField[assignmentTypePercent.length];
+	
 	// Assignment Num: All Assignment, One Assignment and Assignment Name
 	private final JLabel assignmentNum = new JLabel("Assignment Num:");
 	private final String[] assignmentNumName = {"All Assignment", "One Assignment"};
 	private JRadioButton[] assignmentNumButton = new JRadioButton[assignmentNumName.length];
 	private final JLabel assignmentName = new JLabel("Assignment Name:");
 	private JTextField assignmentChoosen = new JTextField();
-	// Graph Attribute: Full Score, Width of Group
-	private final JLabel lb0 = new JLabel("Graph Option:");
-	private final JLabel lb2 = new JLabel("Width of Group:");
-	private JTextField tf2 = new JTextField();
+	
+	// Student Type: All Student, Single Student and Student Name
+	private final JLabel studentType = new JLabel("Student Num:");
+	private final String[] studentTypeName = {"All Student", "Single Student"};
+	private JRadioButton[] studentTypeButton = new JRadioButton[studentTypeName.length];
+	private final JLabel studentName = new JLabel("Student Name:");
+	private JTextField studentChoosen = new JTextField();
+	
+	// Graph Type: Histogram, Pie Chart
+	private final JLabel graphType = new JLabel("Graph Type:");
+	private final String[] graphTypeName = {"Histogram", "Pie Chart"};
+	private JRadioButton[] graphTypeButton = new JRadioButton[graphTypeName.length];
+	
+	// Graph Attribute: Width of Group
+	private final JLabel lb1 = new JLabel("Graph Option:");
+	private JLabel lb2 = new JLabel("Width of Group: 10");
+	private JScrollBar jsb = new JScrollBar(JScrollBar.HORIZONTAL, 10, 10, 1, 30);
+	
 	// Button: Calculate the Statistics, Draw the Graph
 	private JButton buttonDraw = new JButton("Draw");
 	private JButton buttonCalculate = new JButton("Calculate");
+	
 	// Show Statistics Result
 	private JTextArea outputText = new JTextArea("");
+	
 	// Menu
 	private JMenuBar menubar;
 	private JMenu menuFile;
 	private File file;
 	private JMenuItem openFile, saveFile, exit;
 	private FileDialog openDia, saveDia;
+	
 	// Option boolean or String
 	private boolean allStudent = false, allAssignment = false;
 	private String assignmentTypeChoosen, graphTypeChoosen;
+	
 	// Font
-	private final Font f = new Font("Helvetica", Font.BOLD, 20);
+	private final Font f = new Font("Helvetica", Font.BOLD, 30);
+	
 	// Graph
 	private String savePath;
 	private Drawing_GUI dgui;
@@ -73,7 +89,7 @@ public class Graph_GUI extends JFrame implements ActionListener {
 	public Graph_GUI(){
 		super();
 		init();
-		this.setSize(1000, 800);
+		this.setSize(2000, 1000);
 		this.setBackground(Color.LIGHT_GRAY);
 		this.setTitle("Graph GUI");
 		this.setLocation(100, 100);
@@ -90,48 +106,32 @@ public class Graph_GUI extends JFrame implements ActionListener {
 		
 		// Assignment Type
 		JPanel commandPanel1 = new JPanel();
-		commandPanel1.setLayout(new GridLayout(6, 1, 10, 10));
+		commandPanel1.setLayout(new GridLayout(6, 1, 50, 20));
 		assignmentType.setFont(f);
 		commandPanel1.add(assignmentType);
 		ButtonGroup assignmentTypeGroup = new ButtonGroup();
 		for (int i = 0; i < assignmentTypeName.length; i++) {
 			assignmentTypeButton[i] = new JRadioButton(assignmentTypeName[i]);
 			assignmentTypeButton[i].setFont(f);
-			commandPanel1.add(assignmentTypeButton[i]);
 			assignmentTypeGroup.add(assignmentTypeButton[i]);
 			assignmentTypeButton[i].setForeground(Color.blue);
 			assignmentTypeButton[i].addActionListener(this);
-		}
-		
-		// Student Type and Graph Type
-		JPanel commandPanel2 = new JPanel();
-		commandPanel2.setLayout(new GridLayout(6, 1, 10, 10));
-		studentType.setFont(f);
-		commandPanel2.add(studentType);
-		ButtonGroup studentTypeGroup = new ButtonGroup();
-		for (int i = 0; i < studentTypeName.length; i++) {
-			studentTypeButton[i] = new JRadioButton(studentTypeName[i]);
-			studentTypeButton[i].setFont(f);
-			commandPanel2.add(studentTypeButton[i]);
-			studentTypeGroup.add(studentTypeButton[i]);
-			studentTypeButton[i].setForeground(Color.blue);
-			studentTypeButton[i].addActionListener(this);
-		}
-		graphType.setFont(f);
-		commandPanel2.add(graphType);
-		ButtonGroup graphTypeGroup = new ButtonGroup();
-		for (int i = 0; i < graphTypeName.length; i++) {
-			graphTypeButton[i] = new JRadioButton(graphTypeName[i]);
-			graphTypeButton[i].setFont(f);
-			commandPanel2.add(graphTypeButton[i]);
-			graphTypeGroup.add(graphTypeButton[i]);
-			graphTypeButton[i].setForeground(Color.blue);
-			graphTypeButton[i].addActionListener(this);
+			
+			assignmentTypePercentField[i] = new JTextField();
+			assignmentTypePercentField[i].setFont(f);
+			
+			JPanel temp = new JPanel();
+			temp.setLayout(new GridLayout(1, 2, 50, 20));
+			
+			temp.add(assignmentTypeButton[i]);
+			temp.add(assignmentTypePercentField[i]);
+			
+			commandPanel1.add(temp);
 		}
 		
 		// Assignment Num and Assignment Name
 		JPanel commandPanel3 = new JPanel();
-		commandPanel3.setLayout(new GridLayout(5, 1, 10, 10));
+		commandPanel3.setLayout(new GridLayout(5, 1, 50, 20));
 		assignmentNum.setFont(f);
 		commandPanel3.add(assignmentNum);
 		ButtonGroup assignmentNumGroup = new ButtonGroup();
@@ -148,20 +148,50 @@ public class Graph_GUI extends JFrame implements ActionListener {
 		assignmentChoosen.setFont(f);
 		commandPanel3.add(assignmentChoosen);
 		
+		// Student Type and Student Name
+		JPanel commandPanel2 = new JPanel();
+		commandPanel2.setLayout(new GridLayout(5, 1, 50, 20));
+		studentType.setFont(f);
+		commandPanel2.add(studentType);
+		ButtonGroup studentTypeGroup = new ButtonGroup();
+		for (int i = 0; i < studentTypeName.length; i++) {
+			studentTypeButton[i] = new JRadioButton(studentTypeName[i]);
+			studentTypeButton[i].setFont(f);
+			commandPanel2.add(studentTypeButton[i]);
+			studentTypeGroup.add(studentTypeButton[i]);
+			studentTypeButton[i].setForeground(Color.blue);
+			studentTypeButton[i].addActionListener(this);
+		}
+		studentName.setFont(f);
+		commandPanel2.add(studentName);
+		studentChoosen.setFont(f);
+		commandPanel2.add(studentChoosen);
+		
 		// Graph Option
 		JPanel commandPanel4 = new JPanel();
-		commandPanel4.setLayout(new GridLayout(5, 1, 10, 10));
-		lb0.setFont(f);
+		commandPanel4.setLayout(new GridLayout(6, 1, 50, 20));
+		graphType.setFont(f);
+		commandPanel4.add(graphType);
+		ButtonGroup graphTypeGroup = new ButtonGroup();
+		for (int i = 0; i < graphTypeName.length; i++) {
+			graphTypeButton[i] = new JRadioButton(graphTypeName[i]);
+			graphTypeButton[i].setFont(f);
+			commandPanel4.add(graphTypeButton[i]);
+			graphTypeGroup.add(graphTypeButton[i]);
+			graphTypeButton[i].setForeground(Color.blue);
+			graphTypeButton[i].addActionListener(this);
+		}
+		lb1.setFont(f);
 		lb2.setFont(f);
-		tf2.setFont(f);
+		jsb.addAdjustmentListener(this);
 		lb2.setForeground(Color.blue);
-		commandPanel4.add(lb0);
+		commandPanel4.add(lb1);
 		commandPanel4.add(lb2);
-		commandPanel4.add(tf2);
+		commandPanel4.add(jsb);
 		
 		// Button
 		JPanel buttonArea = new JPanel();
-		buttonArea.setLayout(new GridLayout(1, 2, 10, 10));
+		buttonArea.setLayout(new GridLayout(1, 2, 50, 20));
 		buttonCalculate.setFont(f);
 		buttonCalculate.addActionListener(this);
 		buttonDraw.setFont(f);
@@ -179,14 +209,14 @@ public class Graph_GUI extends JFrame implements ActionListener {
 		JPanel right = new JPanel();
 		right.setLayout(new BorderLayout());
 		JPanel select = new JPanel();
-		select.setLayout(new GridLayout(2, 2, 10, 10));
+		select.setLayout(new GridLayout(2, 2, 50, 20));
 		select.add(commandPanel1);
-		select.add(commandPanel2);
-		select.add(commandPanel3);
 		select.add(commandPanel4);
+		select.add(commandPanel3);
+		select.add(commandPanel2);
 		right.add("Center", select);
 		right.add("South", buttonArea);
-		c.setLayout(new GridLayout(1, 2, 10, 10));
+		c.setLayout(new GridLayout(1, 2, 50, 20));
 		c.add(left);
 		c.add(right);
 	}
@@ -292,22 +322,20 @@ public class Graph_GUI extends JFrame implements ActionListener {
 		// draw the graph
 		if (label.equals("Draw")) {
 			// get the graph option and assignment name
-			String widthOfGroup = tf2.getText();
+			int widthOfGroup = jsb.getValue();
 			String assignment = assignmentChoosen.getText();
 			
-			if (!widthOfGroup.equals("")) {
-				double width = Integer.parseInt(widthOfGroup);
+			double width = widthOfGroup;
 				
-				// get the grade and the number of each group
-				GradeGroup gg = new GradeGroup(allStudent, allAssignment, assignmentTypeChoosen, assignment, width);
-				double full = gg.getFull();
-				int group = (int) (full / width);
-				ArrayList<Integer> num = gg.getNum();
-				ArrayList<Double> grade = gg.getGrade();
+			// get the grade and the number of each group
+			GradeGroup gg = new GradeGroup(allStudent, allAssignment, assignmentTypeChoosen, assignment, width);
+			double full = gg.getFull();
+			int group = (int) (full / width);
+			ArrayList<Integer> num = gg.getNum();
+			ArrayList<Double> grade = gg.getGrade();
 				
-				if (gg.getDone()) {
-					dgui = new Drawing_GUI(num, grade, graphTypeChoosen, full, group);
-				}
+			if (gg.getDone()) {
+				dgui = new Drawing_GUI(num, grade, graphTypeChoosen, full, group);
 			}
 		}
 		
@@ -351,6 +379,10 @@ public class Graph_GUI extends JFrame implements ActionListener {
 		openDia = new FileDialog(this, "my open file", FileDialog.LOAD);
 		saveDia = new FileDialog(this, "my save file", FileDialog.SAVE);
 		return menubar;
+	}
+	
+	public void adjustmentValueChanged(AdjustmentEvent e) {
+		lb2.setText("Width of Group: " + e.getValue());
 	}
 	
 	// This part is for testing this GUI
