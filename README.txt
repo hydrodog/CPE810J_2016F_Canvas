@@ -28,3 +28,5 @@ And it can be split into parts:
 
 ----------------------------------------------------
 In the file MyDemo.java is the frame of the gui, but haven't finished yet;
+
+Compile.java is the compile part.
