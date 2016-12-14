@@ -85,6 +85,7 @@ class MyDemo extends JFrame {
                     String line = null;
                     while ((line = bufr.readLine()) != null) {
                 	display.append(line + "\r\n");
+                    }
                     bufr.close();
                 } catch (FileNotFoundException e1) {
                     e1.printStackTrace();
