@@ -30,3 +30,9 @@ And it can be split into parts:
 In the file MyDemo.java is the frame of the gui, but haven't finished yet;
 
 Compile.java is the compile part.
+
+---------------------------------------------------
+Task for tomorrow:
+	ensemble the gui together;     (Jiang Tao)
+	enable the cpp and py compile; (Xie YuCheng)
+	give up LOL or Dragon Vally;  (Cheng Weihao)
