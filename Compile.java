@@ -1,15 +1,37 @@
 import java.io.*;
 import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.FileDialog;
+import java.awt.Frame;
+import java.awt.Menu;
+import java.awt.MenuBar;
+import java.awt.MenuItem;
+import java.awt.TextArea;
+// import java.awt.TextField;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.TextArea;
-import javax.swing.JFrame;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import javax.swing.JButton;
-import java.awt.GridLayout;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 class Compile extends JFrame {
 	private TextArea rstDis;
-	private JButton run;
+	private JButton run, graSave;
+	private JTextField gra;
+	private JLabel graLab;
+	private JPanel gradArea;
 	Compile() {
 		
 		rstDis = new TextArea();
@@ -19,14 +41,34 @@ class Compile extends JFrame {
 				compile();
 			}
 		});
-		this.setLayout(new GridLayout(2,1));
+		graLab = new JLabel("Grade");
+		gra = new JTextField("", 2);
+		graSave = new JButton("Save Grade");
+		gradArea = new JPanel();
+		gradArea.setLayout(new GridLayout(3,1));
+		gradArea.add(graLab);
+		gradArea.add(gra);
+		gradArea.add(graSave);
+
+		// gra.setText(read());
+
+		graSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String ss = gra.getText();
+				grade(ss);
+			}
+		});
+
+		this.setLayout(new GridLayout(3,1));
 		this.add(run);
 		this.add(rstDis);
+		this.add(gradArea);
 		this.setVisible(true);
 		this.setBounds(300, 100, 650, 600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	public void compile() {
+		String sss = "";
 		try {
 		    Process pro = Runtime.getRuntime().exec("javac HelloWorld.java"); //need to modify to get the path of the file.
 		    String line = null;
@@ -41,7 +83,11 @@ class Compile extends JFrame {
 
 		//     System.out.println("javac Main.java" + " exitValue() " + pro.exitValue()); //show "0" if compile successfully
 
-		    if (exitValue != 1) {
+		    if (exitValue == 1) {
+			    sss = Integer.toString(25);
+			    grade(sss);
+			    gra.setText(sss);
+		    } else {
 			pro = Runtime.getRuntime().exec("java HelloWorld");
 			line = null;
 			in = new BufferedReader(
@@ -58,16 +104,55 @@ class Compile extends JFrame {
 				// System.out.println("java Main" + " The error : " + " " + line);
 			}
 			pro.waitFor();
+			exitValue = pro.exitValue();
+			if (exitValue == 1) {
+				sss = Integer.toString(50);
+				grade(sss);
+				gra.setText(sss);
+			} else {
+				sss = Integer.toString(90);
+				grade(sss);
+				gra.setText(sss);
+			}
 			// System.out.println("java Main" + " exitValue() " + pro.exitValue()); //show "0" when running successfully 
-
+			// read();
 		    }
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
 	}
+	public void grade(String str) {
+		String file = "grade.txt";
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+			String str1 = str ;
+			bw.write(str1);
+			bw.newLine();
+			bw.flush();
+			bw.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public void read() {
+		String file = "grade.txt";
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String line = br.readLine();
+			
+			while (line != null) {
+				gra.setText(line);
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// return line;
+	}
 	public static void main(String[] args) throws IOException { //this is the test code, we could run it successfully.
  		Compile java = new Compile();
 
- 		java.compile();
+ 		// java.compile();
 	}
 }
