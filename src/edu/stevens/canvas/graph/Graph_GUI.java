@@ -128,6 +128,7 @@ public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListe
 			
 			commandPanel1.add(temp);
 		}
+		assignmentTypePercentField[4].setEditable(false);
 		
 		// Assignment Num and Assignment Name
 		JPanel commandPanel3 = new JPanel();
@@ -232,7 +233,7 @@ public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListe
 				openDia.setVisible(true);
 				String dirPath = openDia.getDirectory();
 				String fileName = openDia.getFile();
-
+				
 				if (dirPath == null || fileName == null)
 					return ;
 				
@@ -321,40 +322,94 @@ public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListe
 		
 		// draw the graph
 		if (label.equals("Draw")) {
-			// get the graph option and assignment name
+			// get the graph option
 			int widthOfGroup = jsb.getValue();
+			
+			// get the assignment name
 			String assignment = assignmentChoosen.getText();
 			
+			// get the percentage
+			int[] percent = new int[4];
+			int p_sum = 0;
+			for (int i = 0; i < percent.length; i++) {
+				if (!assignmentTypePercentField[i].getText().equals("")) {
+					percent[i] = Integer.parseInt(assignmentTypePercentField[i].getText());
+				}
+				else {
+					percent[i] = 0;
+				}
+				p_sum += percent[i];
+			}
+			boolean z1 = percent[0] >= 0 && percent[1] >= 0 && percent[2] >= 0 && percent[3] >= 0;
+			assignmentTypePercentField[4].setText(p_sum + "");
+			
+			boolean z2 = widthOfGroup == 1 || widthOfGroup == 2 || widthOfGroup == 3 || widthOfGroup == 4
+					|| widthOfGroup == 5 || widthOfGroup == 10 || widthOfGroup == 20;
+			
 			double width = widthOfGroup;
-				
-			// get the grade and the number of each group
-			GradeGroup gg = new GradeGroup(allStudent, allAssignment, assignmentTypeChoosen, assignment, width);
-			double full = gg.getFull();
-			int group = (int) (full / width);
-			ArrayList<Integer> num = gg.getNum();
-			ArrayList<Double> grade = gg.getGrade();
-				
-			if (gg.getDone()) {
-				dgui = new Drawing_GUI(num, grade, graphTypeChoosen, full, group);
+			
+			if (z1 && z2 && (p_sum == 100 || !assignmentTypeChoosen.equals("All"))) {
+				// get the grade and the number of each group
+				GradeGroup gg = new GradeGroup(allStudent, allAssignment, assignmentTypeChoosen, assignment, width, percent);
+				double full = gg.getFull();
+				int group = (int) (full / width);
+				ArrayList<Integer> num = gg.getNum();
+				ArrayList<Double> grade = gg.getGrade();
+					
+				if (gg.getDone()) {
+					dgui = new Drawing_GUI(num, grade, graphTypeChoosen, full, group);
+				}
+			}
+			if (!z1) {
+				outputText.setText("Each percentage must not be less than 0!");
+			}
+			if (p_sum != 100 && assignmentTypeChoosen.equals("All")) {
+				outputText.setText("The sum of percentage must be 100!");
+			}
+			if (!z2) {
+				outputText.setText("Bad width!");
 			}
 		}
 		
 		if (label.equals("Calculate")) {
 			// get the assignment name
 			String assignment = assignmentChoosen.getText();
+						
+			// get the percentage
+			int[] percent = new int[4];
+			int p_sum = 0;
+			for (int i = 0; i < percent.length; i++) {
+				if (!assignmentTypePercentField[i].getText().equals("")) {
+					percent[i] = Integer.parseInt(assignmentTypePercentField[i].getText());
+				}
+				else {
+					percent[i] = 0;
+				}
+				p_sum += percent[i];
+			}
+			boolean z1 = percent[0] >= 0 && percent[1] >= 0 && percent[2] >= 0 && percent[3] >= 0;
+			assignmentTypePercentField[4].setText(p_sum + "");
 			
-			// get the grade
-			GradeGroup gg = new GradeGroup(allStudent, allAssignment, assignmentTypeChoosen, assignment);
-			ArrayList<Double> grade = gg.getGrade();
-			
-			if (gg.getDone()) {
-				SummaryStat ss = new SummaryStat(grade);
-				String str = ss.getStr().toString();
-				outputText.setText(str);
+			if (z1 && (p_sum == 100 || !assignmentTypeChoosen.equals("All"))) {
+				// get the grade
+				GradeGroup gg = new GradeGroup(allStudent, allAssignment, assignmentTypeChoosen, assignment, percent);
+				ArrayList<Double> grade = gg.getGrade();
+				
+				if (gg.getDone()) {
+					SummaryStat ss = new SummaryStat(grade);
+					String str = ss.getStr().toString();
+					outputText.setText(str);
+				}
+			}
+			if (!z1) {
+				outputText.setText("Each percentage must not be less than 0!");
+			}
+			if (p_sum != 100 && assignmentTypeChoosen.equals("All")) {
+				outputText.setText("The sum of percentage must be 100!");
 			}
 		}
 	}
-		
+	
 	JMenuBar getMenu() {// Set the menu and menubar
 		MenuListener myMenuListener = new MenuListener();
 		menubar = new JMenuBar();

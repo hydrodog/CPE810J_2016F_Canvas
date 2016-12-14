@@ -13,6 +13,6 @@ public class Rect extends Shape {
 	
 	public void paint(Graphics g) {
 		g.setColor(Color.BLUE);
-		g.fillRect((int)x + 1, (int)y + 1, (int)width - 2, (int)height - 2);
+		g.fillRect((int)x, (int)y, (int)width, (int)height);
 	}
 }

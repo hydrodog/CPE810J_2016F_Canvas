@@ -84,7 +84,7 @@ public class DrawingArea extends JPanel {
 			int h = (int) (num.get(i) * height * 0.80 / (num_max * 2));
 			if (h != 0) {
 				shapes.add(new Str(width * 0.075 + bar_width * i, height * 0.90 - h, num.get(i) + ""));
-				shapes.add(new Rect(width * 0.075 + bar_width * i + 1, height * 0.90 - h, bar_width - 2, h));
+				shapes.add(new Rect(width * 0.075 + bar_width * i, height * 0.90 - h, bar_width, h));
 			}
 		}
 		

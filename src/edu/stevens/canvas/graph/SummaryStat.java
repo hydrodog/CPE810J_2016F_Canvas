@@ -17,19 +17,13 @@ public class SummaryStat {
 		sb.append("Standard Deviation: " + StdDev(grade) + "\r\n" + "\r\n");
 		sb.append("Median: " + median(grade) + "\r\n" + "\r\n");
 		
-		//System.out.println("The mode(s): " + mode(grade));
-		/*
-		System.out.println("The sorted score from low to high is: " );
-		for(Double counter: grade) {
-			System.out.print(counter + " ");
-		}*/
+		sb.append("Mode(s): " + mode(grade) + "\r\n" + "\r\n");
 	}
 	
 	public static int count(ArrayList<Double> list) {
 		return list.size();
 	}
 	
-		
 	public static double sum(ArrayList<Double> list) {
 		double sum = 0;
 		for (int i = 0; i < list.size(); i++){
@@ -54,37 +48,36 @@ public class SummaryStat {
 		}
 	}
 	
-	
-	public static ArrayList<Double> mode(final ArrayList<Integer> list) {
-		final ArrayList<Double> modes = new ArrayList<Double>();
-		final Map<Double, Integer> countMap = new HashMap<Double, Integer>();
+	public static ArrayList<Integer> mode(final ArrayList<Double> list) {
+		final ArrayList<Integer> modes = new ArrayList<Integer>();
+		final Map<Integer, Integer> countMap = new HashMap<Integer, Integer>();
 
 		int max = -1;
 
-		for (final int n : list) {
+		for (final double n : list) {
+			int n2 = (int) n;
 			int count = 0;
-			if (countMap.containsKey(n)) {
-				count = countMap.get(n) + 1;
+			if (countMap.containsKey(n2)) {
+				count = countMap.get(n2) + 1;
 			}
 			else {
 				count = 1;
 			}
 			
-			countMap.put(n, count);
+			countMap.put(n2, count);
 			
 			if (count > max) {
 				max = count;
 			}
 		}
 
-		for (final Map.Entry<Double, Integer> tuple : countMap.entrySet()) {
+		for (final Map.Entry<Integer, Integer> tuple : countMap.entrySet()) {
 			if (tuple.getValue() == max) {
 				modes.add(tuple.getKey());
 			}
 		}
 		return modes;
 	}
-	
 	
 	public static double variance(ArrayList<Double> list) {
 		double var = 0;

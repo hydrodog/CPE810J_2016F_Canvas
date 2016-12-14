@@ -15,15 +15,21 @@ public class GradeGroup {
 	private String assignmentTypeChoosen, assignment;
 	private static ArrayList<Double> grade;
 	private static ArrayList<Integer> num;
+	private static HashMap<String, Double> multiGrade;
 	private int group;
-	private double fullScore, width;
+	private double fullScore, width, fullScore_temp;
 	private boolean done;
+	private int p1, p2, p3, p4;
 	
-	public GradeGroup(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen, String assignment) {
+	public GradeGroup(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen, String assignment, int[] percent) {
 		this.allStudent = allStudent;
 		this.allAssignment = allAssignment;
 		this.assignmentTypeChoosen = assignmentTypeChoosen;
 		this.assignment = assignment;
+		p1 = percent[0];
+		p2 = percent[1];
+		p3 = percent[2];
+		p4 = percent[3];
 		
 		File file = new File("grade");
 		fileList = file.listFiles();
@@ -33,18 +39,27 @@ public class GradeGroup {
 			done = true;
 		}
 		
-		if (this.allStudent == true && this.allAssignment == true) {
+		if (this.allStudent == true && this.allAssignment == true && !assignmentTypeChoosen.equals("All")) {
 			getMultiGradeFile();
+			done = true;
+		}
+		
+		if (this.allStudent == true && this.allAssignment == true && assignmentTypeChoosen.equals("All")) {
+			getAllGradeFile();
 			done = true;
 		}
 	}
 	
-	public GradeGroup(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen, String assignment, double width) {
+	public GradeGroup(boolean allStudent, boolean allAssignment, String assignmentTypeChoosen, String assignment, double width, int[] percent) {
 		this.allStudent = allStudent;
 		this.allAssignment = allAssignment;
 		this.assignmentTypeChoosen = assignmentTypeChoosen;
 		this.assignment = assignment;
 		this.width = width;
+		p1 = percent[0];
+		p2 = percent[1];
+		p3 = percent[2];
+		p4 = percent[3];
 		
 		File file = new File("grade");
 		fileList = file.listFiles();
@@ -55,11 +70,82 @@ public class GradeGroup {
 			done = true;
 		}
 		
-		if (this.allStudent == true && this.allAssignment == true) {
+		if (this.allStudent == true && this.allAssignment == true && !assignmentTypeChoosen.equals("All")) {
 			getMultiGradeFile();
 			cal();
 			done = true;
 		}
+		
+		if (this.allStudent == true && this.allAssignment == true && assignmentTypeChoosen.equals("All")) {
+			getAllGradeFile();
+			cal();
+			done = true;
+		}
+	}
+	
+	public void getAllGradeFile() {
+		assignmentTypeChoosen = "Assignment";
+		getMultiGradeFile();
+		HashMap<String, Double> gradeAssignment = multiGrade;
+		double fullAssignment = fullScore_temp;
+		
+		assignmentTypeChoosen = "Quiz";
+		getMultiGradeFile();
+		HashMap<String, Double> gradeQuiz = multiGrade;
+		double fullQuiz = fullScore_temp;
+		
+		assignmentTypeChoosen = "Test";
+		getMultiGradeFile();
+		HashMap<String, Double> gradeTest = multiGrade;
+		double fullTest = fullScore_temp;
+		
+		assignmentTypeChoosen = "Project";
+		getMultiGradeFile();
+		HashMap<String, Double> gradeProject = multiGrade;
+		double fullProject = fullScore_temp;
+		
+		HashMap<String, Double> gradeAll = new HashMap<String, Double> ();
+		
+		for (HashMap.Entry<String, Double> entry : gradeAssignment.entrySet()) {
+			gradeAll.put(entry.getKey(), entry.getValue() / fullAssignment * p1);
+		}
+		
+		for (HashMap.Entry<String, Double> entry : gradeQuiz.entrySet()) {
+			if (!gradeAll.containsKey(entry.getKey())) {
+				gradeAll.put(entry.getKey(), entry.getValue() / fullQuiz * p2);
+			}
+			else {
+				gradeAll.put(entry.getKey(), gradeAll.get(entry.getKey()) + entry.getValue() / fullQuiz * p2);
+			}
+		}
+		
+		for (HashMap.Entry<String, Double> entry : gradeTest.entrySet()) {
+			if (!gradeAll.containsKey(entry.getKey())) {
+				gradeAll.put(entry.getKey(), entry.getValue() / fullTest * p3);
+			}
+			else {
+				gradeAll.put(entry.getKey(), gradeAll.get(entry.getKey()) + entry.getValue() / fullTest * p3);
+			}
+		}
+		
+		for (HashMap.Entry<String, Double> entry : gradeProject.entrySet()) {
+			if (!gradeAll.containsKey(entry.getKey())) {
+				gradeAll.put(entry.getKey(), entry.getValue() / fullProject * p4);
+			}
+			else {
+				gradeAll.put(entry.getKey(), gradeAll.get(entry.getKey()) + entry.getValue() / fullProject * p4);
+			}
+		}
+		
+		grade = new ArrayList<Double> ();
+		
+		for (HashMap.Entry<String, Double> entry : gradeAll.entrySet()) {
+			grade.add(entry.getValue());
+		}
+		
+		fullScore = 100;
+		
+		group = (int) (100 / width);
 	}
 	
 	public void getMultiGradeFile() {
@@ -85,16 +171,16 @@ public class GradeGroup {
 			}
 		}
 		
-		fullScore = 0;
+		fullScore_temp = 0;
 		
-		HashMap<String, Double> multiGrade = new HashMap<String, Double> ();
+		multiGrade = new HashMap<String, Double> ();
 		
-		for (int i = 0; i < index.size(); i++) {			
+		for (int i = 0; i < index.size(); i++) {
 			Scanner fileInput;
 			try {
 				fileInput = new Scanner(fileList[index.get(i)]);
 				
-				fullScore += Double.parseDouble(fileInput.next());
+				fullScore_temp += Double.parseDouble(fileInput.next());
 				
 				while (fileInput.hasNext()) {
 					String id_temp = fileInput.next();
@@ -116,7 +202,7 @@ public class GradeGroup {
 		grade = new ArrayList<Double> ();
 		
 		for (HashMap.Entry<String, Double> entry : multiGrade.entrySet()) {
-			grade.add(entry.getValue() / fullScore * 100);
+			grade.add(entry.getValue() / fullScore_temp * 100);
 		}
 		
 		fullScore = 100;
