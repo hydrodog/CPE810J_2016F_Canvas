@@ -54,8 +54,18 @@ Update the Drawing part;
 
 -- Lan Chang
 
+Update Statistics functions and discussed future work of the project with group members;
+
+-- Tao Feng
+
 # WEEK 6
 
 Add method that can read a category of grade file, combine the whole classes together and debug the program;
 
 -- Lan Chang
+
+Documentations writing  for the project;
+Problem discussions with group members;
+ 
+-- Tao Feng
+
