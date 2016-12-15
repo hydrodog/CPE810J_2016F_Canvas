@@ -181,7 +181,7 @@ class Compile extends JFrame {
     public void run() {
         String sss = "";
         try {
-            Process pro = Runtime.getRuntime().exec("python Hi.py");
+            Process pro = Runtime.getRuntime().exec("python /Users/yucheng/Desktop/No1/Hi.py");
             String line = null;
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(pro.getInputStream()));
