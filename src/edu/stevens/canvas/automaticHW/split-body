@@ -1,0 +1,28 @@
+package ui;
+
+public class body {
+	
+	public static String peelL(String str) {
+		if (str == null) 
+			return str;
+		int len = str.length();
+		int i = str.indexOf('.');
+		String rst = str.substring(i, len);
+		return rst;
+		}
+	
+	public static void main(String[] args) {
+		String add = " ";
+		String suffix;
+   		suffix = peelL(add);
+   		if(suffix.equals("java")) {
+			runJAVA ();
+		}
+		else if(suffix.equals("cpp")) {
+			runCPP();
+		}
+		else if(suffix.equals("py")) {
+			System.out.println("1");
+			runPY();
+		}
+    }
