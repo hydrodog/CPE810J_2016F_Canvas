@@ -2,8 +2,13 @@ package edu.stevens.canvas.graph;
 
 import java.awt.*;
 import java.util.ArrayList;
-
 import javax.swing.*;
+
+/**
+ * class to display the drawing GUI
+ * @author Lan Chang
+ *
+ */
 
 public class Drawing_GUI extends JFrame {
 	private DrawingArea d;
@@ -18,6 +23,7 @@ public class Drawing_GUI extends JFrame {
 		title.setHorizontalAlignment(SwingConstants.CENTER);
 		c.add(title, BorderLayout.NORTH);
 		
+		// create the drawing area
 		d = new DrawingArea(num, grade, graphTypeChoosen, fullScore, group);
 		c.add(d, BorderLayout.CENTER);
 		
