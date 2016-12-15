@@ -2,6 +2,12 @@ package edu.stevens.canvas.graph;
 
 import java.awt.*;
 
+/**
+ * class to draw the line
+ * @author Lan Chang
+ *
+ */
+
 public class Line extends Shape {
 	private double x2, y2;
 	
@@ -13,6 +19,6 @@ public class Line extends Shape {
 	
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
-		g.drawLine((int)x, (int)y, (int)x2, (int)y2);
+		g.drawLine((int) x, (int) y, (int) x2, (int) y2);
 	}
 }

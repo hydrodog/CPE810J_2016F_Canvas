@@ -2,6 +2,12 @@ package edu.stevens.canvas.graph;
 
 import java.awt.*;
 
+/**
+ * class to draw the rectangle
+ * @author Lan Chang
+ *
+ */
+
 public class Rect extends Shape {
 	private double width, height;
 	
@@ -13,6 +19,6 @@ public class Rect extends Shape {
 	
 	public void paint(Graphics g) {
 		g.setColor(Color.BLUE);
-		g.fillRect((int)x, (int)y, (int)width, (int)height);
+		g.fillRect((int) x, (int) y, (int) width, (int) height);
 	}
 }

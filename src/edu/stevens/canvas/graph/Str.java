@@ -2,6 +2,12 @@ package edu.stevens.canvas.graph;
 
 import java.awt.*;
 
+/**
+ * class to draw the String
+ * @author Lan Chang
+ *
+ */
+
 public class Str extends Shape {
 	private String str;
 	
@@ -13,6 +19,6 @@ public class Str extends Shape {
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Helvetica", Font.PLAIN, 25));
-		g.drawString(str, (int)x, (int)y);
+		g.drawString(str, (int) x, (int) y);
 	}
 }
