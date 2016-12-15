@@ -10,17 +10,9 @@ import javax.swing.*;
  * @author: Zeming Wang
  * @modified:
  * This class is for the GUI part of graph group.
- * It will build an interface to react with the user including buttons to choose the mode, type of graph
- * 11.16:
- * Change the buttons to radio buttons
- * Reallocate the GUI
- * Talk with the download group, and find that the data they get doesn't show us the type of assignment
- * Which means we cannot directly know which assignment is quiz or test or project.
- * Talk with the download group, know that data is store in .txt file
- * Add read function to this class
- * 11.19~12.2:
- * See that there should be pie chart and bar chart, add these two buttons and action listeners.
-*/
+ * It will build an interface to react with the user including buttons to choose the mode, type of graph.
+ *
+ */
 
 public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListener {
 	private JTextField inputText;
@@ -46,7 +38,7 @@ public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListe
 	private final JLabel studentType = new JLabel("Student Num:");
 	private final String[] studentTypeName = {"All Student", "Single Student"};
 	private JRadioButton[] studentTypeButton = new JRadioButton[studentTypeName.length];
-	private final JLabel studentName = new JLabel("Student Name:");
+	private final JLabel studentName = new JLabel("Student ID:");
 	private JTextField studentChoosen = new JTextField();
 	
 	// Graph Type: Histogram, Pie Chart
@@ -103,7 +95,7 @@ public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListe
 		
 		inputText = new JTextField(14);
 		
-		// Assignment Type, setup buttons and panel, and the text area to let user input the weight of each type of assignment.
+		// Assignment Type, setup buttons and panel, and the text area to let user input the weight of each type of assignment
 		JPanel commandPanel1 = new JPanel();
 		commandPanel1.setLayout(new GridLayout(6, 1, 50, 20));
 		assignmentType.setFont(f);
@@ -224,10 +216,12 @@ public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListe
 	// The actionlistener reacts to the operation on Menu
 	class MenuListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			// exit
 			if (e.getActionCommand().equals("Exit")) {
 				System.exit(0); 
 			}
 			
+			// open a file
 			if (e.getActionCommand().equals("Open a file..")) {
 				openDia.setVisible(true);
 				String dirPath = openDia.getDirectory();
@@ -258,12 +252,13 @@ public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListe
 				}
 			}
 			
+			// save the graph
 			if (e.getActionCommand().equals("Save the graph")) {
 				if (file == null) {
 					saveDia.setVisible(true);
 					String dirPath = saveDia.getDirectory();
 					String fileName = saveDia.getFile();
-
+					
 					if (dirPath == null || fileName == null)
 						return ;
 					savePath = dirPath + fileName;
@@ -342,6 +337,7 @@ public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListe
 			boolean z1 = percent[0] >= 0 && percent[1] >= 0 && percent[2] >= 0 && percent[3] >= 0;
 			assignmentTypePercentField[4].setText(p_sum + "");
 			
+			// good width
 			boolean z2 = widthOfGroup == 1 || widthOfGroup == 2 || widthOfGroup == 3 || widthOfGroup == 4
 					|| widthOfGroup == 5 || widthOfGroup == 10 || widthOfGroup == 20;
 			
@@ -354,7 +350,8 @@ public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListe
 				int group = (int) (full / width);
 				ArrayList<Integer> num = gg.getNum();
 				ArrayList<Double> grade = gg.getGrade();
-					
+				
+				// display drawing GUI
 				if (gg.getDone()) {
 					dgui = new Drawing_GUI(num, grade, graphTypeChoosen, full, group);
 				}
@@ -373,6 +370,9 @@ public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListe
 		if (label.equals("Calculate")) {
 			// get the assignment name
 			String assignment = assignmentChoosen.getText();
+			
+			// get the student
+			String student = studentChoosen.getText();
 						
 			// get the percentage
 			int[] percent = new int[4];
@@ -391,13 +391,30 @@ public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListe
 			
 			if (z1 && (p_sum == 100 || !assignmentTypeChoosen.equals("All"))) {
 				// get the grade
-				GradeGroup gg = new GradeGroup(allStudent, allAssignment, assignmentTypeChoosen, assignment, percent);
+				GradeGroup gg = new GradeGroup(allStudent, allAssignment, assignmentTypeChoosen, assignment, student, percent);
 				ArrayList<Double> grade = gg.getGrade();
 				
-				if (gg.getDone()) {
-					SummaryStat ss = new SummaryStat(grade);
-					String str = ss.getStr().toString();
-					outputText.setText(str);
+				// display the summary statistics
+				if (allStudent == true) {
+					if (gg.getDone() && !assignmentChoosen.equals("")) {
+						SummaryStat ss = new SummaryStat(grade);
+						String str = ss.getStr().toString();
+						outputText.setText(str);
+					}
+					else {
+						outputText.setText("Please enter the assignment name!");
+					}
+				}
+				
+				// display single student's grade
+				if (allStudent == false) {
+					if (gg.getDone() && !student.equals("")) {
+						String str = gg.getStr().toString();
+						outputText.setText(str);
+					}
+					else {
+						outputText.setText("Please enter the student ID!");
+					}
 				}
 			}
 			if (!z1) {
