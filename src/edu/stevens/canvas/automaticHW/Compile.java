@@ -32,14 +32,49 @@ class Compile extends JFrame {
     private JTextField gra;
     private JLabel graLab;
     private JPanel gradArea;
+    String address = "/Users/chengweihao/Desktop/810p.py";
+	String suffix = " ";
+	String prefix = " ";
+    
     Compile() {
 
         rstDis = new TextArea();
         run = new JButton("run");
         run.addActionListener(new ActionListener() {
+            char a = '.';
+            char b = '/';
+        	int ad1, ad2;
             public void actionPerformed(ActionEvent e) {
-                runCpp();
-            }
+        		char[] ss = address.toCharArray();
+        		for(int i = 0; i < ss.length; i++) {
+        			if(ss[i] == a) {
+        				ad1 = i;
+        				for(int j = i + 1; j < ss.length; j++)        					
+        					suffix += ss[j];
+        			}
+        		}
+            	for(int x = ad1; x > 0; x--) {
+        			if(ss[x] == b) {
+        				ad2 = x;
+        				break;
+        			}
+        		}
+        		for(int y = 0; y < ad2; y++) {     					
+        			prefix += ss[y];
+        		}
+            	System.out.println(suffix);
+            	System.out.println(prefix);
+        		if(suffix.equals("java")) {
+        			runJAVA();
+        		}
+        		else if(suffix.equals("cpp")) {
+        			runCPP();
+        		}
+        		else if(suffix.equals("py")) {
+        			System.out.println("1");
+        			runPY();
+        		}
+            }                      
         });
         graLab = new JLabel("Grade");
         gra = new JTextField("", 2);
