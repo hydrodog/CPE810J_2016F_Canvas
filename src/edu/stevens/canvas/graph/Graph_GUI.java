@@ -25,10 +25,9 @@ import javax.swing.*;
 public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListener {
 	private JTextField inputText;
 	
-	// These are used to choose the data range, is it going to draw a graph for a student or all student?
-	// And is the target data include one assignment, all assignment or one category of assignment?
-	
-	// Assignment Type: Quiz, Test, Project, Assignment, All
+	// These are used to choose the data range
+	// is the target data include one assignment, all assignment or one category of assignment?
+	// Assignment Type: Quiz, Test, Project, Assignment, All (and the weight of each type)
 	private final JLabel assignmentType = new JLabel("Assignment Type:");
 	private final String[] assignmentTypeName = {"Assignment", "Quiz", "Test", "Project", "All"};
 	private JRadioButton[] assignmentTypeButton = new JRadioButton[assignmentTypeName.length];
@@ -55,7 +54,7 @@ public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListe
 	private final String[] graphTypeName = {"Histogram", "Pie Chart"};
 	private JRadioButton[] graphTypeButton = new JRadioButton[graphTypeName.length];
 	
-	// Graph Attribute: Width of Group
+	// Graph Attribute: Width of Group, the width means how many data are there in a group
 	private final JLabel lb1 = new JLabel("Graph Option:");
 	private JLabel lb2 = new JLabel("Width of Group: 10");
 	private JScrollBar jsb = new JScrollBar(JScrollBar.HORIZONTAL, 10, 10, 1, 30);
@@ -104,7 +103,7 @@ public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListe
 		
 		inputText = new JTextField(14);
 		
-		// Assignment Type
+		// Assignment Type, setup buttons and panel, and the text area to let user input the weight of each type of assignment.
 		JPanel commandPanel1 = new JPanel();
 		commandPanel1.setLayout(new GridLayout(6, 1, 50, 20));
 		assignmentType.setFont(f);
@@ -248,7 +247,7 @@ public class Graph_GUI extends JFrame implements ActionListener, AdjustmentListe
 					String line = null;
 						
 					while((line = bufr.readLine()) != null) {
-						//to do: where should we put these input text?
+						//where should we put these input text?
 						//Now we know that the input data will be store in .txt
 						//But what's the format, and will there be any available data that is sorted by other group?
 					}
