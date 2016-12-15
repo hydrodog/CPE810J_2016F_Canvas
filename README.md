@@ -64,8 +64,12 @@ Add method that can read a category of grade file, combine the whole classes tog
 
 -- Lan Chang
 
-Documentations writing  for the project;
-Problem discussions with group members;
- 
--- Tao Feng
+# WEEK 7
 
+Add method that can read all grade file, add method that can display single student's grade;
+
+-- Lan Chang
+
+Documentations writing for the project, problem discussions with group members, prepare for the presentation;
+ 
+-- Tao Feng, Zeming Wang, Lan Chang
