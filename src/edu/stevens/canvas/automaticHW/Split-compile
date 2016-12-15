@@ -11,7 +11,7 @@ public class compile {
 
 	public void compile(String path, String fileName, File file) {
 		grade grade1 = new grade();
-		String aaa= peel(fileName);
+		String aaa = peelF(fileName);
 ////		System.out.println(aaa);
 ////		System.out.println(path);
 		try {
@@ -176,12 +176,21 @@ public class compile {
 //             e1.printStackTrace();
 //         }
 //     }
-	public String peel(String str) {
+	public String peelF(String str) {
 		if (str == null) 
 			return str;
 		int len = str.length();
 		int i = str.indexOf('.');
 		String rst = str.substring(0, i);
+		return rst;
+		}
+
+	public String peelL(String str) {
+		if (str == null) 
+			return str;
+		int len = str.length();
+		int i = str.indexOf('.');
+		String rst = str.substring(i, len);
 		return rst;
 		}
 
@@ -193,3 +202,4 @@ public class compile {
 		return sss;
 	}
 }
+
