@@ -18,9 +18,9 @@ public class DrawingArea extends JPanel {
 	private ArrayList<Integer> num;
 	private ArrayList<Double> grade;
 	private int group;
+	private double width, height;
 	private double fullScore;
 	private String graphTypeChoosen;
-	private double width, height;
 	private BufferedImage image;
 	
 	public DrawingArea(ArrayList<Integer> num, ArrayList<Double> grade, String graphTypeChoosen, double fullScore, int group) {
@@ -31,6 +31,7 @@ public class DrawingArea extends JPanel {
 		this.group = group;
 	}
 	
+	// paint the shapes on the graphics
 	public void paint(Graphics g) {
 		// get the size
 		width = this.getWidth();
@@ -112,6 +113,7 @@ public class DrawingArea extends JPanel {
 			}
 		}
 		
+		// save the graph
 		image = new BufferedImage((int)width, (int)height, BufferedImage.TYPE_INT_RGB);
 		Graphics g = image.getGraphics();
 		g.setColor(Color.WHITE);
@@ -160,6 +162,7 @@ public class DrawingArea extends JPanel {
 			}
 		}
 		
+		// draw the legend
 		String s = "): ";
 		for (int i = 0, k = 0; i < num.size(); i++) {
 			if (num.get(i) != 0) {
@@ -172,6 +175,7 @@ public class DrawingArea extends JPanel {
 			}
 		}
 		
+		// save the graph
 		image = new BufferedImage((int)width, (int)height, BufferedImage.TYPE_INT_RGB);
 		Graphics g = image.getGraphics();
 		g.setColor(Color.WHITE);
@@ -181,11 +185,13 @@ public class DrawingArea extends JPanel {
 		}
 	}
 	
+	// clear the shapes
 	public void clear() {
 		shapes.clear();
 		repaint();
 	}
 	
+	// calculate the variance
 	public static double variance(ArrayList<Double> list) {
 		double var = 0;
 		for (int i = 0; i < list.size(); i++) {
@@ -194,6 +200,7 @@ public class DrawingArea extends JPanel {
 		return var / list.size();
 	}
 	
+	// calculate the average
 	public static double average(ArrayList<Double> list) {
 		double sum = 0;
 		for (int i = 0; i < list.size(); i++){
@@ -203,10 +210,12 @@ public class DrawingArea extends JPanel {
 		return average;
 	}
 	
+	// calculate the distribution
 	public double Gauss(double x, double avg, double var) {
 		return (1 / Math.sqrt(2 * Math.PI * var)) * Math.pow(Math.E, - (x / (width * 0.8 / fullScore) - avg) * (x / (width * 0.8 / fullScore) - avg) / (2 * var));
 	}
 	
+	// save the image to the path
 	public void saveImage(String savePath) {
 		try {
 			ImageIO.write(image, "PNG", new File(savePath + ".png"));
