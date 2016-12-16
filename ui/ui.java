@@ -1,4 +1,4 @@
-package ui;
+package com.company;
 
 import java.io.*;
 import java.util.*;
@@ -38,7 +38,7 @@ public class ui extends JFrame {
 	private JTextField gra;
 	private JLabel graLab, comLab, rstLab;
 	private JPanel gradArea, comPanel, rstPanel, panel, disPanel, runPanel, pane3;
-	private MenuBar bar;       // Menu bar  
+	private MenuBar bar;       // Menu bar
 	private Menu fileMenu;
 	private MenuItem openItem, nextItem, closeItem;
 	private FileDialog openDia, nextDia;
@@ -54,7 +54,7 @@ public class ui extends JFrame {
 
 
 	ui() {
-		
+
 		rstDis = new TextArea();
 		run = new JButton("run");
 		runPanel = new JPanel();
@@ -63,13 +63,13 @@ public class ui extends JFrame {
 		graLab = new JLabel("Grade");
 		gra = new JTextField("", 3);
 		graSave = new JButton("Save Grade");
-		
+
 		comLab = new JLabel("Comment ");
 		comArea = new JTextArea("");
 		comArea.setLineWrap(true);
 		comSave = new JButton("Save Comment");
 
-		bar = new MenuBar(); // 
+		bar = new MenuBar(); //
 		fileMenu = new Menu("file");// Initial menu
 		openItem = new MenuItem("open");// create open item
 		nextItem = new MenuItem("next");// create next item
@@ -91,7 +91,7 @@ public class ui extends JFrame {
 		this.setLayout(new GridBagLayout());
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0; 
+		c.gridx = 0;
 		c.gridy = 0;
 		c.gridwidth = 8;
 		c.gridheight = 7;
@@ -99,42 +99,42 @@ public class ui extends JFrame {
 
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.NONE;
-		c.gridx = 9; 
+		c.gridx = 9;
 		c.gridy = 1;
 		c.gridwidth = 1;
 		this.add(run, c);
 
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 9; 
+		c.gridx = 9;
 		c.gridy = 4;
 		c.gridwidth = 1;
 		this.add(graLab, c);
 
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.NONE;
-		c.gridx = 8; 
+		c.gridx = 8;
 		c.gridy = 5;
 		c.gridwidth = 2;
 		this.add(gra, c);
 
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.NONE;
-		c.gridx = 9; 
+		c.gridx = 9;
 		c.gridy = 6;
 		c.gridwidth = 1;
 		this.add(graSave, c);
 
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 9; 
+		c.gridx = 9;
 		c.gridy = 7;
 		c.gridwidth = 1;
 		this.add(comLab, c);
 
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.NONE;
-		c.gridx = 9; 
+		c.gridx = 9;
 		c.gridy = 8;
 		c.gridwidth = 2;
 		c.gridheight = 1;
@@ -142,21 +142,21 @@ public class ui extends JFrame {
 
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.NONE;
-		c.gridx = 9; 
+		c.gridx = 9;
 		c.gridy = 9;
 		c.gridwidth = 1;
 		this.add(comSave, c);
 
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0; 
+		c.gridx = 0;
 		c.gridy = 7;
 		c.gridwidth = 1;
 		this.add(rstLab, c);
 
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.NONE;
-		c.gridx = 0; 
+		c.gridx = 0;
 		c.gridy = 8;
 		c.gridwidth = 1;
 		c.gridheight = 1;
@@ -170,15 +170,17 @@ public class ui extends JFrame {
 	}
 
 	private void myEvent() {
-        
+
 		openItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				rstDis.setText(" ");
+
+				rstDis.setText("The Output is:\n");
+				gra.setText("");
+				comArea.setText("");
 				openDia.setVisible(true);
-				
+
 				dirpath = openDia.getDirectory();
-				fileName = openDia.getFile();				
+				fileName = openDia.getFile();
 				if (dirpath == null || fileName == null)
 					return;
 				else
@@ -199,79 +201,79 @@ public class ui extends JFrame {
 				}
 			}
 		});
-				
-				run.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						result = " ";
-						if(get(dirpath + fileName).equals("java")) {
-							java.compile(dirpath, fileName, file);
-							result = java.getResult();
-							rstDis.append(result + "\r\n");
-							sss = java.getGrade();
-							gra.setText(sss);
-						} else if(get(dirpath + fileName).equals("cpp")) {
-							cpp.compile(dirpath, fileName, file);
-							result = cpp.getResult();
-							rstDis.append(result + "\r\n");
-							sss = cpp.getGrade();
-							gra.setText(sss);
-						} else if(get(dirpath + fileName).equals("py")) {
-							py.compile(dirpath, fileName, file);
-							result = py.getResult();
-							rstDis.append(result + "\r\n");
-							sss = py.getGrade();
-							gra.setText(sss);
-						}
-					}
-				});
 
-				graSave.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						String ss = gra.getText();
-						grade1.grade(ss, dirpath);
-					}
-				});
-				
-				comSave.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						String ss = comArea.getText();
-						comment1.comment(ss, dirpath);
-					}
-				});
+		run.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				result = " ";
+				if(get(dirpath + fileName).equals("java")) {
+					java.compile(dirpath, fileName, file);
+					result = java.getResult();
+					rstDis.append(result + "\r\n");
+					sss = java.getGrade();
+					gra.setText(sss);
+				} else if(get(dirpath + fileName).equals("cpp")) {
+					cpp.compile(dirpath, fileName, file);
+					result = cpp.getResult();
+					rstDis.append(result + "\r\n");
+					sss = cpp.getGrade();
+					gra.setText(sss);
+				} else if(get(dirpath + fileName).equals("py")) {
+					py.compile(dirpath, fileName, file);
+					result = py.getResult();
+					rstDis.append(result + "\r\n");
+					sss = py.getGrade();
+					gra.setText(sss);
+				}
+			}
+		});
 
-		
+		graSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String ss = gra.getText();
+				grade1.grade(ss, dirpath);
+			}
+		});
+
+		comSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String ss = comArea.getText();
+				comment1.comment(ss, dirpath);
+			}
+		});
+
+
 		nextItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (file == null) {
-				nextDia.setVisible(true);
-				String dirpath = nextDia.getDirectory();
-				String fileName = nextDia.getFile();
-				
-				if (dirpath == null || fileName == null)
-					return;
-				else
-					file=new File(dirpath,fileName);
+					nextDia.setVisible(true);
+					String dirpath = nextDia.getDirectory();
+					String fileName = nextDia.getFile();
+
+					if (dirpath == null || fileName == null)
+						return;
+					else
+						file=new File(dirpath,fileName);
 				}
 				try {
 					BufferedWriter bufw = new BufferedWriter(new FileWriter(file));
-					
+
 					String text = display.getText();
 					bufw.write(text);
-					
+
 					bufw.close();
 				} catch (IOException e1) {
-					
+
 					e1.printStackTrace();
 				}
 			}
 		});
-		
+
 		closeItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});
-		
+
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
@@ -280,20 +282,20 @@ public class ui extends JFrame {
 	}
 
 	public static void main(String[] args) throws IOException { //this is the test code, we could run it successfully.
- 		ui java = new ui();
+		ui java = new ui();
 	}
 
-public String get(String str) {
-	String suffix = "";
-	String prefix = "";
-	char a = '.';
-	char b = '/';
-	int ad1 = 0, ad2 = 0;
+	public String get(String str) {
+		String suffix = "";
+		String prefix = "";
+		char a = '.';
+		char b = '/';
+		int ad1 = 0, ad2 = 0;
 		char[] ss = str.toCharArray();
 		for(int i = 0; i < ss.length; i++) {
 			if(ss[i] == a) {
 				ad1 = i;
-				for(int j = i + 1; j < ss.length; j++)        					
+				for(int j = i + 1; j < ss.length; j++)
 					suffix += ss[j];
 			}
 		}
@@ -303,19 +305,19 @@ public String get(String str) {
 				break;
 			}
 		}
-		for(int y = 0; y < ad2; y++) {     					
+		for(int y = 0; y < ad2; y++) {
 			prefix += ss[y];
 		}
 		return suffix;
-}
+	}
 
-class Code {
-	private String path;
-	private String fileName;
-	public void setPath(String str) {
-		this.path = str;
-	}
-	public void setName(String str) {
-		this.fileName = str;
-	}
-}}
+	class Code {
+		private String path;
+		private String fileName;
+		public void setPath(String str) {
+			this.path = str;
+		}
+		public void setName(String str) {
+			this.fileName = str;
+		}
+	}}
