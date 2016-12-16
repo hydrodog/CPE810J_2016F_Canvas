@@ -59,7 +59,7 @@ public class childCpp extends father {
                     sss = Integer.toString(50);
                     grade1.grade(sss, path);
                 } else {
-                    sss = Integer.toString(90);
+                    sss = Integer.toString(100);
                     grade1.grade(sss, path);
                 }
             }
