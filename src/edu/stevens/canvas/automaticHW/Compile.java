@@ -1,6 +1,8 @@
 import java.io.*;
 import java.util.*;
 import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.Menu;
@@ -25,13 +27,15 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JTextArea;
 
 public class Compile extends JFrame {
-	private TextArea rstDis, comArea, display;
+	private TextArea rstDis, display;
+	private JTextArea comArea;
 	private JButton run, graSave, comSave;
 	private JTextField gra;
-	private JLabel graLab, comLab;
-	private JPanel gradArea, comPanel;
+	private JLabel graLab, comLab, rstLab;
+	private JPanel gradArea, comPanel, rstPanel, panel, disPanel, runPanel, pane3;
 	private MenuBar bar;       // Menu bar  
 	private Menu fileMenu;
 	private MenuItem openItem, nextItem, closeItem;
@@ -52,60 +56,218 @@ public class Compile extends JFrame {
 		rstDis = new TextArea();
 		// run button
 		run = new JButton("run");
+		runPanel = new JPanel();
+		runPanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		// c.fill = GridBagConstraints.NONE;
+		// c.gridwidth = 2;
+		// c.gridheight = 2;
+		// c.gridx = 1;
+		// c.gridy = 1;
+		// runPanel.add(run, c);
+
+
 		// grade area
 		graLab = new JLabel("Grade");
-		gra = new JTextField("", 2);
+		gra = new JTextField("", 3);
 		graSave = new JButton("Save Grade");
-		gradArea = new JPanel();
-		gradArea.setLayout(new GridLayout(3,1));
-		gradArea.add(graLab);
-		gradArea.add(gra);
-		gradArea.add(graSave);
+		// gradArea = new JPanel();
+		// gradArea.setLayout(new GridBagLayout());
+		// c = new GridBagConstraints();
+		// c.fill = GridBagConstraints.HORIZONTAL;
+		// c.gridwidth = 1;
+		// c.weightx = 0;
+		// c.gridx = 0;
+		// c.gridy = 0;
+		// gradArea.add(graLab, c);
+
+		// c = new GridBagConstraints();
+		// c.fill = GridBagConstraints.NONE;
+		// c.gridwidth = 2;
+		// c.gridx = 1;
+		// c.gridy = 2;
+		// gradArea.add(gra, c);
+
+		// c = new GridBagConstraints();
+		// c.fill = GridBagConstraints.NONE;
+		// // c.weightx = 1.0;
+		// c.gridwidth = 2;
+		// c.gridx = 1;
+		// c.gridy = 4;
+		// gradArea.add(graSave, c);
 
 		// comment area
-		comLab = new JLabel("Comment: ");
-		comArea = new TextArea();
+		comLab = new JLabel("Comment ");
+		comArea = new JTextArea("");
+		comArea.setLineWrap(true);
 		comSave = new JButton("Save Comment");
-		comPanel = new JPanel();
-		comPanel.setLayout(new GridLayout(3,1));
-		comPanel.add(comLab);
-		comPanel.add(comArea);
-		comPanel.add(comSave);
+		// comPanel = new JPanel();
+		// comPanel.setLayout(new GridBagLayout());
+		// c = new GridBagConstraints();
+		// c.fill = GridBagConstraints.HORIZONTAL;
+		// c.weightx = 0.5;
+		// c.gridwidth = 1;
+		// c.gridx = 0;
+		// c.gridy = 0;
+		// comPanel.add(comLab, c);
 
-
+		// c = new GridBagConstraints();
+		// c.fill = GridBagConstraints.NONE;
+		// c.gridwidth = 2;
+		// // c.gridheight = 2;
+		// c.gridx = 0;
+		// c.gridy = 1;
+		// comPanel.add(comArea, c);
 		
+		// c = new GridBagConstraints();
+		// c.fill = GridBagConstraints.NONE;
+		// c.gridwidth = 1;
+		// c.gridx = 0;
+		// c.gridy = 4;
+		// comPanel.add(comSave, c);
+
+		// pane3 = new JPanel();
+		// pane3.setLayout(new GridLayout(3, 1));
+		// pane3.add(runPanel);
+		// pane3.add(gradArea);
+		// pane3.add(comPanel);
+
+
+		// menu bar
 		bar = new MenuBar(); // 
-		display = new TextArea();
-
 		fileMenu = new Menu("file");// Initial menu
-
 		openItem = new MenuItem("open");// create open item
 		nextItem = new MenuItem("next");// create next item
 		closeItem = new MenuItem("quit");
-
 		fileMenu.add(openItem);
 		fileMenu.add(nextItem);
 		fileMenu.add(closeItem);
-
 		bar.add(fileMenu);
 		this.setMenuBar(bar);
+
+		display = new TextArea();
+		rstLab = new JLabel("Result");
+		// rstPanel = new JPanel();
+		// rstPanel.setLayout(new GridBagLayout());
+		// c = new GridBagConstraints();
+		// c.fill = GridBagConstraints.HORIZONTAL;
+		// c.gridwidth = 1;
+		// // c.gridheight = 2;
+		// c.gridx = 0;
+		// c.gridy = 0;
+		// rstPanel.add(rstLab, c);
+		
+		// c = new GridBagConstraints();
+		// c.fill = GridBagConstraints.HORIZONTAL;
+		// c.gridwidth = 2;
+		// c.gridx = 0;
+		// c.gridy = 2;
+		// rstPanel.add(rstDis, c);
+
+		// disPanel = new JPanel();
+		// disPanel.setLayout(new BorderLayout());
+		// disPanel.add(rstPanel, BorderLayout.SOUTH);
+		// disPanel.add(display, BorderLayout.CENTER);
 
 		openDia = new FileDialog(this, "open", FileDialog.LOAD);
 		nextDia = new FileDialog(this, "save", FileDialog.SAVE);
 
 		this.setTitle("Automatic HomeWork");
-		this.setBounds(300, 100, 650, 600);
-		this.setLayout(new GridLayout(5,1));
-		this.add(comPanel);
-		this.add(display);
-		this.add(run);
-		this.add(rstDis);
-		this.add(gradArea);
-		this.setVisible(true);
-		// this.setBounds(300, 100, 650, 600);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setBounds(300, 100, 700, 600);
+		this.setLayout(new GridBagLayout());
+
+		// c = new GridBagConstraints();
+		// c.fill = GridBagConstraints.NONE;
+		// c.gridx = 0; 
+		// c.gridy = 0;
+		// c.gridwidth = 8;
+		// // c.gridheight = 7;
+		// this.add(disPanel, c);
+
+		// c = new GridBagConstraints();
+		// c.fill = GridBagConstraints.NONE;
+		// c.gridx = 8; 
+		// c.gridy = 0;
+		// c.gridwidth = 2;
+		// // c.gridheight = 7;
+		// this.add(pane3, c);
+
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0; 
+		c.gridy = 0;
+		c.gridwidth = 8;
+		c.gridheight = 7;
+		this.add(display, c);
+
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.NONE;
+		c.gridx = 9; 
+		c.gridy = 1;
+		c.gridwidth = 1;
+		this.add(run, c);
+
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 9; 
+		c.gridy = 4;
+		c.gridwidth = 1;
+		this.add(graLab, c);
+
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.NONE;
+		c.gridx = 8; 
+		c.gridy = 5;
+		c.gridwidth = 2;
+		this.add(gra, c);
+
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.NONE;
+		c.gridx = 9; 
+		c.gridy = 6;
+		c.gridwidth = 1;
+		this.add(graSave, c);
+
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 9; 
+		c.gridy = 7;
+		c.gridwidth = 1;
+		this.add(comLab, c);
+
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.NONE;
+		c.gridx = 9; 
+		c.gridy = 8;
+		c.gridwidth = 2;
+		c.gridheight = 1;
+		this.add(comArea, c);
+
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.NONE;
+		c.gridx = 9; 
+		c.gridy = 9;
+		c.gridwidth = 1;
+		this.add(comSave, c);
+
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0; 
+		c.gridy = 7;
+		c.gridwidth = 1;
+		this.add(rstLab, c);
+
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.NONE;
+		c.gridx = 0; 
+		c.gridy = 8;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		this.add(rstDis, c);
+
 
 		this.setVisible(true);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		myEvent();
 	}
