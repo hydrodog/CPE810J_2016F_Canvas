@@ -5,7 +5,7 @@
  * 
  * 
  * */
-package Download;
+package edu.stevens.canvas.download;
 
 import java.io.*;
 import java.net.*;
