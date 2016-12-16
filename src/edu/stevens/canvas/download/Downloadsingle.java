@@ -1,4 +1,4 @@
-package testpl;
+package edu.stevens.canvas.download;
 import java.io.*;
 import java.net.*;
 import java.util.regex.Matcher;
