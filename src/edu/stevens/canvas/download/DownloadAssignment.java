@@ -85,7 +85,7 @@ public class DownloadAssignment {
 	    	 	String []s1=new String[3];
 	    	 	String []ss1=new String[5];
 	    	 	/*
-	    	 	 * Here we need the assignment URL from the Jason.
+	    	 	 * Here we need the assignment URL from the JSON.
 	    	 	 * To download the assignment
 	    	 	 * We put the url that found in Jason to the String url
 	    	 	 * */
