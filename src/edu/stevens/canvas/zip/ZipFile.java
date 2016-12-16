@@ -247,9 +247,6 @@ class getFiles {
 	
 	public void checkRules(direc reald, direc setd) {
 		if(reald.name.equalsIgnoreCase(setd.name) == false) {
-			//istrue = false; // rules have violation
-			//console.add("You don't have the directory \"" + setd.name + "\"");
-			//System.out.println("You don't have the directory \"" + setd.name + "\"");
 		}
 		//else {
 			for(int ii = 0; ii < setd.have.size(); ii++) {
@@ -271,7 +268,7 @@ class getFiles {
 						index = i;
 						break;
 					}
-					if(setd.have.get(i).filename.equalsIgnoreCase("") == true && setd.have.get(i).fileext.equalsIgnoreCase("") == true) {
+					if(setd.have.get(ii).filename.equalsIgnoreCase("") == true && setd.have.get(ii).fileext.equalsIgnoreCase("") == true) {
 						isTrue = true;
 						index = i;
 						break;
@@ -284,6 +281,40 @@ class getFiles {
 					istrue = false;
 					console.add("Don't have the file \"" + setd.have.get(ii).toString() + "\" in the directory \"" + setd.name + "\"");
 					//System.out.println("You don't have the file \"" + setd.have.get(ii).toString() + "\" in the directory \"" + setd.name + "\"");
+				}
+			}
+			for(int i = 0; i < reald.have.size(); i++) {
+				int index = -1;
+				boolean isFalse = false;
+				for(int ii = 0; ii < setd.nothave.size(); ii++) {
+					if(reald.have.get(i).filename.equalsIgnoreCase(setd.nothave.get(ii).filename) == true && reald.have.get(i).fileext.equalsIgnoreCase(setd.nothave.get(ii).fileext) == true) {
+						isFalse = true;
+						index = i;
+						break;
+					}
+					if(setd.nothave.get(ii).filename.equalsIgnoreCase("") == true && reald.have.get(i).fileext.equalsIgnoreCase(setd.nothave.get(ii).fileext) == true) {
+						isFalse = true;
+						index = i;
+						break;
+					}
+					if(reald.have.get(i).filename.equalsIgnoreCase(setd.nothave.get(ii).filename) == true && setd.nothave.get(ii).fileext.equalsIgnoreCase("") == true) {
+						isFalse = true;
+						index = i;
+						break;
+					}
+					if(setd.nothave.get(ii).filename.equalsIgnoreCase("") == true && setd.nothave.get(ii).fileext.equalsIgnoreCase("") == true) {
+						isFalse = true;
+						index = i;
+						break;
+					}
+				}
+				if(isFalse == false) {
+					//reald.have.get(index).isChecked = true;
+				}
+				else {
+					if(reald.have.get(index).isChecked != true) {
+						console.add("Can't have the file \"" + reald.have.get(index).toString() + "\" in the directory \"" + reald.name + "\"");
+					}
 				}
 			}
 			boolean isFound = false;
@@ -299,7 +330,6 @@ class getFiles {
 				if(isFound == false) {
 					istrue = false;
 					console.add("Don't have the directory \"" + setd.d.get(j).name + "\"");
-					//System.out.println("You don't have the directory \"" + setd.d.get(j).name + "\"");
 				}
 				else {
 					checkRules(reald.d.get(ind), setd.d.get(j));
