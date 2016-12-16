@@ -51,11 +51,13 @@ public class ruleGUI extends JFrame implements Serializable {
 	public direc DIRECTORY;
 	boolean isSend = false;
 	public List<String> output = new ArrayList<String>();
+	public List<PassStudent> pass = new ArrayList<PassStudent>();
 	DefaultTreeModel model = new DefaultTreeModel(null);
 	public int total = 0;
 	public int now = 0;
 	public boolean[] isDecom;
-	public String fileRoot;
+	public String fileRoot = "";
+	public String passPath = "";
 	
 	final static boolean shouldFill = true;
     final static boolean shouldWeightX = true;
@@ -106,34 +108,49 @@ public class ruleGUI extends JFrame implements Serializable {
     public void checkAndSend(int I) {
     	try {
 			if(I != 0) {
-				process.setText(process.getText() + "Unziping " + info.get(I).hw + "...\n");
-				Z = new ZipFile(info.get(I).stuID, info.get(I).name, info.get(I).email, info.get(I).hw, fileRoot);
-				process.setText(process.getText() + "Done!\n");
+				if(isDecom[I] != true) {
+					process.setText(process.getText() + "Decompressing for " + info.get(I).hw + "...\n");
+					process.setText(process.getText() + "Decompression done!\n\n");
+					isDecom[I] = true;
+				}
 			}
+			Z = new ZipFile(info.get(I).stuID, info.get(I).name, info.get(I).email, info.get(I).hw, fileRoot);
+			process.setText(process.getText() + "Check for " + info.get(I).name + "...\n");
 			getFiles G = new getFiles(Z);
 			G.checkRules(G.RealDirectory, DIRECTORY);
 			for(int i = 0; i < G.console.size(); i++) {
-				process.setText(process.getText() + G.console.get(i) + "\n");
+				process.setText(process.getText() + "  " + G.console.get(i) + "\n");
 			}
-			if(G.istrue == false) {
+			if(G.console.size() != 0) {
 				// use thread to update GUI while in progress
 				process.setText(process.getText() + "Sending email to " + info.get(I).name + ", please wait...\n");
 				SwingWorker<List<String>, Object> worker = new SwingWorker<List<String>, Object>() {
 			    @Override
 			    protected List<String> doInBackground() throws Exception {
-			        return G.console; // call a REST API
+			        return G.console; 
 			    }
 			    @Override
 			    protected void done() {
 			        try {
 			        	int ii = I;
 			        	Z.sendEmail(Z.writeEmail(get()));
-			            //Z.sendEmail(Z.writeEmail(G.console));
-				        process.setText(process.getText() + "Email has been sent successfully!\n");
+				        process.setText(process.getText() + "Email has been sent successfully!\n\n");
 				        ii ++;
 				        if(ii < total) {
 				        	checkAndSend(ii);
 				        }
+				        if(ii == total) {
+							try {
+								FileOutputStream fos = new FileOutputStream("passed students.ser");
+								ObjectOutputStream oos = new ObjectOutputStream(fos);
+								oos.writeObject(pass);
+								oos.close();
+							} catch (Exception e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							process.setText(process.getText() + "Successfully saved the information of passed students in \"passed students.ser\"\n\n");
+						}
 			        } catch (Exception e) {
 			            //ignore
 			        }
@@ -143,10 +160,34 @@ public class ruleGUI extends JFrame implements Serializable {
 		}
 		else {
 			process.setText(process.getText() + "Nothing wrong with the rules!\n");
+			process.setText(process.getText() + Z.stuName + "'s homework is passed.\n\n");
+			PassStudent stu = new PassStudent(Z.hw.toString(), Z.hw.toString() + "/" + passPath, Z.stuName, Z.stuID);
+			boolean isBreak = false;
+			for(int i = 0; i < pass.size(); i++) {
+				if(pass.get(i).CWID == stu.CWID) {
+					isBreak = true;
+					break;
+				}
+			}
+			if(isBreak == false) {
+				pass.add(stu);
+			}
 			int ii = I;
 			ii++;
 			if(ii < total) {
 				checkAndSend(ii);
+			}
+			if(ii == total) {
+				try {
+					FileOutputStream fos = new FileOutputStream("passed students.ser");
+					ObjectOutputStream oos = new ObjectOutputStream(fos);
+					oos.writeObject(pass);
+					oos.close();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				process.setText(process.getText() + "Successfully saved the information of passed students in \"passed students.ser\"\n\n");
 			}
 		}
 	} catch (Exception e1) {
@@ -216,27 +257,27 @@ public class ruleGUI extends JFrame implements Serializable {
 		super(s);
 		process = new JTextArea();
 		process.setEditable(false);
-		musthave = new JLabel("Must have: ");
-		mustnot = new JLabel("Must not have: ");
+		musthave = new JLabel("\t\tMust have: ");
+		mustnot = new JLabel("\t\tMust not have: ");
 		directory = new JLabel(direct, SwingConstants.CENTER);
 		must_t = new JTextField();
 		mustnot_t = new JTextField();
 		directories = new JTextField();
-		setD = new JButton("add new directory");
-		removeD = new JButton("remove directory");
-		save = new JButton("save rules");
-		load = new JButton("load rules");
+		setD = new JButton("Add New Directory");
+		removeD = new JButton("Remove Directory");
+		save = new JButton("Save Rules");
+		load = new JButton("Load Rules");
 		next = new JButton("NEXT ☞");
 		prev = new JButton("☜ PREVIOUS");
 		image = new JLabel();
-		//image.setIcon(iconLogo);
-		checkAll = new JButton("Check All");
+		checkAll = new JButton("CHECK ALL");
 		fileRoot = "/Users/Steveisno1/Documents/16-17Fall/EE810Java/Final Project/ZIPRULE/src/Download";
 		try {
 			FileInputStream fis = new FileInputStream(fileRoot + "/studentInfo.ser");
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			info = (ArrayList<StudentInfo>) ois.readObject();
 			total = info.size();
+			isDecom = new boolean[total];
 			ois.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -244,14 +285,19 @@ public class ruleGUI extends JFrame implements Serializable {
 		}
 		
 		title = new JLabel("ZIP FILE RULES", SwingConstants.CENTER);
-		stuID = new JLabel("\t\tStudent CWID: \t\t" + info.get(0).stuID, SwingConstants.LEFT);
-		stuName = new JLabel("\t\tStudent Name: \t\t" + info.get(0).name, SwingConstants.LEFT);
-		stuEmail = new JLabel("\t\tStudent Email: \t\t" + info.get(0).email, SwingConstants.LEFT);
+		title.setFont(new Font("Chalkduster", Font.PLAIN, 35));
+		stuID = new JLabel("\t\tStudent CWID: \t\t\t" + info.get(0).stuID, SwingConstants.LEFT);
+		stuName = new JLabel("\t\tStudent Name: \t\t\t" + info.get(0).name, SwingConstants.LEFT);
+		stuEmail = new JLabel("\t\tStudent Email: \t\t\t" + info.get(0).email, SwingConstants.LEFT);
+		stuID.setFont(new Font("Chalkduster", Font.PLAIN, 13));
+		stuName.setFont(new Font("Chalkduster", Font.PLAIN, 13));
+		stuEmail.setFont(new Font("Chalkduster", Font.PLAIN, 13));
 		hwName = new JLabel("\tHomework: " + "example homework", SwingConstants.CENTER);	// edit later...
-		ddd = new JLabel("Directory", SwingConstants.CENTER);
-		process.setText(process.getText() + "Unziping " + info.get(0).hw + "...\n");
+		ddd = new JLabel("\t\tDirectory:");
+		process.setText(process.getText() + "Decompressing for " + info.get(0).name + "...\n");
+		isDecom[0] = true;
 		Z = new ZipFile(info.get(0).stuID, info.get(0).name, info.get(0).email, info.get(0).hw, fileRoot);
-		process.setText(process.getText() + "Done!\n");
+		process.setText(process.getText() + "Decompression done!\n\n");
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -266,7 +312,6 @@ public class ruleGUI extends JFrame implements Serializable {
 		}
 		
 		DIRECTORY = new direc(folderName);
-		
 		DefaultMutableTreeNode top =
 		        new DefaultMutableTreeNode("Root Directory");
 		rootNode = top;
@@ -294,18 +339,24 @@ public class ruleGUI extends JFrame implements Serializable {
 		
 		next.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				if(now < total) {
+				if(now < total-1) {
 					now ++;
+					if(isDecom[now] != true) {
+						process.setText(process.getText() + "Decompressing for " + info.get(now).name + "...\n");
+					}
 					try {
 						Z = new ZipFile(info.get(now).stuID, info.get(now).name, info.get(now).email, info.get(now).hw, fileRoot);
-						//System.out.println(Z.stuName);
+						if(isDecom[now] != true) {
+							process.setText(process.getText() + "Decompression done!\n\n");
+							isDecom[now] = true;
+						}
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					stuName.setText("Student Name: " + info.get(now).name);
-					stuID.setText("Student CWID: " + info.get(now).stuID);
-					stuEmail.setText("Student Email: " + info.get(now).email);
+					stuName.setText("\t\tStudent Name: \t\t\t" + info.get(now).name);
+					stuID.setText("\t\tStudent CWID: \t\t\t" + info.get(now).stuID);
+					stuEmail.setText("\t\tStudent Email: \t\t\t" + info.get(now).email);
 				}
 				else {
 					process.setText(process.getText() + "This is the last student!\n\n");
@@ -317,15 +368,22 @@ public class ruleGUI extends JFrame implements Serializable {
 			public void actionPerformed(ActionEvent e) {
 				if(now > 0) {
 					now --;
+					if(isDecom[now] != true) {
+						process.setText(process.getText() + "Decompressing for " + info.get(now).name + "...\n");
+					}
 					try {
 						Z = new ZipFile(info.get(now).stuID, info.get(now).name, info.get(now).email, info.get(now).hw, fileRoot);
+						if(isDecom[now] != true) {
+							process.setText(process.getText() + "Decompression done!\n\n");
+							isDecom[now] = true;
+						}
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					stuName.setText("Student Name: " + info.get(now).name);
-					stuID.setText("Student CWID: " + info.get(now).stuID);
-					stuEmail.setText("Student Email: " + info.get(now).email);
+					stuName.setText("\t\tStudent Name: \t\t\t" + info.get(now).name);
+					stuID.setText("\t\tStudent CWID: \t\t\t" + info.get(now).stuID);
+					stuEmail.setText("\t\tStudent Email: \t\t\t" + info.get(now).email);
 				}
 				else {
 					process.setText(process.getText() + "This is the first student!\n\n");
@@ -500,17 +558,11 @@ public class ruleGUI extends JFrame implements Serializable {
 				//}
 				while((DefaultMutableTreeNode)temp.getParent() != null) {
 					list.add(((DefaultMutableTreeNode)temp.getParent()).toString());
-					/*if((DefaultMutableTreeNode)((DefaultMutableTreeNode)temp.getParent()).getParent() == null) {
-						break;
-					}*/
 					temp = (DefaultMutableTreeNode)temp.getParent();
-					
 				}
 				direc d = DIRECTORY;
 				direc t = null;
 		        for(int i = list.size()-2; i >= 0; i--) {
-		        	//System.out.println(list.get(i));
-		        	//d.d.add(new direc(list.get(i)));
 		        	for(int ii = 0; ii < d.d.size(); ii++) {
 		        		if(d.d.get(ii).name.equals(list.get(i)) == true) {
 		        			t = d;
@@ -561,8 +613,16 @@ public class ruleGUI extends JFrame implements Serializable {
 					list.add(((DefaultMutableTreeNode)temp.getParent()).toString());
 					temp = (DefaultMutableTreeNode)temp.getParent();
 				}
+				
 				direc d = DIRECTORY;
 				
+				// save for "main.java" path
+				if(s1.contains("main.java")) {
+					for(int i = list.size() - 2; i >= 0; i--) {
+						passPath += list.get(i) + "/";
+					}
+					passPath += "main.java";
+				}
 				
 				for(int i = list.size()-2; i >= 0; i--) {
 					for(int ii = 0; ii < d.d.size(); ii++) {
@@ -653,11 +713,12 @@ public class ruleGUI extends JFrame implements Serializable {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					getFiles G = new getFiles(Z);
+					process.setText(process.getText() + "Check for " + Z.stuName + ":...\n");
 					G.checkRules(G.RealDirectory, DIRECTORY);
 					for(int i = 0; i < G.console.size(); i++) {
-						process.setText(process.getText() + G.console.get(i) + "\n");
+						process.setText(process.getText() + "  " + G.console.get(i) + "\n");
 					}
-					if(G.istrue == false) {
+					if(G.console.size() != 0) {
 						// use thread to update GUI while in progress
 						process.setText(process.getText() + "Sending email, please wait...\n");
 						SwingWorker<List<String>, Object> worker = new SwingWorker<List<String>, Object>() {
@@ -669,7 +730,7 @@ public class ruleGUI extends JFrame implements Serializable {
 				        protected void done() {
 				            try {
 				        		Z.sendEmail(Z.writeEmail(get()));
-				        		process.setText(process.getText() + "Email has been sent successfully!\n");
+				        		process.setText(process.getText() + "Email has been sent successfully!\n\n");
 				            } catch (Exception e) {
 				                //ignore
 				            }
@@ -678,7 +739,19 @@ public class ruleGUI extends JFrame implements Serializable {
 				    worker.execute();
 					}
 					else {
-						process.setText(process.getText() + "Nothing wrong with the rules!\n");
+						process.setText(process.getText() + "Nothing wrong with the rules!\n\n");
+						process.setText(process.getText() + Z.stuName + "'s homework is passed.\n\n");
+						PassStudent stu = new PassStudent(Z.hw.toString(), Z.hw.toString() + "/" + passPath, Z.stuName, Z.stuID);
+						boolean isBreak = false;
+						for(int i = 0; i < pass.size(); i++) {
+							if(pass.get(i).CWID == stu.CWID) {
+								isBreak = true;
+								break;
+							}
+						}
+						if(isBreak == false) {
+							pass.add(stu);
+						}
 					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -702,25 +775,10 @@ public class ruleGUI extends JFrame implements Serializable {
 	            	File f = chooser.getSelectedFile();
 	            	fname = chooser.getName(f); 
 	            	try {
-	            		
 	            		FileOutputStream fos = new FileOutputStream(fname + ".ser");
 	            		ObjectOutputStream oos = new ObjectOutputStream(fos);
 	            		oos.writeObject(DIRECTORY);
 	            		oos.close();
-	            		
-	            		/*
-	            		FileOutputStream fos2;
-	            		if(fname.contains(".xml") == true) {
-	            			fos2 = new FileOutputStream(fname);
-	            		}
-	            		else {
-	            			fos2 = new FileOutputStream(fname + ".xml");
-	            		}
-	            		XMLEncoder xe = new XMLEncoder(fos2);
-	            		//xe.writeObject(DIRECTORY);
-	            		xe.writeObject(rootNode);
-	            		xe.close();*/
-	            		
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -751,6 +809,7 @@ public class ruleGUI extends JFrame implements Serializable {
 	            	DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root Directory");
 	            	direcToJTree dj = new direcToJTree(DIRECTORY, root);
 	            	dj.convert(DIRECTORY, root);
+	            	passPath = dj.passPath;
 	            	rootNode = root;
 	            	model.setRoot(rootNode);
 				} catch (Exception e1) {
@@ -771,13 +830,13 @@ public class ruleGUI extends JFrame implements Serializable {
 		c.gridwidth = 4;
 		pane1.add(title,c);
 		c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridwidth = 2;
 		c.gridheight = 4;
-		c.ipadx = 150;
-		ImageIcon imageIcon = new ImageIcon(new ImageIcon("stevens.gif").getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH));
+		c.insets = new Insets(15,15,15,15);
+		ImageIcon imageIcon = new ImageIcon(new ImageIcon("stevens.png").getImage().getScaledInstance(210, 80, Image.SCALE_SMOOTH));
 		image.setIcon(imageIcon);
 		pane1.add(image,c);
 		c = new GridBagConstraints();
@@ -802,16 +861,20 @@ public class ruleGUI extends JFrame implements Serializable {
 		c.gridwidth = 2;
 		pane1.add(stuEmail,c);
 		c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.fill = GridBagConstraints.NONE;
 		c.gridx = 2;
 		c.gridy = 4;
 		c.ipady = 15;
+		c.ipadx = 10;
+		prev.setFont(new Font("Lucida Handwriting", Font.PLAIN, 12));
 		pane1.add(prev,c);
 		c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.fill = GridBagConstraints.NONE;
 		c.gridx = 3;
 		c.gridy = 4;
 		c.ipady = 15;
+		c.ipadx = 40;
+		next.setFont(new Font("Lucida Handwriting", Font.PLAIN, 12));
 		pane1.add(next,c);
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.BOTH;
@@ -819,7 +882,7 @@ public class ruleGUI extends JFrame implements Serializable {
 		c.gridy = 5;
 		c.gridwidth = 2;
 		c.gridheight = 7;
-		c.ipadx = 120;
+		c.ipadx = 80;
 		pane1.add(treeView,c);
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -827,6 +890,7 @@ public class ruleGUI extends JFrame implements Serializable {
 		c.gridy = 5;
 		c.gridwidth = 2;
 		c.ipady = 15;
+		ddd.setFont(new Font("Chalkduster", Font.PLAIN, 13));
 		pane1.add(ddd,c);
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -840,24 +904,30 @@ public class ruleGUI extends JFrame implements Serializable {
 		c.gridx = 2;
 		c.gridy = 7;
 		c.ipady = 15;
+		c.insets = new Insets(5,5,5,5);
+		setD.setFont(new Font("Lucida Handwriting", Font.PLAIN, 12));
 		pane1.add(setD,c);
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 3;
 		c.gridy = 7;
 		c.ipady = 15;
+		c.insets = new Insets(5,5,5,5);
+		removeD.setFont(new Font("Lucida Handwriting", Font.PLAIN, 12));
 		pane1.add(removeD, c);
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 2;
 		c.gridy = 8;
 		c.ipady = 15;
+		musthave.setFont(new Font("Chalkduster", Font.PLAIN, 13));
 		pane1.add(musthave, c);
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 2;
 		c.gridy = 9;
 		c.ipady = 15;
+		mustnot.setFont(new Font("Chalkduster", Font.PLAIN, 13));
 		pane1.add(mustnot, c);
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -876,41 +946,53 @@ public class ruleGUI extends JFrame implements Serializable {
 		c.gridx = 2;
 		c.gridy = 10;
 		c.ipady = 15;
+		c.insets = new Insets(5,5,5,5);
+		setR.setFont(new Font("Lucida Handwriting", Font.PLAIN, 12));
 		pane1.add(setR, c);
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 3;
 		c.gridy = 10;
 		c.ipady = 15;
+		c.insets = new Insets(5,5,5,5);
+		reset.setFont(new Font("Lucida Handwriting", Font.PLAIN, 12));
 		pane1.add(reset, c);
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 2;
 		c.gridy = 11;
 		c.ipady = 15;
+		c.insets = new Insets(5,5,5,5);
+		ok.setFont(new Font("Lucida Handwriting", Font.PLAIN, 12));
 		pane1.add(ok, c);
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 3;
 		c.gridy = 11;
 		c.ipady = 15;
+		c.insets = new Insets(5,5,5,5);
+		checkAll.setFont(new Font("Lucida Handwriting", Font.PLAIN, 12));
+		checkAll.setForeground(Color.red);
+		checkAll.setOpaque(true);
 		pane1.add(checkAll, c);
+		
 		c = new GridBagConstraints();
-		//c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.ipadx = 40;
+		c.ipady = 15;
+		c.insets = new Insets(5,5,5,5);
+		save.setFont(new Font("Lucida Handwriting", Font.PLAIN, 12));
+		pane2.add(save,c);
+		c.gridx = 1;
+		load.setFont(new Font("Lucida Handwriting", Font.PLAIN, 12));
+		pane2.add(load,c);
+		c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 12;
-		c.ipadx = 30;
-		c.ipady = 15;
-		c.gridwidth = 2;
-		pane1.add(save, c);
-		c = new GridBagConstraints();
-		//c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 2;
-		c.gridy = 12;
-		c.ipadx = 30;
-		c.ipady = 15;
-		c.gridwidth = 2;
-		pane1.add(load, c);
+		c.gridwidth = 4;
+		pane1.add(pane2,c);
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -918,163 +1000,8 @@ public class ruleGUI extends JFrame implements Serializable {
 		c.ipady = 200;
 		c.gridwidth = 4;
 		pane1.add(sp, c);
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		/*c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 1;
-		pane1.add(directory);
-		*/
-		
-		//c.fill = GridBagConstraints.HORIZONTAL;
-		//c.gridwidth = 3;
-		/*
-		c.ipady = 20;      //make this component tall
-		c.gridx = 0;
-		c.gridy = 1;
-		pane1.add(pane2, c);
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 2;
-		pane1.add(directory, c);
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 3;
-		c.ipady = 100;
-		pane1.add(treeView, c);
-		
-		JPanel temppane = new JPanel(new GridBagLayout());
-		c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 0;
-		c.ipadx = 10;
-		temppane.add(setD, c);
-		c.gridx = 1;
-		temppane.add(removeD, c);
-		
-		c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		//c.gridwidth = 3;
-		c.gridx = 1;
-		c.gridy = 0;
-		c.ipadx = 400;
-		c.ipady = 10;
-		pane3.add(directories, c);
-		c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		//c.gridwidth = 3;
-		c.gridx = 0;
-		c.gridy = 0;
-		c.ipadx = 10;
-		c.ipady = 10;
-		pane3.add(temppane, c);
-		c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		//c.gridwidth = 3;
-		c.gridx = 0;
-		c.gridy = 1;
-		c.ipady = 10;
-		pane3.add(musthave, c);
-		c.fill = GridBagConstraints.HORIZONTAL;
-		//c.gridwidth = 3;
-		c.gridx = 1;
-		c.gridy = 1;
-		c.ipady = 10;
-		pane3.add(must_t, c);
-		c.fill = GridBagConstraints.HORIZONTAL;
-		//c.gridwidth = 3;
-		c.gridx = 0;
-		c.gridy = 2;
-		c.ipady = 10;
-		pane3.add(mustnot, c);
-		c.fill = GridBagConstraints.HORIZONTAL;
-		//c.gridwidth = 3;
-		c.gridx = 1;
-		c.gridy = 2;
-		c.ipady = 10;
-		pane3.add(mustnot_t, c);
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		//c.gridwidth = 3;
-		c.ipady = 40;      //make this component tall
-		c.gridx = 0;
-		c.gridy = 4;
-		pane1.add(pane3, c);
-		
-		//c.fill = GridBagConstraints.HORIZONTAL;
-		c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridy = 0;
-		c.ipadx = 10;
-		c.ipady = 10;
-		pane4.add(setR, c);
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
-		c.gridy = 0;
-		pane4.add(reset, c);
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 2;
-		c.gridy = 0;
-		pane4.add(ok, c);
-		//c.gridwidth = 3;
-		//c.ipady = 40;      //make this component tall
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 5;
-		c.ipady = 10;
-		pane1.add(pane4, c);
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 6;
-		c.ipady = 100;
-		pane1.add(sp, c);
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 7;
-		c.ipady = 100;
-		pane1.add(checkAll, c);
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
-		c.gridy = 7;
-		c.ipady = 100;
-		pane1.add(prev, c);
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 2;
-		c.gridy = 7;
-		c.ipady = 100;
-		pane1.add(next, c);
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 8;
-		c.ipady = 100;
-		pane1.add(save, c);
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
-		c.gridy = 8;
-		c.ipady = 100;
-		pane1.add(load, c);*/
-		
 		getContentPane().add(pane1);
-		setSize(600,750);
+		setSize(600,780);
 		setResizable(false);
 		setLocationRelativeTo(null); 
 		setVisible(true);
