@@ -1,4 +1,4 @@
-package Download;
+package edu.stevens.canvas.download;
 
 import java.io.IOException;
 import java.io.OutputStream;
