@@ -1,12 +1,20 @@
 package integratedPlagiarismDetector;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Test {
+<<<<<<< HEAD
 	public static void main(String[] args) {
 		File f1 = new File("e:1.py");
 		File f2 = new File("e:2.py");
+=======
+	public static void main(String[] args) throws FileNotFoundException, IOException {
+		File f1 = new File("e:HelloWorld1.cpp");
+		File f2 = new File("e:HelloWorld2.cpp");
+>>>>>>> 3802649f12e8c1d889b757a427e96f3bc048e786
 		ArrayList<File> f = new ArrayList<File>();
 		f.add(f1);
 		f.add(f2);

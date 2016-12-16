@@ -1,6 +1,8 @@
 package integratedPlagiarismDetector;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PlagiarismDector {
@@ -12,7 +14,7 @@ public class PlagiarismDector {
 		this.type = type;
 	}
 	
-	public ArrayList<File[]> getSuspectedFilePair() {
+	public ArrayList<File[]> getSuspectedFilePair() throws FileNotFoundException, IOException {
 		ArrayList<File[]> suspectedFilePair = new ArrayList<File[]>();
 		for(int i = 0; i < fileList.size(); i++){
 			for(int j = i + 1; j < fileList.size(); j++){
@@ -27,8 +29,11 @@ public class PlagiarismDector {
 				
 				pla.Plagiarism lCS = new pla.Plagiarism();
 				similarity += lCS.pla(filePair[0].getPath(),filePair[1].getPath());
+
+				javaPlagiarism.SyntaxScore ss = new javaPlagiarism.SyntaxScore();
+				similarity += ss.getScore(filePair[0].getPath(),filePair[1].getPath());
 				
-				if(similarity/2 > 0.5) {
+				if(similarity > 0.5) {
 					suspectedFilePair.add(filePair);
 					System.out.println("\nWarning!Find plagiarism between " + filePair[0].getName() +
 							" and " + filePair[1].getName() +"!\n");
