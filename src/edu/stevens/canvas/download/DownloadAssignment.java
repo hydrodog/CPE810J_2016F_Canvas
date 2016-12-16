@@ -148,7 +148,7 @@ public class DownloadAssignment {
     	    
     	    URL link=new URL(url);
     	    ReadableByteChannel rbc = Channels.newChannel(link.openStream());
-   		 	FileOutputStream fos = new FileOutputStream(filename);
+   		 	FileOutputStream fos = new FileOutputStream(filename);//save the file to folder
    		 	fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);   		 
        }
     }
