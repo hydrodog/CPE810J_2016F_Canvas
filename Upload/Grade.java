@@ -24,6 +24,12 @@ package update;
 import java.io.*;
 import java.net.*;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import update.SQLhelper;
 
 public class Grade {// The information we need to identify a course and a student
 	private String assignmentId;
