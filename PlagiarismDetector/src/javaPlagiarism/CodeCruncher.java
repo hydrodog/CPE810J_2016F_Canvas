@@ -30,15 +30,12 @@ import pla.Plagiarism;
 //--------------------------------------
 public class CodeCruncher {
 	//Looks for words and lines for parsing
-	private int overallScore;
+
 	
 	//List of files
 	public CodeCruncher()
 	{
-			overallScore = 0;
-	}
-	public int getOverallScore() {
-		return overallScore;
+			
 	}
 
 	public File crunchCode(File file1, VariableEditor variable1) throws IOException, FileNotFoundException {
