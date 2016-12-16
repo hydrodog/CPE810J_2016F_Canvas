@@ -28,7 +28,7 @@ public class PlagiarismDector {
 				pla.Plagiarism lCS = new pla.Plagiarism();
 				similarity += lCS.pla(filePair[0].getPath(),filePair[1].getPath());
 				
-				if(similarity > 0.5) {
+				if(similarity/2 > 0.5) {
 					suspectedFilePair.add(filePair);
 					System.out.println("\nWarning!Find plagiarism between " + filePair[0].getName() +
 							" and " + filePair[1].getName() +"!\n");
