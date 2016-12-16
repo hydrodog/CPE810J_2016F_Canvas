@@ -1,13 +1,9 @@
 The Plagiarism Team is pursuing several different approaches to the project.  
 
-In the Plagiarism Detector class, there will be several classes and sub-classes to pull different segments of the file and compare their similarity
-Thos pieces are: 
-1. String syntax - Is it the same set of strings
-2. Variable names - Did they use the same variables and info
-3. ByteCode - Did it compile to the same code
-4. Function use - Did they just change loop parameters or type
-5. Pattern of Student - If we were to check previous documents, did their habbits match up?
+The byte code that is created by compiling code takes care of the process of understanding the functional differences between code.  With smart compilers, the difference between small changes will automatically be taken care of.
+Another approach was to look at the syntax and styling of the words.  This was done by removing Java keywords and necessary formatting so that the forced format of Java was minimized, and all that was left was almost all user created.
 
-An implementation of the LCS Algorithm, or longest common string, is being implemented to also evaluate whether or not they copied large chunks of code from another source
-Using this method, the general similarity of the file can be viewed.  
+In order to test each of these methods, the Longest Common Sequence algorithms was employed.  The LCS algorithm can identify the longest common string sequences between two large sets of strings.  
+Since byte code is going to be similar, the LCS algorithm can to determine how similar it is.
+In terms of user syntax, the LCS algorithm is a good choice to match how much a user took from others barring small details and differences.    
 
