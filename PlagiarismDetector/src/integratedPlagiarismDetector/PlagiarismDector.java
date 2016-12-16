@@ -29,8 +29,10 @@ public class PlagiarismDector {
 				
 				pla.Plagiarism lCS = new pla.Plagiarism();
 				similarity += lCS.pla(filePair[0].getPath(),filePair[1].getPath());
+				
 				javaPlagiarism.SyntaxScore ss = new javaPlagiarism.SyntaxScore();
 				similarity += ss.getScore(filePair[0].getPath(),filePair[1].getPath());
+				
 				if(similarity > 0.5) {
 					suspectedFilePair.add(filePair);
 					System.out.println("\nWarning!Find plagiarism between " + filePair[0].getName() +
