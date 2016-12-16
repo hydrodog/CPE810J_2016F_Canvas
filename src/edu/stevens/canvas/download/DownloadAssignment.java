@@ -6,7 +6,7 @@
  * 
  * 
  * */
-package edu.stevens.canvas.Download;
+package edu.stevens.canvas.download;
 
 import java.io.*;
 import java.io.IOException;
