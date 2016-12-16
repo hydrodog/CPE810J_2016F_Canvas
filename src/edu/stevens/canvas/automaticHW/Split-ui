@@ -29,7 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class ui extends JFrame {
-	private TextArea rstDis, comArea, display;
+	protected TextArea rstDis, comArea, display;
 	private JButton run, graSave, comSave;
 	private JTextField gra;
 	private JLabel graLab, comLab;
@@ -42,17 +42,8 @@ public class ui extends JFrame {
 	private String dirpath, fileName;
 	private String result = "";
 	private String sss = "";
-	compile compile1 = new compile();
 	grade grade1 = new grade();
 	comment comment1 = new comment();
-
-	// public void setPath(String str) {
-	// 	this.dirpath = str;
-	// }
-	// public void setFileName(String str) {
-	// 	this.fileName = str;
-	// }
-
 
 	ui() {
 		
@@ -149,13 +140,33 @@ public class ui extends JFrame {
 				}
 				
 				run.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						compile1.compile(dirpath, fileName, file);
-						result = compile1.getResult();
-						System.out.println(result);
-						rstDis.append(result + "\r\n");
-						sss = compile1.getGrade();
-						gra.setText(sss);
+					public void actionPerformed(ActionEvent e) {					
+						if(get(dirpath + fileName).equals("java")) {
+							childJava java = new childJava();
+							java.compile(dirpath, fileName, file);
+							result = java.getResult();
+							System.out.println(result);
+							rstDis.append(result + "\r\n");
+							sss = java.getGrade();
+							gra.setText(sss);
+						} else if(get(dirpath + fileName).equals("cpp")) {
+							System.out.println("1");
+							childCpp cpp = new childCpp();
+							cpp.compile(dirpath, fileName, file);
+							result = cpp.getResult();
+							System.out.println(result);
+							rstDis.append(result + "\r\n");
+							sss = cpp.getGrade();
+							gra.setText(sss);
+						} else if(get(dirpath + fileName).equals("py")) {
+							childPy py = new childPy();
+							py.compile(dirpath, fileName, file);
+							result = py.getResult();
+							System.out.println(result);
+							rstDis.append(result + "\r\n");
+							sss = py.getGrade();
+							gra.setText(sss);
+						}						
 					}
 				});
 
@@ -215,216 +226,42 @@ public class ui extends JFrame {
 			}
 		});
 	}
+	
+	public String get(String str) {
+		String suffix = "";
+		String prefix = "";
+		char a = '.';
+		char b = '/';
+		int ad1 = 0, ad2 = 0;
+			char[] ss = str.toCharArray();
+			for(int i = 0; i < ss.length; i++) {
+				if(ss[i] == a) {
+					ad1 = i;
+					for(int j = i + 1; j < ss.length; j++)        					
+						suffix += ss[j];
+				}
+			}
+			for(int x = ad1; x > 0; x--) {
+				if(ss[x] == b) {
+					ad2 = x;
+					break;
+				}
+			}
+			for(int y = 0; y < ad2; y++) {     					
+				prefix += ss[y];
+			}
+			return suffix;
+	}
 
+	public String peelL(String str) {
+		if (str == null) 
+			return str;
+		int len = str.length();
+		int i = str.indexOf('.');
+		String rst = str.substring(i, len);
+		return rst;
+		}
 	
-//	public void compile(String path, String fileName, File file) {
-//		String sss = "";
-//		String aaa= peel(fileName);
-//////		System.out.println(aaa);
-//////		System.out.println(path);
-//		try {
-//			// String com = "cd" + path;
-//			// Process pro = Runtime.getRuntime().exec(com); //need to modify to get the path of the file.
-//			// pro.waitFor();
-//			ProcessBuilder pb = new ProcessBuilder("javac", fileName);
-//			pb.directory(new File(path).getAbsoluteFile());
-//			Process pro = pb.start();
-//			// Runtime.getRuntime().exec("javac " + path + fileName);
-//			String line = null;
-//
-//			BufferedReader in = new BufferedReader(
-//				new InputStreamReader(pro.getErrorStream()));
-//
-//////			while ((line = in.readLine()) != null) { //display the error location of compiling
-//////				rstDis.append(line + "\r\n");
-//////				// System.out.println("javac Main.java" + " The error : " + " " + line); 
-//////			}
-//
-//			pro.waitFor();
-//			int exitValue = pro.exitValue();
-//
-//			//     System.out.println("javac Main.java" + " exitValue() " + pro.exitValue()); //show "0" if compile successfully
-//
-//			if (exitValue == 1) {
-//				sss = Integer.toString(25);
-//				grade(sss, path);
-//				gra.setText(sss);
-//			} else {
-//
-//				// pro = Runtime.getRuntime().exec("cd " + path);
-//				// pro.waitFor();
-//				// pro = Runtime.getRuntime().exec("java " + aaa);
-//				// pro = Runtime.getRuntime().exec("pwd");
-//				pb = new ProcessBuilder("java", aaa);
-//				pb.directory(new File(path).getAbsoluteFile());
-//				pro = pb.start();
-//				line = null;
-//				in = new BufferedReader(
-//					new InputStreamReader(pro.getInputStream()));
-//				while ((line = in.readLine()) != null) { //display the output of the java program in console
-//					result += line + "\r\n";
-//////					rstDis.append(line + "\r\n");
-//					// System.out.println("java Main" + " The output of this program : " + " " + line);
-//				}
-//				line = null;
-//				in = new BufferedReader(
-//					new InputStreamReader(pro.getErrorStream()));
-//////				while ((line = in.readLine()) != null) { //display the error location when running the java program
-//////				rstDis.append(line + "\r\n");
-//////					// System.out.println("java Main" + " The error : " + " " + line);
-//////				}
-//				pro.waitFor();
-//				exitValue = pro.exitValue();
-//				if (exitValue == 1) {
-//					sss = Integer.toString(50);
-//					grade(sss, path);
-//					gra.setText(sss);
-//				} else {
-//					sss = Integer.toString(90);
-//					grade(sss, path);
-//					gra.setText(sss);
-//				}
-//				// System.out.println("java Main" + " exitValue() " + pro.exitValue()); //show "0" when running successfully 
-//				// read();
-//		    }
-//		} catch (Exception e) {
-//		    e.printStackTrace();
-//		}
-//	}
-////	public void run() {
-////        String sss = "";
-////        try {
-////            Process pro = Runtime.getRuntime().exec("g++ Hello.cpp -o Hello"); //need to modify to get the path of the file.
-////            String line = null;
-////            BufferedReader in = new BufferedReader(
-////                    new InputStreamReader(pro.getErrorStream()));
-////            while ((line = in.readLine()) != null) { //display the error location of compiling
-////                rstDis.append(line + "\r\n");
-////                // System.out.println("g++ Hello.cpp" + " The error : " + " " + line);
-////            }
-////            pro.waitFor();
-////            int exitValue = pro.exitValue();
-////
-////            // System.out.println("g++ Hello.cpp" + " exitValue() " + pro.exitValue()); //show "0" if compile successfully
-////
-////            if (exitValue == 1) {
-////                sss = Integer.toString(25);
-////                grade(sss);
-////                gra.setText(sss);
-////            } else {
-////                pro = Runtime.getRuntime().exec("./Hello");
-////                line = null;
-////                in = new BufferedReader(
-////                        new InputStreamReader(pro.getInputStream()));
-////                while ((line = in.readLine()) != null) { //display the output of the java program in console
-////                    rstDis.append(line + "\r\n");
-////                    // System.out.println("run Hello" + " The output of this program : " + " " + line);
-////                }
-////                line = null;
-////                in = new BufferedReader(
-////                        new InputStreamReader(pro.getErrorStream()));
-////                while ((line = in.readLine()) != null) { //display the error location when running the java program
-////                    rstDis.append(line + "\r\n");
-////                    // System.out.println("run Hello" + " The error : " + " " + line);
-////                }
-////                pro.waitFor();
-////                exitValue = pro.exitValue();
-////                if (exitValue == 1) {
-////                    sss = Integer.toString(50);
-////                    grade(sss);
-////                    gra.setText(sss);
-////                } else {
-////                    sss = Integer.toString(90);
-////                    grade(sss);
-////                    gra.setText(sss);
-////                }
-////                // System.out.println("run Hello" + " exitValue() " + pro.exitValue()); //show "0" when running successfully
-////                // read();
-////            }
-////        } catch (Exception e) {
-////            e.printStackTrace();
-////        }
-////    }
-//
-//
-////     public void run() {
-////         String sss = "";
-////         try {
-////             Process pro = Runtime.getRuntime().exec("python Hi.py");
-////             String line = null;
-////             BufferedReader in = new BufferedReader(
-////                     new InputStreamReader(pro.getInputStream()));
-////             while ((line = in.readLine()) != null) { //display the output of the java program in console
-////                 rstDis.append(line + "\r\n");
-////                 // System.out.println("run Hello" + " The output of this program : " + " " + line);
-////             }
-////             line = null;
-////             in = new BufferedReader(
-////                     new InputStreamReader(pro.getErrorStream()));
-////             while ((line = in.readLine()) != null) { //display the error location when running the java program
-////                 rstDis.append(line + "\r\n");
-////                 // System.out.println("run Hello" + " The error : " + " " + line);
-////             }
-////             pro.waitFor();
-////             int exitValue = pro.exitValue();
-////             if (exitValue == 1) {
-////                 sss = Integer.toString(50);
-////                 grade(sss);
-////                 gra.setText(sss);
-////             } else {
-////                 sss = Integer.toString(90);
-////                 grade(sss);
-////                 gra.setText(sss);
-////             }
-////             // System.out.println("run Hello" + " exitValue() " + pro.exitValue()); //show "0" when running successfully
-////             // read();
-////             } catch (InterruptedException e1) {
-////             e1.printStackTrace();
-////         } catch (IOException e1) {
-////             e1.printStackTrace();
-////         }
-////     }
-	
-////	public void grade(String str, String path) {
-////		String name = "grade.txt";
-////		File file = new File(path, name);
-////		try {
-////			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-////			String str1 = str ;
-////			bw.write(str1);
-////			bw.newLine();
-////			bw.flush();
-////		bw.close();
-////
-////		} catch (IOException e) {
-////			e.printStackTrace();
-////		}
-////	}
-	
-////	public void comment(String str, String path) {
-////		String name = "comment.txt";
-////		File file = new File(path, name);
-////		try {
-////			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-////			String line = str;
-////			bw.write(str);
-////			bw.newLine();
-////			bw.flush();
-////			bw.close();
-////		} catch (IOException e) {
-////			e.printStackTrace();
-////		}
-////		// return line;
-////	}
-	
-////	public String peel(String str) {
-////		if (str == null) 
-////			return str;
-////		int len = str.length();
-////		int i = str.indexOf('.');
-////		String rst = str.substring(0, i);
-////		return rst;
-////	}
 	public static void main(String[] args) throws IOException { //this is the test code, we could run it successfully.
  		ui java = new ui();
 		// System.out.println(dirpath);
@@ -434,6 +271,7 @@ public class ui extends JFrame {
 		// String s = java.peel("HelleWorld.java");
 		// System.out.println(s);
 	}
+	
 }
 
 //class Code {
