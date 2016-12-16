@@ -1,13 +1,10 @@
 package com.company;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 // import java.awt.TextField;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,10 +21,10 @@ public class Compile extends JFrame {
     protected JTextField gra;
     private JLabel graLab, comLab, rstLab;
     private JPanel gradArea, comPanel, rstPanel, panel, disPanel, runPanel, pane3;
-    private MenuBar bar;       // Menu bar
+    private MenuBar bar;
     private Menu fileMenu;
-    private MenuItem openItem, nextItem, closeItem;
-    private FileDialog openDia, nextDia;
+    private MenuItem openItem, saveItem, closeItem, nextItem;
+    private FileDialog openDia, saveDia, nextDia;
     private File file;
     private String dirpath, fileName;
 
@@ -38,88 +35,32 @@ public class Compile extends JFrame {
         run = new JButton("run");
         runPanel = new JPanel();
         runPanel.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        // c.fill = GridBagConstraints.NONE;
-        // c.gridwidth = 2;
-        // c.gridheight = 2;
-        // c.gridx = 1;
-        // c.gridy = 1;
-        // runPanel.add(run, c);
-
 
         // grade area
         graLab = new JLabel("Grade");
         gra = new JTextField("", 3);
         graSave = new JButton("Save Grade");
-        // gradArea = new JPanel();
-        // gradArea.setLayout(new GridBagLayout());
-        // c = new GridBagConstraints();
-        // c.fill = GridBagConstraints.HORIZONTAL;
-        // c.gridwidth = 1;
-        // c.weightx = 0;
-        // c.gridx = 0;
-        // c.gridy = 0;
-        // gradArea.add(graLab, c);
-
-        // c = new GridBagConstraints();
-        // c.fill = GridBagConstraints.NONE;
-        // c.gridwidth = 2;
-        // c.gridx = 1;
-        // c.gridy = 2;
-        // gradArea.add(gra, c);
-
-        // c = new GridBagConstraints();
-        // c.fill = GridBagConstraints.NONE;
-        // // c.weightx = 1.0;
-        // c.gridwidth = 2;
-        // c.gridx = 1;
-        // c.gridy = 4;
-        // gradArea.add(graSave, c);
 
         // comment area
         comLab = new JLabel("Comment ");
         comArea = new JTextArea("");
         comArea.setLineWrap(true);
         comSave = new JButton("Save Comment");
-        // comPanel = new JPanel();
-        // comPanel.setLayout(new GridBagLayout());
-        // c = new GridBagConstraints();
-        // c.fill = GridBagConstraints.HORIZONTAL;
-        // c.weightx = 0.5;
-        // c.gridwidth = 1;
-        // c.gridx = 0;
-        // c.gridy = 0;
-        // comPanel.add(comLab, c);
-
-        // c = new GridBagConstraints();
-        // c.fill = GridBagConstraints.NONE;
-        // c.gridwidth = 2;
-        // // c.gridheight = 2;
-        // c.gridx = 0;
-        // c.gridy = 1;
-        // comPanel.add(comArea, c);
-
-        // c = new GridBagConstraints();
-        // c.fill = GridBagConstraints.NONE;
-        // c.gridwidth = 1;
-        // c.gridx = 0;
-        // c.gridy = 4;
-        // comPanel.add(comSave, c);
-
-        // pane3 = new JPanel();
-        // pane3.setLayout(new GridLayout(3, 1));
-        // pane3.add(runPanel);
-        // pane3.add(gradArea);
-        // pane3.add(comPanel);
-
 
         // menu bar
         bar = new MenuBar(); //
         fileMenu = new Menu("file");// Initial menu
-        openItem = new MenuItem("open");// create open item
-        nextItem = new MenuItem("next");// create next item
+        // fileMenu.setShortcut(new MenuShortcut(KeyEvent.VK_F));
+        openItem = new MenuItem("open(O)");// create open item
+        openItem.setShortcut(new MenuShortcut(KeyEvent.VK_O));   //set shortcut for OpenItem
+        saveItem = new MenuItem("save");// create save item
+        saveItem.setShortcut(new MenuShortcut(KeyEvent.VK_S));
         closeItem = new MenuItem("quit");
+        closeItem.setShortcut(new MenuShortcut(KeyEvent.VK_Q));
+        nextItem = new MenuItem("next");
+        nextItem.setShortcut(new MenuShortcut(KeyEvent.VK_N));
         fileMenu.add(openItem);
+        fileMenu.add(saveItem);
         fileMenu.add(nextItem);
         fileMenu.add(closeItem);
         bar.add(fileMenu);
@@ -127,51 +68,17 @@ public class Compile extends JFrame {
 
         display = new TextArea();
         rstLab = new JLabel("Result");
-        // rstPanel = new JPanel();
-        // rstPanel.setLayout(new GridBagLayout());
-        // c = new GridBagConstraints();
-        // c.fill = GridBagConstraints.HORIZONTAL;
-        // c.gridwidth = 1;
-        // // c.gridheight = 2;
-        // c.gridx = 0;
-        // c.gridy = 0;
-        // rstPanel.add(rstLab, c);
-
-        // c = new GridBagConstraints();
-        // c.fill = GridBagConstraints.HORIZONTAL;
-        // c.gridwidth = 2;
-        // c.gridx = 0;
-        // c.gridy = 2;
-        // rstPanel.add(rstDis, c);
-
-        // disPanel = new JPanel();
-        // disPanel.setLayout(new BorderLayout());
-        // disPanel.add(rstPanel, BorderLayout.SOUTH);
-        // disPanel.add(display, BorderLayout.CENTER);
 
         openDia = new FileDialog(this, "open", FileDialog.LOAD);
-        nextDia = new FileDialog(this, "save", FileDialog.SAVE);
+        saveDia = new FileDialog(this, "save", FileDialog.SAVE);
+        nextDia = new FileDialog(this, "next", FileDialog.LOAD);
 
         this.setTitle("Automatic HomeWork");
         this.setBounds(300, 100, 700, 600);
         this.setLayout(new GridBagLayout());
 
-        // c = new GridBagConstraints();
-        // c.fill = GridBagConstraints.NONE;
-        // c.gridx = 0;
-        // c.gridy = 0;
-        // c.gridwidth = 8;
-        // // c.gridheight = 7;
-        // this.add(disPanel, c);
-
-        // c = new GridBagConstraints();
-        // c.fill = GridBagConstraints.NONE;
-        // c.gridx = 8;
-        // c.gridy = 0;
-        // c.gridwidth = 2;
-        // // c.gridheight = 7;
-        // this.add(pane3, c);
-
+        // Add components into frame
+        GridBagConstraints c = new GridBagConstraints();
         c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
@@ -245,16 +152,15 @@ public class Compile extends JFrame {
         c.gridheight = 1;
         this.add(rstDis, c);
 
-
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         myEvent();
     }
 
-
+    // Event method for components
     private void myEvent() {
-
+        // action of openItem;
         openItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -262,8 +168,6 @@ public class Compile extends JFrame {
 
                 dirpath = openDia.getDirectory();
                 fileName = openDia.getFile();
-                // System.out.println(dirpath);
-
 
                 if (dirpath == null || fileName == null)
                     return;
@@ -271,6 +175,13 @@ public class Compile extends JFrame {
                     display.setText(null);
                 file = new File(dirpath, fileName);
 
+                // Clear the result Display
+                if (!"".equals(rstDis.getText())) {
+                    rstDis.setText(null);
+                }
+
+
+                // Display the code file into TextArea
                 try {
                     BufferedReader bufr = new BufferedReader(new FileReader(file));
                     String line = null;
@@ -283,9 +194,10 @@ public class Compile extends JFrame {
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-
+                // Run button action
                 run.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
+                        // compile the code and grade in the dirtory the code belongs to
                         if(get(dirpath + fileName).equals(".java")) {
                             CompileJava java = new CompileJava();
                             java.compile(dirpath, fileName, file);
@@ -300,37 +212,92 @@ public class Compile extends JFrame {
                         }
                     }
                 });
-
+                // Button to save the grade into the certain path
                 graSave.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         String ss = gra.getText();
                         grade(ss, dirpath);
                     }
                 });
-
+                // Button to save comments into the certain path
                 comSave.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         String ss = comArea.getText();
                         comment(ss, dirpath);
                     }
                 });
-
             }
-
         });
-
-        // next event listen;
+        // next Item listener
         nextItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
+                nextDia.setVisible(true);
+
+                dirpath = nextDia.getDirectory();
+                fileName = nextDia.getFile();
+
+                if (dirpath == null || fileName == null)
+                    return;
+                else
+                    display.setText(null);
+                file = new File(dirpath, fileName);
+
+                // Clear the result Display
+                if (!"".equals(rstDis.getText())) {
+                    rstDis.setText(null);
+                }
+
+
+                // Display the code file into TextArea
+                try {
+                    BufferedReader bufr = new BufferedReader(new FileReader(file));
+                    String line = null;
+                    while ((line = bufr.readLine()) != null) {
+                        display.append(line + "\r\n");
+                    }
+                    bufr.close();
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                // Run button action
+                run.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        // compile the code and grade in the dirtory the code belongs to
+                        compile(dirpath, fileName, file);
+                    }
+                });
+                // Button to save the grade into the certain path
+                graSave.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String ss = gra.getText();
+                        grade(ss, dirpath);
+                    }
+                });
+                // Button to save comments into the certain path
+                comSave.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String ss = comArea.getText();
+                        comment(ss, dirpath);
+                    }
+                });
+            }
+        });
+
+        // save event listen
+        saveItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 if (file == null) {
-                    nextDia.setVisible(true);
-                    String dirpath = nextDia.getDirectory();
-                    String fileName = nextDia.getFile();
+                    saveDia.setVisible(true);
+                    String dirpath = saveDia.getDirectory();
+                    String fileName = saveDia.getFile();
 
                     if (dirpath == null || fileName == null)
                         return;
                     else
-                        file = new File(dirpath, fileName);
+                        file=new File(dirpath,fileName);
                 }
                 try {
                     BufferedWriter bufw = new BufferedWriter(new FileWriter(file));
@@ -345,7 +312,7 @@ public class Compile extends JFrame {
                 }
             }
         });
-
+        // Close event listener
         closeItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
