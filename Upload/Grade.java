@@ -117,18 +117,31 @@ public class Grade {// The information we need to identify a course and a studen
 		}
 	//Testing upload function
 	public static void main(String[] args){
-	    String courseId="10300000000000133";
-	    String assignmentId="10300000000046026";
-	    String userId="10300000000022347";
-	    String token="1030~otki4cHfzAaABucqiiXd3MyqTcIppLIdxeX5mOV8qQzVURff4wxgwzVwZ0eiPoNQ";
-	    String comment="goodjob";
-	    Grade test = new Grade(courseId,assignmentId,userId,token,10,comment);
-	    //test.printurl();
-	    test.updateGrade();
+	    	String token = "1030~CcjXAdiqvyaYOiEsqfBiIFGZx3hN7T6s2wO5dPVYNU3OYvdKNfV6b7KUP0t13G7F";
+		SQLhelper sqlHelper = new SQLhelper();
+		Connection conn = sqlHelper.getSQL();
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet result = stmt.executeQuery("select * from grade");
+			while (result.next()) {
+				// System.out.println(result.getString("lastname"));
+				String courseId = result.getString("courseId");
+				String assignmentId = result.getString("assignmentId");
+				String userId = result.getString("userId");
+				double grade = result.getDouble("grade");
+				Grade test = new Grade(courseId, assignmentId, userId, token, grade);
+				test.updateGrade();
+				// System.out.println(courseId+ assignmentId + userId + grade);
+
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	    
    }
     	
-    }
+  }
 	
 	
 
