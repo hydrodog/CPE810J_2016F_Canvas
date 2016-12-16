@@ -1,4 +1,4 @@
-package Download;
+package edu.stevens.canvas.download;
 
 /*The class of Student is to save the Students' information 
  * */
