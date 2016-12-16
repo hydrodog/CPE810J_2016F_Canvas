@@ -1,10 +1,14 @@
 package edu.stevens.canvas.zip;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.tree.*;
 
 public class direcToJTree {
 	direc D;
 	DefaultMutableTreeNode root;
+	String passPath = "";
 	public direcToJTree(direc d, DefaultMutableTreeNode r) {
 		D = d;
 		root = r;
@@ -16,6 +20,19 @@ public class direcToJTree {
 			DefaultMutableTreeNode temp = new DefaultMutableTreeNode(D.have.get(i).toString());
 			R.add(temp);
 			isH = true;
+			if(D.have.get(i).toString().equals("main.java")) {
+				List<String> list = new ArrayList<String>();
+				DefaultMutableTreeNode temp1 = R;
+				list.add(R.toString());
+				while((DefaultMutableTreeNode)temp1.getParent() != null) {
+					list.add(((DefaultMutableTreeNode)temp1.getParent()).toString());
+					temp1 = (DefaultMutableTreeNode)temp1.getParent();
+				}
+				for(int i1 = list.size() - 2; i1 >= 0; i1--) {
+					passPath += list.get(i1) + "/";
+				}
+				passPath += "main.java";
+			}
 		}
 		for(int i = 0; i < D.nothave.size(); i++) {
 			DefaultMutableTreeNode temp = new DefaultMutableTreeNode("Not Allowed: " + D.nothave.get(i));
