@@ -12,8 +12,9 @@ public class CompilePython extends Compile {
     public void compile(String path, String fileName, File file) {
         String sss = "";
         String aaa = peel(fileName);
-        System.out.println(aaa);
-        System.out.println(path);
+        if (!get(fileName).equals(".py")) {
+            return;
+        }
         try {
             ProcessBuilder pb = new ProcessBuilder("python",fileName);
             pb.directory(new File(path).getAbsoluteFile());

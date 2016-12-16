@@ -11,8 +11,9 @@ public class CompileJava extends Compile {
     public void compile(String path, String fileName, File file) {
         String sss = "";
         String aaa = peel(fileName);
-        System.out.println(aaa);
-        System.out.println(path);
+        if (!get(fileName).equals(".java")) {
+            return;
+        }
         try {
             ProcessBuilder pb = new ProcessBuilder("javac", fileName);
             pb.directory(new File(path).getAbsoluteFile());
