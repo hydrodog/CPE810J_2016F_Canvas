@@ -6,7 +6,7 @@
  * 
  * 
  * */
-package Download;
+package edu.stevens.canvas.download;
 
 import java.io.BufferedReader;
 import java.io.File;
