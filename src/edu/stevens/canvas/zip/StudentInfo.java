@@ -8,6 +8,7 @@ public class StudentInfo implements Serializable {
 	int stuID;
 	String email;
 	String hw; // abstract path
+
 	public StudentInfo(String name, int stuID, String email, String hw) {
 		this.name = name;
 		this.stuID = stuID;

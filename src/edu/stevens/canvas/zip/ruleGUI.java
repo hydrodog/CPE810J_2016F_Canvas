@@ -997,11 +997,11 @@ public class ruleGUI extends JFrame implements Serializable {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 13;
-		c.ipady = 200;
+		c.ipady = 150;
 		c.gridwidth = 4;
 		pane1.add(sp, c);
 		getContentPane().add(pane1);
-		setSize(600,780);
+		setSize(600,760);
 		setResizable(false);
 		setLocationRelativeTo(null); 
 		setVisible(true);
@@ -1077,4 +1077,3 @@ public class ruleGUI extends JFrame implements Serializable {
 		}
 	}
 }
-
