@@ -1,4 +1,5 @@
-
+--------------------------------------------------------------------
+Code is in the folder final_src, and the files outside show the process we achieve our project.
 ----------------------------------------------------
 Instructions: 
 	After adding the shortcut, press "ctrl + O" to open a file, and the code will be displayed onto the TextArea;
