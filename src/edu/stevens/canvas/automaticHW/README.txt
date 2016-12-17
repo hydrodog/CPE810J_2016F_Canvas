@@ -1,5 +1,5 @@
 
-Final codes are in the folder final_src, and the files outside show the process we achieve our project.
+Final codes are in the folder final_src, and the files outside show the process how we achieve our project.
 
 
 ----------------------------------------------------
