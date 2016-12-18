@@ -3,12 +3,15 @@ Group members:
 Peiying Cao, Shenwei Chen, Zhaolun Song
 
 1. Project Statement
+
 Canvas has major problems.  While we may not notice as a student, it is incredible difficult to get the kind of behavior as teachers.  Lots of features will be implemented in a large project, with each team contributing their part towards a complete, integrated improvement of Canvas. And our group is focus on zip file part, trying to do some optimization based on present canvas features.
 
 2. Objectives
+
 We will make a function to specify the zip file rule, decompress the zip file which could be got from the Download Group. And according the specified the rules, Email Students automatically if they get the rules wrong, letting them re-enter the homework. After unzipped all the homework, output them in a file which could be available to other group.
 
 3. Components
+
 3.1 Classes
 There are 9 classes in our project: decompress, direc, Email, file, getFiles, PassStudent, ruleGUI, StudentInfo, ZipFile. 
 Here are the brief overview of each class, the core codes will be explained in next section.
@@ -32,6 +35,7 @@ This class is a representation of the student information, ncluding student name
 The main class to run the codes.
 
 3.2 GUI introduction
+
 We designed a GUI to realize the main functions of our projects.
 The student information is displayed on the screen, and the user can change the student by clicking “NEXT” or “PREVIOUS” button.
 The GUI has a visualization window for the rules, that means, the user can see the rule as folder icons and file icons.
@@ -42,9 +46,11 @@ Save and Load rules by clicking “Save Rules” and “Load Rules” buttons.
 The console window shows the progresses of what the user have done.
 
 3.3 Decompression
+
 We use ZipInputStream to get the zip file path, use BufferedInputStream to get the input zip file. For there may be a problem, if one zip file include another zip file, we use ZipEntry to judge if it’s a folder, in order to traverse all of the zip files.
 
 3.4 Rules specify
+
 3.4.1 Data structure we use
 We write two Objects called direc and file to store all the directories and files under it. List<file> have stores the files that the rules say that must have, List<file> nothave stores the files that are not allowed. The two boolean values in class file is the status of the file, which will be explained later.
 
