@@ -2,36 +2,36 @@
 Group members: 
 Peiying Cao, Shenwei Chen, Zhaolun Song
 
-Project Statement
+##Project Statement
 
 Canvas has major problems.  While we may not notice as a student, it is incredible difficult to get the kind of behavior as teachers.  Lots of features will be implemented in a large project, with each team contributing their part towards a complete, integrated improvement of Canvas. And our group is focus on zip file part, trying to do some optimization based on present canvas features.
 
-Objectives
+##Objectives
 
 We will make a function to specify the zip file rule, decompress the zip file which could be got from the Download Group. And according the specified the rules, Email Students automatically if they get the rules wrong, letting them re-enter the homework. After unzipped all the homework, output them in a file which could be available to other group.
 
-Components
+##Components
 
-3.1 Classes
+###3.1 Classes
 There are 9 classes in our project: decompress, direc, Email, file, getFiles, PassStudent, ruleGUI, StudentInfo, ZipFile. 
 Here are the brief overview of each class, the core codes will be explained in next section.
-3.1.1 decompress
+###3.1.1 decompress
 This class works for decompression of the zip files.
-3.1.2 direc
+###3.1.2 direc
 This class is a representation of the directory, including directory name, the sub-directories, the must-have files, the must-not-have files. Can be serialized to save and load the rules.
-3.1.3 Email
+###3.1.3 Email
 This class works for writing email contents and sending email.
 3.1.4 file
 This class is a representation of the file, including file name, file extension, and some boolean values to represent the file’s status. Can be serialized to save and load the rules.
-3.1.5 getFiles
+###3.1.5 getFiles
 This class works mainly on File IO, to get the folder and files after decompression and further process.
-3.1.6 PassStudents
+###3.1.6 PassStudents
 This class is a representation of the student information, including student name, id, email address and the homework path of the student. We can combine the homework folder with the student in this class. Can be serialized and used for Automatic Homework.
-3.1.7 ruleGUI
+###3.1.7 ruleGUI
 This class presents a GUI to specify the rules, including many JLabels, JButtons, JTextAreas, etc.
-3.1.8 StudentInfo
+###3.1.8 StudentInfo
 This class is a representation of the student information, ncluding student name, id, email address and the zip path of the student. We can combine the zip file with the student in this class. Can be serialized and the infomation from Download can be stored.
-3.1.9 ZipFile
+###3.1.9 ZipFile
 The main class to run the codes.
 
 3.2 GUI introduction
