@@ -2,15 +2,15 @@
 Group members: 
 Peiying Cao, Shenwei Chen, Zhaolun Song
 
-1. Project Statement
+Project Statement
 
 Canvas has major problems.  While we may not notice as a student, it is incredible difficult to get the kind of behavior as teachers.  Lots of features will be implemented in a large project, with each team contributing their part towards a complete, integrated improvement of Canvas. And our group is focus on zip file part, trying to do some optimization based on present canvas features.
 
-2. Objectives
+Objectives
 
 We will make a function to specify the zip file rule, decompress the zip file which could be got from the Download Group. And according the specified the rules, Email Students automatically if they get the rules wrong, letting them re-enter the homework. After unzipped all the homework, output them in a file which could be available to other group.
 
-3. Components
+Components
 
 3.1 Classes
 There are 9 classes in our project: decompress, direc, Email, file, getFiles, PassStudent, ruleGUI, StudentInfo, ZipFile. 
