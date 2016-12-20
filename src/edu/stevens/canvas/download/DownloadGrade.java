@@ -5,7 +5,7 @@
  * 
  * 
  * */
-package Download;
+package Download; //TODO: package names should be lowercase.  should edu.stevens.download
 
 import java.io.*;
 import java.net.*;
@@ -42,7 +42,7 @@ public class DownloadGrade {
     			;
     	
     }
-    public void get(){
+    public void get(){ //TODO: Bad indentation makes everything harder to read.  We must be consistent
     	try {
 
 			URL targetUrl = new URL(targetURL);
